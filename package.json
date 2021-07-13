@@ -1,0 +1,34 @@
+{
+  "name": "yomo-vhq-nextjs",
+  "version": "0.0.1",
+  "description": "Open-source Virtual HQ implementation by Geo-distributed System tech stacks",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "export": "next build && next export"
+  },
+  "keywords": [
+    "vhq",
+    "yomo",
+    "geodistributedsystem"
+  ],
+  "author": "YoMo",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "jsc8": "^0.16.3",
+    "moment-timezone": "^0.5.33",
+    "next": "^11.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "rxjs": "^7.1.0",
+    "socket.io-client": "2.4.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.29.0",
+    "eslint-config-next": "^11.0.1"
+  }
+}
