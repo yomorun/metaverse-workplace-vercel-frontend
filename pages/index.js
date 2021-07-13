@@ -122,9 +122,9 @@ export default function Index() {
     ws.disconnect()
   }
 
-  // if (!logged) {
-  //   return null
-  // }
+  if (!logged) {
+    return null
+  }
 
   return (
     <Layout>

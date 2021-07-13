@@ -19,12 +19,12 @@ export default function Layout({ children }) {
         <link rel="stylesheet" media="print" onLoad="this.onload=null;this.removeAttribute('media');" href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400&amp;display=swap"/>
       </Head>
       <main>{children}</main>
-      {/* <Script src="https://www.googletagmanager.com/gtag/js?id=UA-47208480-12" onLoad={()=>{
+      <Script src="https://www.googletagmanager.com/gtag/js?id=UA-47208480-12" onLoad={()=>{
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
           gtag('config', 'UA-47208480-12');
-      }} /> */}
+      }} />
     </>
   )
 }

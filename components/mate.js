@@ -31,15 +31,6 @@ export default function Mate(props) {
     // set name
     setName(props.name)
 
-    // // hook on websocket
-    // props.sock.on('sync', state => {
-    //   log.log("[sync]", state)
-    //   if(props.name == state.name) {
-    //     setLeft(state.pos.x)
-    //     setTop(state.pos.y)
-    //   }
-    // })
-
     const direction$ = new Observable(obs => {
       props.sock.on('movement', mv => {
         if(mv.name != props.name){
