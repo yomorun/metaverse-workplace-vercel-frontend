@@ -1,6 +1,6 @@
 import React from 'react'
 import { fromEvent } from 'rxjs'
-import { map, filter, scan } from 'rxjs/operators'
+import { map, filter, scan, auditTime } from 'rxjs/operators'
 
 import {Vector, move} from '../libs/movement'
 import { Logger } from '../libs/lib'
@@ -65,7 +65,7 @@ export default function Yoser(props) {
 
     // keyboard `keypress` event, we use keyboard to control moving actions
     const evtKeyPress = fromEvent(document, 'keypress').pipe(
-      // auditTime(50),
+      auditTime(16),
       map((e) => {
         return { evt: 'move', keyCode: e.keyCode }
       })
