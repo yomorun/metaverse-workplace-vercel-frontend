@@ -26,8 +26,6 @@ export default function Yoser(props) {
   // position of the avatar
   const [left, setLeft] = useState(0)
   const [top, setTop] = useState(0)
-  // user_id
-  const [name, setName] = useState("")
   // video
   const videoRef = useRef(null);
   const [videoState, setVideoState] = useState(false)
@@ -49,14 +47,13 @@ export default function Yoser(props) {
     // Answer server query, when other mates go online, server will ask others' states,
     // this is the response
     props.sock.on('ask', () => {
-      log.log('[ask], response as', props.name)
-      props.sock.emit('sync', {name: props.name, pos: POS})
+      log.log('[ask], response as', props.name, 'avatar:', props.avatar)
+      props.sock.emit('sync', {name: props.name, pos: POS, avatar: props.avatar })  
     })
 
     // initial websocket communication
     log.log('props.sock ->', props)
     log.log('props.sock props.name->', props.name)
-    setName(props.name)
 
     // TODO：Broadcast movement event streams to others in this game room
     const broadcastEvent = (evt) => {
@@ -138,7 +135,7 @@ export default function Yoser(props) {
 
       log.log(canvas.toDataURL('image/png'));
     })
-    .catch(error => log.error);
+    .catch(log.error);
   }
 
   return (
@@ -147,6 +144,14 @@ export default function Yoser(props) {
       position: 'absolute',
       transform: `translate3d(${left}px, ${top}px, 0)`
     }}>
+      <img src={props.avatar} width="160px" height="160px" 
+      style={{
+        width: '120px',
+        height: '120px',
+        borderRadius: '50%',
+        WebkitTransform: "scaleX(-1)",
+        transform: "scaleX(-1)",
+      }}/>
     <video 
       ref={ videoRef } 
       style={{
@@ -155,8 +160,9 @@ export default function Yoser(props) {
         borderRadius: '50%',
         WebkitTransform: "scaleX(-1)",
         transform: "scaleX(-1)",
+        display: "none",
       }}/>
-    <div style={{ fontSize:'8pt' }}>
+    <div style={{ fontSize:'8pt', display: "none" }}>
       <button onClick={ getVideo }>StartVideo</button>
       <button onClick={ stopVideo }>Stop Video</button>
       <button onClick={ capture }>Capture</button>

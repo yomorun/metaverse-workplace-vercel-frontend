@@ -2,11 +2,10 @@ import React, { useEffect, useState } from 'react'
 import Router from 'next/router'
 import dynamic from 'next/dynamic'
 import io from "socket.io-client";
-import axios from 'axios'
 import Layout from '../components/layout'
 import Sidebar from '../components/sidebar'
 import { Vector } from '../libs/movement'
-import { uuidv4, Logger } from '../libs/lib'
+import { Logger } from '../libs/lib'
 
 // init socket.io client
 const ws = io(process.env.NEXT_PUBLIC_WEBSOCKET_URL, {
@@ -20,10 +19,11 @@ const Me = dynamic(() => import('../components/me'), { ssr: false })
 const Mate = dynamic(() => import('../components/mate'), { ssr: false })
 
 const log = new Logger("Index", "color: green; background: yellow")
-const myName = uuidv4()
 
 const isDEV = process.env.NODE_ENV == "development"
 log.log("isDEV=", isDEV)
+
+let me = {}
 
 export default function Index() {
   const [logged, setLogged] = useState(false)
@@ -31,24 +31,26 @@ export default function Index() {
 
   useEffect(() => {
     const accessToken = localStorage.getItem(process.env.NEXT_PUBLIC_ACCESSTOKENKEY)
-    const user = localStorage.getItem(process.env.NEXT_PUBLIC_USERKEY)
     if (!isDEV && !accessToken) {
       Router.push('/login')
       return
     }
 
+    const u = localStorage.getItem(process.env.NEXT_PUBLIC_USERKEY)
+    me = JSON.parse(u)
     setLogged(true)
     log.log('accessToken:', accessToken)
-    log.log('user:', JSON.parse(user))
+    log.log('me:', me)
   }, [])
 
   const [mates, setMates] = useState([])
 
   useEffect(() => {
-    // `online` event will be occured when user is connected to websocket
+    log.log('me---:', me)
+      // `online` event will be occured when user is connected to websocket
     ws.on('online', mate => {
-      if(mate.name == myName) {
-        log.log('[online] is Me, ignore', myName)
+      if(mate.name == me.login) {
+        log.log('[online] is Me, ignore', me.login)
         return
       }
       mate.key = mate.name
@@ -73,9 +75,9 @@ export default function Index() {
     })
 
     ws.on('sync', state => {
-      log.log("[sync]", state, ", Me:", myName)
-      if(state.name == myName) {
-        log.log('[sync] is Me, ignore', myName)
+      log.log("[sync]", state, ", Me:", me.login)
+      if(state.name == me.login) {
+        log.log('[sync] is Me, ignore', me.login)
         return
       }
 
@@ -98,8 +100,8 @@ export default function Index() {
     // broadcast to others I am online when WebSocket connected
     ws.on('connect', () => { 
       log.log("WS CONNECTED", ws.id, ws.connected)
+      ws.emit('online', { name: me.login, avatar: me.avatar })
       setOnlineState(true)
-      ws.emit("online", {name: myName})
     })
 
     ws.on('disconnect', (reason) => { 
@@ -130,11 +132,11 @@ export default function Index() {
     <Layout>
       <Sidebar onlineState={ onlineState } count = { mates.length + 1 } />
       <section>
-        <Me sock={ws} name={myName} pos={{left:15, top:30}} />
+        <Me sock={ws} name={me.login} pos={{left:30, top:0}} avatar={me.avatar} />
         {mates.map(m => {
-          return <Mate key={m.name} sock={ws} name={m.name} pos={m.pos} />
+          return <Mate key={m.name} sock={ws} name={m.name} pos={m.pos} avatar={m.avatar} />
         })}
-        <button onClick={ disconnect } >Disconnect</button>
+        {/* <button onClick={ disconnect } >Disconnect</button> */}
       </section>
   </Layout>
   )

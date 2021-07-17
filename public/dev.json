@@ -1,1 +1,1 @@
-[{"name":"Receiver-A","host":"192.168.108.102","port":9000}, {"name":"Receiver-B","host":"192.168.108.104","port":9000}]
+[{"name":"Receiver-Local","host":"localhost","port":9000}]

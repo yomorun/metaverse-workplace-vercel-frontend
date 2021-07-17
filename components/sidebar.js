@@ -6,7 +6,7 @@ export default function Sidebar({ onlineState, count }) {
     <nav className={styles.nav}>
       {/* <input placeholder="Type name"></input> */}
       <Link href="https://github.com/yomorun/yomo" >
-        <a target="_blank" alt="YoMo Github Repository">YoMo</a>
+        <a target="_blank" alt="YoMo Github Repository">Use W/A/S/D control moving</a>
       </Link>
       <span className={ onlineState ? styles.online : styles.offline }>{ onlineState ? "Online" : "Offline" }</span>
       <span>{ count }</span>
