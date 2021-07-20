@@ -1,12 +1,16 @@
 # 客户端信令文档
 
-与 [Presence Server](https://github.com/yomorun/yomo-vhq-backend) 的交互信令文档，描述了 `控制信令` 和 `数据结构`
+>
+>  Version 2021072, cc@yomo.run
+>
+
+与 [状态同步服务 Presence Server](https://github.com/yomorun/yomo-vhq-backend) 的交互信令文档，描述了 `控制信令` 和 `数据结构`，
+`状态`是指用户的信息（用户名、头像）、状态（在线、离线、位置、位移事件）等内容。
 
 ## 技术名词
 
-- 作用：指用户的信息（用户名、头像）、状态（在线、离线、位置、位移事件）
-- Interface：`wss://x.yomo.dev`
 - 协议：目前是通过 `Socket.io` 框架（一种对 WebSocket 的封装），如果不适合 Unity，我们可以配合改成 Pure WebSocket 的方式
+- 服务器地址：`wss://x.yomo.dev`
 
 ## 本文举例场景
 
