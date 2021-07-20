@@ -5,7 +5,7 @@ const client = new jsc8({
     apiKey: process.env.C8APIKEY
 })
 
-export default async (req, res) => {
+const login = async (req, res) => {
     if (req.method === 'GET') {
         const { code } = req.query
         if (code) {
@@ -32,3 +32,5 @@ export default async (req, res) => {
         res.status(405).json({})
     }
 }
+
+export default login

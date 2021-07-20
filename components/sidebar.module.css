@@ -1,28 +1,27 @@
 .nav {
-  display: flex;
+  display        : flex;
   justify-content: flex-end;
-  flex-direction: row;
-  width: 100%;
-  border-right: 1px solid #eaeaea;
+  width          : 100%;
+  border-right   : 1px solid #eaeaea;
 }
 
-.nav > * {
-  position: relative;
-  margin: 16px 16px 16px 0;
+.nav>* {
+  position       : relative;
+  margin         : 16px 16px 16px 0;
+  padding        : 12px 16px;
+  border-radius  : 4px;
   text-decoration: none;
-  background: white;
-  border-radius: 4px;
-  font-size: 14px;
-  padding: 12px 16px;
-  text-transform: uppercase;
-  font-weight: 600;
-  letter-spacing: 0.025em;
-  color: #333;
-  border: 1px solid #eaeaea;
-  transition: all 0.125s ease;
+  background     : white;
+  font-size      : 14px;
+  font-weight    : 600;
+  letter-spacing : 0.025em;
+  color          : #333;
+  text-transform : uppercase;
+  border         : 1px solid #eaeaea;
+  transition     : all 0.125s ease;
 }
 
-.nav > a:hover {
+.nav>a:hover {
   background-color: #eaeaea;
 }
 
