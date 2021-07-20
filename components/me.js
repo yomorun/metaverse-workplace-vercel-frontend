@@ -97,7 +97,7 @@ export default function Yoser(props) {
                 transform: `translate3d(${left}px, ${top}px, 0)`
             }}
         >
-            <Webcam />
+            <Webcam cover={props.avatar} />
         </div>
     )
 }

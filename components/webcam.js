@@ -89,7 +89,7 @@ const stopAudio = () => {
     }
 }
 
-const Webcam = () => {
+const Webcam = ({ cover }) => {
     const [videoOn, setVideoOn] = useState(false)
     const [micOn, setMicOn] = useState(false)
 
@@ -142,7 +142,7 @@ const Webcam = () => {
         <div className='relative w-40 h-40 flex flex-col items-center justify-center bg-white rounded-full shadow-lg'>
             {videoOn
                 ? <video className='w-full h-full rounded-full' id='videoElementId' />
-                : <p className='w-48 text-sm text-black text-center'>Join without camera {!micOn && 'and microphone'}</p>
+                : <img className='w-full h-full rounded-full' src={cover} alt='avatar' />
             }
             <div className='absolute bottom-3 flex'>
                 <div className='cursor-pointer' onClick={toggleVideoSwitch}>
