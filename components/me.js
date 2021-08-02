@@ -1,4 +1,4 @@
-import React from 'react'
+import { useEffect, useState, memo } from 'react'
 import { fromEvent } from 'rxjs'
 import { map, filter, scan, auditTime } from 'rxjs/operators'
 
@@ -6,8 +6,6 @@ import { Vector, move } from '../libs/movement'
 import { Logger } from '../libs/lib'
 
 import Webcam from './webcam'
-
-const { useEffect, useState, useRef } = React
 
 const log = new Logger("Me", "color: white; background: green")
 
@@ -24,18 +22,18 @@ const keyPressWASD = (e) => {
     }
 }
 
-export default function Yoser(props) {
+function Yoser({ name, avatar, initPos, sock, videoTrack, audioTrack, rtcClient }) {
     // position of the avatar
     const [left, setLeft] = useState(0)
     const [top, setTop] = useState(0)
 
     useEffect(() => {
         // default position
-        const POS = new Vector(props.initPos.x || 0, props.initPos.y || 0)
+        const POS = new Vector(initPos.x || 0, initPos.y || 0)
 
         // Redraw UI
         const renderPosition = (p) => {
-            // log.info(`[${props.name}] pos: ${p.toString()}`)
+            // log.info(`[${name}] pos: ${p.toString()}`)
             setLeft(p.x)
             setTop(p.y)
         }
@@ -45,18 +43,14 @@ export default function Yoser(props) {
 
         // Answer server query, when other mates go online, server will ask others' states,
         // this is the response
-        props.sock.on('ask', () => {
-            log.log('[ask], response as', props.name, 'avatar:', props.avatar)
-            props.sock.emit('sync', { name: props.name, pos: POS, avatar: props.avatar })
+        sock.on('ask', () => {
+            log.log('[ask], response as', name, 'avatar:', avatar)
+            sock.emit('sync', { name: name, pos: POS, avatar: avatar })
         })
-
-        // initial websocket communication
-        log.log('props.sock ->', props)
-        log.log('props.sock props.name->', props.name)
 
         // TODO：Broadcast movement event streams to others in this game room
         const broadcastEvent = (evt) => {
-            props.sock.emit('movement', { dir: evt })
+            sock.emit('movement', { dir: evt })
         }
 
         // keyboard `keypress` event, we use keyboard to control moving actions
@@ -68,10 +62,10 @@ export default function Yoser(props) {
         )
 
         // ignore keys other than W/A/S/D
-        var keyPress$ = evtKeyPress.pipe(filter(keyPressWASD))
+        const keyPress$ = evtKeyPress.pipe(filter(keyPressWASD))
 
         // stream of direction changing, this will turns w/a/s/d keypress event into direction vector changing streams
-        var direction$ = keyPress$.pipe(
+        const direction$ = keyPress$.pipe(
             map(move),
             map((p) => p.dir)
         )
@@ -83,7 +77,7 @@ export default function Yoser(props) {
         direction$.subscribe(broadcastEvent)
 
         // connect to socket.io server
-        props.sock.connect()
+        sock.connect()
 
         return () => {
             log.log('[Unmount] event')
@@ -97,7 +91,17 @@ export default function Yoser(props) {
                 transform: `translate3d(${left}px, ${top}px, 0)`
             }}
         >
-            <Webcam cover={props.avatar} videoTrack={props.videoTrack} audioTrack={props.audioTrack} uid={props.uid} rtc={props.rtc} />
+            <Webcam cover={avatar} videoTrack={videoTrack} audioTrack={audioTrack} name={name} rtcClient={rtcClient} />
+            <div className='mt-2 text-base text-center text-black font-bold'>{name}</div>
         </div>
     )
 }
+
+function areEqual(prevProps, nextProps) {
+    const _prev = JSON.stringify(prevProps.name)
+    const _next = JSON.stringify(nextProps.name)
+
+    return _prev === _next
+}
+
+export default memo(Yoser, areEqual)

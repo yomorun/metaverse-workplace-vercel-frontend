@@ -23,14 +23,12 @@ export default function Container() {
     const [onlineState, setOnlineState] = useState(false)
     const [me, setMe] = useState(null)
     const [mates, setMates] = useState([])
-    const [VideoTrack, setVideoTrack] = useState(null)
-    const [AudioTrack, setAudioTrack] = useState(null)
-    const [localUid, setLocalUid] = useState(null)
+
+    const rtc = useRef(null)
+    const [videoTrack, setVideoTrack] = useState(null)
+    const [audioTrack, setAudioTrack] = useState(null)
     const [rtcJoined, setRtcJoined] = useState(false)
     const [rtcClient, setRtcClient] = useState(null)
-    const rtc = useRef(null)
-    const [remoteUsers, setRemoteUsers] = useState({})
-    const [videoNum, setVideoNum] = useState(0)
 
     useEffect(() => {
         const accessToken = localStorage.getItem(process.env.NEXT_PUBLIC_ACCESSTOKENKEY)
@@ -45,53 +43,59 @@ export default function Container() {
         if (logged) {
             const u = localStorage.getItem(process.env.NEXT_PUBLIC_USERKEY)
             const me = JSON.parse(u)
-            setLocalUid(me.login)
             setMe(me)
+
             const client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' })
             rtc.current = client
             setRtcClient(client)
+
             client.join(process.env.NEXT_PUBLIC_AGORA_APP_ID, process.env.NEXT_PUBLIC_AGORA_APP_CHANNEL, null, me.login)
                 .then(uid => {
-                    log.log('[agora-rtc]', uid)
                     AgoraRTC.createMicrophoneAndCameraTracks().then(tracks => {
                         setAudioTrack(tracks[0])
                         setVideoTrack(tracks[1])
                         setRtcJoined(true)
                     })
                 })
+
             client.on('user-published', (remoteUser, mediaType) => {
                 // remoteUser:
                 // mediaType: 'audio' | 'video'
-                console.debug(`onUserPublished ${remoteUser.uid}, mediaType= ${mediaType}`)
+                log.log('[onUserPublished]', remoteUser.uid)
                 if (mediaType === 'video') {
                     rtc.current.subscribe(remoteUser, mediaType).then(track => {
-                        remoteUsers[remoteUser.uid] = track
-                        setRemoteUsers(remoteUsers)
                         setMates(arr => {
-                            arr.every(p => {
-                                if (p.name === remoteUser.uid) {
-                                    p.track = track
+                            for (let i = 0; i < arr.length; i++) {
+                                if (arr[i].name === remoteUser.uid) {
+                                    arr[i].track = track
                                 }
-                            })
-                            return arr
+                            }
+                            return [...arr]
                         })
-                        setVideoNum(new Date().getSeconds() % 100)
                     })
                 }
+
                 if (mediaType === 'audio') {
                     rtc.current.subscribe(remoteUser, mediaType)
-                    if(remoteUser.audioTrack){
+                    if (remoteUser.audioTrack) {
                         remoteUser.audioTrack.play()
                     }
                 }
             })
-            client.on('user-unpublished',  (remoteUser, mediaType) => {
+
+            client.on('user-unpublished', (remoteUser, mediaType) => {
                 // remoteUser:
                 // mediaType: 'audio' | 'video'
-                console.debug(`onUserUnPublished ${remoteUser.uid}`)
+                log.log('[onUserUnPublished]', remoteUser.uid)
                 if (mediaType === 'video') {
-                    delete remoteUsers[remoteUser.uid]
-                    setRemoteUsers(remoteUsers)
+                    setMates(arr => {
+                        for (let i = 0; i < arr.length; i++) {
+                            if (arr[i].name === remoteUser.uid) {
+                                arr[i].track = null
+                            }
+                        }
+                        return [...arr]
+                    })
                 }
             })
         }
@@ -181,27 +185,26 @@ export default function Container() {
 
     return (
         <>
-            <Sidebar onlineState={onlineState} count={mates.length + 1} videos={videoNum} />
+            <Sidebar onlineState={onlineState} count={mates.length + 1} />
             <section>
                 {mates.map(m => (
                     <Mate
                         key={m.name}
-                        sock={ws}
                         name={m.name}
-                        pos={m.pos}
                         avatar={m.avatar}
+                        pos={m.pos}
+                        sock={ws}
                         track={m.track}
                     />
                 ))}
                 <Me
-                    sock={ws}
                     name={me.login}
                     avatar={me.avatar}
                     initPos={{ x: 30, y: 0 }}
-                    audioTrack={AudioTrack}
-                    videoTrack={VideoTrack}
-                    uid={localUid}
-                    rtc={rtcClient}
+                    sock={ws}
+                    audioTrack={audioTrack}
+                    videoTrack={videoTrack}
+                    rtcClient={rtcClient}
                 />
             </section>
         </>

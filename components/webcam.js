@@ -1,28 +1,28 @@
 import { useState, useEffect, useCallback, memo } from 'react'
 import cn from 'classnames'
 
-const Webcam = ({ cover, videoTrack, audioTrack, uid, rtc }) => {
+const Webcam = ({ cover, videoTrack, audioTrack, name, rtcClient }) => {
     const [videoOn, setVideoOn] = useState(false)
     const [micOn, setMicOn] = useState(false)
 
     useEffect(() => {
-        if (videoTrack != null) {
+        if (videoTrack) {
             if (!videoOn) {
                 videoTrack.stop()
-                rtc.unpublish(videoTrack)
+                rtcClient.unpublish(videoTrack)
             } else {
-                videoTrack.play(`stream-player-${uid}`)
-                rtc.publish(videoTrack)
+                videoTrack.play(`stream-player-${name}`)
+                rtcClient.publish(videoTrack)
             }
         }
     }, [videoOn, videoTrack])
 
     useEffect(() => {
-        if (audioTrack != null) {
+        if (audioTrack) {
             if (!micOn) {
-                rtc.unpublish(audioTrack)
+                rtcClient.unpublish(audioTrack)
             } else {
-                rtc.publish(audioTrack)
+                rtcClient.publish(audioTrack)
             }
         }
     }, [micOn, audioTrack])
@@ -36,13 +36,9 @@ const Webcam = ({ cover, videoTrack, audioTrack, uid, rtc }) => {
     }, [micOn])
 
     return (
-        <div
-            className='relative w-40 h-40 flex flex-col items-center justify-center bg-white shadow-lg'>
-            <div className='w-full h-full' id={`stream-player-${uid}`}>
+        <div className='relative w-40 h-40 flex flex-col items-center justify-center bg-white rounded-full overflow-hidden shadow-lg'>
+            <div className='w-full h-full' id={`stream-player-${name}`}>
                 {!videoOn && <img className='w-full h-full' src={cover} alt='avatar' />}
-            </div>
-            <div className='absolute top-0 flex items-start justify-start'>
-                <span className='text-sm text-white'>{uid}</span>
             </div>
             <div className='absolute bottom-3 flex'>
                 <div className='cursor-pointer' onClick={toggleVideoSwitch}>

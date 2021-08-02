@@ -1,23 +1,20 @@
-import React from 'react'
+import { useEffect, useState } from 'react'
 import { Observable } from 'rxjs'
 import { scan } from 'rxjs/operators'
 
 import { Vector, move } from '../libs/movement'
 import { Logger } from '../libs/lib'
 
-const { useEffect, useState } = React
-
-export default function Mate(props) {
+export default function Mate({ name, avatar, pos, sock, track }) {
     // position of the avatar
     const [left, setLeft] = useState(0)
     const [top, setTop] = useState(0)
-    // user_id
-    const [name, setName] = useState('')
-    const log = new Logger(`Mate:${props.name}`, 'color: white; background: orange')
+
+    const log = new Logger(`Mate:${name}`, 'color: white; background: orange')
 
     useEffect(() => {
         // default position
-        const POS = new Vector(props.pos.x || 0, props.pos.y || 0)
+        const POS = new Vector(pos.x || 0, pos.y || 0)
 
         // Redraw UI
         const renderPosition = (p) => {
@@ -28,18 +25,12 @@ export default function Mate(props) {
         // initial position
         renderPosition(POS)
 
-        // set name
-        setName(props.name)
-
         const direction$ = new Observable(obs => {
-            props.sock.on('movement', mv => {
-                if (mv.name != props.name) {
+            sock.on('movement', mv => {
+                if (mv.name != name) {
                     return
                 }
                 obs.next(mv.dir)
-
-                return function() {
-                }
             })
         })
 
@@ -52,10 +43,10 @@ export default function Mate(props) {
     }, [])
 
     useEffect(() => {
-        if (props.track != null) {
-            props.track.play(`stream-player-${props.name}`)
+        if (track) {
+            track.play(`stream-player-${name}`)
         }
-    }, [props.track])
+    }, [track])
 
     return (
         <div
@@ -64,20 +55,14 @@ export default function Mate(props) {
                 transform: `translate3d(${left}px, ${top}px, 0)`
             }}
         >
-            <div className='w-32 h-32 shadow-lg'>
+            <div className='w-32 h-32 rounded-full overflow-hidden shadow-lg'>
                 {
-                    props.track ?
-                        <div id={`stream-player-${props.name}`} className='w-full h-full'>
-
-                        </div>
-                        :
-                        <img
-                            className='w-full h-full'
-                            src={props.avatar}
-                        />
+                    track
+                        ? <div id={`stream-player-${name}`} className='w-full h-full' />
+                        : <img className='w-full h-full' src={avatar} />
                 }
             </div>
-            <div className='mt-2 text-sm text-center'>{name}</div>
+            <div className='mt-2 text-base text-center text-black font-bold'>{name}</div>
         </div>
     )
 }
