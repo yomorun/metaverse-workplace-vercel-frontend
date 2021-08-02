@@ -2,9 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer utilities {
-  
-}
+@layer utilities {}
 
 #__next {
   display       : flex;
@@ -13,9 +11,11 @@
 }
 
 body {
-  margin     : 0;
-  font-size  : 24px;
-  font-family: 'Exo 2';
+  margin         : 0;
+  font-size      : 24px;
+  font-family    : 'Exo 2';
+  background     : url('/background.png') no-repeat center center;
+  background-size: cover;
 }
 
 button,
@@ -25,6 +25,6 @@ input {
 
 .video {
   display: block;
-  width: 640px;
-  height: 480px;
+  width  : 640px;
+  height : 480px;
 }

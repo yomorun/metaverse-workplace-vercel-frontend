@@ -6,7 +6,6 @@ class MyDocument extends Document {
         return (
             <Html lang='en'>
                 <Head>
-                    <meta name="viewport" content="width=device-width" />
                     <meta name="description" content="Open-source Virtual HQ with YoMo and other Geo-distributed System Tech Stacks." />
                     <meta name="twitter:image:src" content="https://blog.yomo.run/static/images/logo.png" />
                     <meta name="twitter:site" content="@yomohq" />

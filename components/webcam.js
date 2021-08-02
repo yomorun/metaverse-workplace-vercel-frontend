@@ -1,93 +1,5 @@
-import { useState, useCallback, memo, useMemo, useEffect } from 'react'
+import { useState, useEffect, useCallback, memo } from 'react'
 import cn from 'classnames'
-import { Logger } from '../libs/lib'
-
-const log = new Logger('Me', 'color: white; background: green')
-
-const getUserMedia = (constraints) => {
-    if (!navigator.mediaDevices) {
-        navigator.mediaDevices = {}
-    }
-
-    if (!navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia = constraints => {
-            const getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia
-
-            if (!getUserMedia) {
-                return Promise.reject(new Error('getUserMedia is not implemented in this browser'))
-            }
-
-            return new Promise((resolve, reject) => {
-                getUserMedia.call(navigator, constraints, resolve, reject)
-            })
-        }
-    }
-
-    return navigator.mediaDevices.getUserMedia(constraints)
-}
-
-const getVideoMedia = (videoElementId) => {
-    const constraints = {
-        video: { width: 256, height: 256 }
-    }
-
-    const promise = getUserMedia(constraints)
-
-    return new Promise((resolve, reject) => {
-        promise.then(stream => {
-            const video = document.getElementById(videoElementId)
-            if (video) {
-                if ('srcObject' in video) {
-                    video.srcObject = stream
-                } else {
-                    video.src = window.URL.createObjectURL(stream)
-                }
-
-                video.onloadedmetadata = e => {
-                    video.play()
-                }
-            }
-
-            window.videoStream = stream
-            resolve(stream)
-        }).catch(err => {
-            console.error(err.name + ': ' + err.message)
-            reject(err)
-        })
-    })
-}
-
-const getAudioMedia = () => {
-    const constraints = {
-        audio: true
-    }
-
-    const promise = getUserMedia(constraints)
-
-    return new Promise((resolve, reject) => {
-        promise.then(stream => {
-            window.audioStream = stream
-            resolve(stream)
-        }).catch(err => {
-            console.error(err.name + ': ' + err.message)
-            reject(err)
-        })
-    })
-}
-
-const stopVideo = () => {
-    if (window.videoStream) {
-        const track = window.videoStream.getVideoTracks()[0]
-        track.stop()
-    }
-}
-
-const stopAudio = () => {
-    if (window.audioStream) {
-        const track = window.audioStream.getAudioTracks()[0]
-        track.stop()
-    }
-}
 
 const Webcam = ({ cover, videoTrack, audioTrack, uid, rtc }) => {
     const [videoOn, setVideoOn] = useState(false)
@@ -123,43 +35,15 @@ const Webcam = ({ cover, videoTrack, audioTrack, uid, rtc }) => {
         setMicOn(!micOn)
     }, [micOn])
 
-    const capture = useCallback(e => {
-        if (!window.videoStream) {
-            return
-        }
-
-        const track = window.videoStream.getVideoTracks()[0]
-        const imageCapture = new ImageCapture(track)
-
-        imageCapture.grabFrame()
-            .then(imageBitmap => {
-                log.log(imageBitmap)
-                var canvas = document.createElement('canvas')
-                canvas.width = 160
-                canvas.height = 160
-                canvas.getContext('2d').drawImage(imageBitmap, 0, 0, 160, 160)
-
-                log.log(canvas.toDataURL('image/png'))
-            })
-            .catch(log.error)
-    }, [])
-
     return (
         <div
             className='relative w-40 h-40 flex flex-col items-center justify-center bg-white shadow-lg'>
             <div className='w-full h-full' id={`stream-player-${uid}`}>
-                {!videoOn &&
-                <img className='w-full h-full' src={cover} alt='avatar' />
-                }
+                {!videoOn && <img className='w-full h-full' src={cover} alt='avatar' />}
             </div>
             <div className='absolute top-0 flex items-start justify-start'>
-                <div>
-                    <span className="text-sm text-white">
-                    {uid}
-                    </span>
-                </div>
+                <span className='text-sm text-white'>{uid}</span>
             </div>
-
             <div className='absolute bottom-3 flex'>
                 <div className='cursor-pointer' onClick={toggleVideoSwitch}>
                     <svg

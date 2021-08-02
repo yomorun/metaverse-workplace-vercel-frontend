@@ -1,6 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Router from 'next/router'
-import Head from 'next/head'
 import io from 'socket.io-client'
 import Sidebar from '../components/sidebar'
 import { Vector } from '../libs/movement'
@@ -53,7 +52,7 @@ export default function Container() {
             setRtcClient(client)
             client.join(process.env.NEXT_PUBLIC_AGORA_APP_ID, process.env.NEXT_PUBLIC_AGORA_APP_CHANNEL, null, me.login)
                 .then(uid => {
-                    console.log('join  ok! ' + uid)
+                    log.log('[agora-rtc]', uid)
                     AgoraRTC.createMicrophoneAndCameraTracks().then(tracks => {
                         setAudioTrack(tracks[0])
                         setVideoTrack(tracks[1])
@@ -62,7 +61,7 @@ export default function Container() {
                 })
             client.on('user-published', (remoteUser, mediaType) => {
                 // remoteUser:
-                // mediaType: "audio" | "video"
+                // mediaType: 'audio' | 'video'
                 console.debug(`onUserPublished ${remoteUser.uid}, mediaType= ${mediaType}`)
                 if (mediaType === 'video') {
                     rtc.current.subscribe(remoteUser, mediaType).then(track => {
@@ -88,7 +87,7 @@ export default function Container() {
             })
             client.on('user-unpublished',  (remoteUser, mediaType) => {
                 // remoteUser:
-                // mediaType: "audio" | "video"
+                // mediaType: 'audio' | 'video'
                 console.debug(`onUserUnPublished ${remoteUser.uid}`)
                 if (mediaType === 'video') {
                     delete remoteUsers[remoteUser.uid]
@@ -182,9 +181,6 @@ export default function Container() {
 
     return (
         <>
-            <Head>
-                <title>Open-source Virtual HQ with Geo-distributed System Tech Stacks</title>
-            </Head>
             <Sidebar onlineState={onlineState} count={mates.length + 1} videos={videoNum} />
             <section>
                 {mates.map(m => (
