@@ -38,7 +38,7 @@ export default function Mate(props) {
                 }
                 obs.next(mv.dir)
 
-                return function () {
+                return function() {
                 }
             })
         })
@@ -51,17 +51,32 @@ export default function Mate(props) {
         }
     }, [])
 
+    useEffect(() => {
+        if (props.track != null) {
+            props.track.play(`stream-player-${props.name}`)
+        }
+    }, [props.track])
+
     return (
         <div
             className='absolute'
             style={{
-                transform: `translate3d(${left}px, ${top}px, 0)`,
+                transform: `translate3d(${left}px, ${top}px, 0)`
             }}
         >
-            <img
-                className='w-32 h-32 rounded-full shadow-lg'
-                src={props.avatar}
-            />
+            <div className='w-32 h-32 shadow-lg'>
+                {
+                    props.track ?
+                        <div id={`stream-player-${props.name}`} className='w-full h-full'>
+
+                        </div>
+                        :
+                        <img
+                            className='w-full h-full'
+                            src={props.avatar}
+                        />
+                }
+            </div>
             <div className='mt-2 text-sm text-center'>{name}</div>
         </div>
     )

@@ -22,3 +22,9 @@ button,
 input {
   font-family: 'Exo 2';
 }
+
+.video {
+  display: block;
+  width: 640px;
+  height: 480px;
+}

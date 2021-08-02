@@ -1,4 +1,4 @@
-import { useState, useCallback, memo } from 'react'
+import { useState, useCallback, memo, useMemo, useEffect } from 'react'
 import cn from 'classnames'
 import { Logger } from '../libs/lib'
 
@@ -89,37 +89,43 @@ const stopAudio = () => {
     }
 }
 
-const Webcam = ({ cover }) => {
+const Webcam = ({ cover, videoTrack, audioTrack, uid, rtc }) => {
     const [videoOn, setVideoOn] = useState(false)
     const [micOn, setMicOn] = useState(false)
 
-    const toggleVideoSwitch = useCallback(e => {
-        if (videoOn) {
-            stopVideo()
-        } else {
-            getVideoMedia('videoElementId').then(stream => {
-
-            })
+    useEffect(() => {
+        if (videoTrack != null) {
+            if (!videoOn) {
+                videoTrack.stop()
+                rtc.unpublish(videoTrack)
+            } else {
+                videoTrack.play(`stream-player-${uid}`)
+                rtc.publish(videoTrack)
+            }
         }
+    }, [videoOn, videoTrack])
 
+    useEffect(() => {
+        if (audioTrack != null) {
+            if (!micOn) {
+                rtc.unpublish(audioTrack)
+            } else {
+                rtc.publish(audioTrack)
+            }
+        }
+    }, [micOn, audioTrack])
+
+    const toggleVideoSwitch = useCallback(e => {
         setVideoOn(!videoOn)
     }, [videoOn])
 
     const toggleMicSwitch = useCallback(e => {
-        if (micOn) {
-            stopAudio()
-        } else {
-            getAudioMedia().then(stream => {
-
-            })
-        }
-
         setMicOn(!micOn)
     }, [micOn])
 
     const capture = useCallback(e => {
         if (!window.videoStream) {
-           return
+            return
         }
 
         const track = window.videoStream.getVideoTracks()[0]
@@ -139,11 +145,21 @@ const Webcam = ({ cover }) => {
     }, [])
 
     return (
-        <div className='relative w-40 h-40 flex flex-col items-center justify-center bg-white rounded-full shadow-lg'>
-            {videoOn
-                ? <video className='w-full h-full rounded-full' id='videoElementId' />
-                : <img className='w-full h-full rounded-full' src={cover} alt='avatar' />
-            }
+        <div
+            className='relative w-40 h-40 flex flex-col items-center justify-center bg-white shadow-lg'>
+            <div className='w-full h-full' id={`stream-player-${uid}`}>
+                {!videoOn &&
+                <img className='w-full h-full' src={cover} alt='avatar' />
+                }
+            </div>
+            <div className='absolute top-0 flex items-start justify-start'>
+                <div>
+                    <span className="text-sm text-white">
+                    {uid}
+                    </span>
+                </div>
+            </div>
+
             <div className='absolute bottom-3 flex'>
                 <div className='cursor-pointer' onClick={toggleVideoSwitch}>
                     <svg
@@ -187,16 +203,27 @@ const Webcam = ({ cover }) => {
                         {
                             micOn ? (
                                 <>
-                                    <path stroke='currentColor' strokeLinecap='round' strokeLinejoin='round' strokeWidth='1.5' d='M8.75 8C8.75 6.20507 10.2051 4.75 12 4.75C13.7949 4.75 15.25 6.20507 15.25 8V11C15.25 12.7949 13.7949 14.25 12 14.25C10.2051 14.25 8.75 12.7949 8.75 11V8Z' />
-                                    <path stroke='currentColor' strokeLinecap='round' strokeLinejoin='round' strokeWidth='1.5' d='M5.75 12.75C5.75 12.75 6 17.25 12 17.25C18 17.25 18.25 12.75 18.25 12.75' />
-                                    <path stroke='currentColor' strokeLinecap='round' strokeLinejoin='round' strokeWidth='1.5' d='M12 17.75V19.25' />
+                                    <path stroke='currentColor' strokeLinecap='round' strokeLinejoin='round'
+                                          strokeWidth='1.5'
+                                          d='M8.75 8C8.75 6.20507 10.2051 4.75 12 4.75C13.7949 4.75 15.25 6.20507 15.25 8V11C15.25 12.7949 13.7949 14.25 12 14.25C10.2051 14.25 8.75 12.7949 8.75 11V8Z' />
+                                    <path stroke='currentColor' strokeLinecap='round' strokeLinejoin='round'
+                                          strokeWidth='1.5'
+                                          d='M5.75 12.75C5.75 12.75 6 17.25 12 17.25C18 17.25 18.25 12.75 18.25 12.75' />
+                                    <path stroke='currentColor' strokeLinecap='round' strokeLinejoin='round'
+                                          strokeWidth='1.5' d='M12 17.75V19.25' />
                                 </>
                             ) : (
                                 <>
-                                    <path stroke='currentColor' strokeLinecap='round' strokeLinejoin='round' strokeWidth='1.5' d='M15.25 8.5V8C15.25 6.20507 13.7949 4.75 12 4.75C10.2051 4.75 8.75 6.20507 8.75 8V11.1802C8.75 11.2267 8.7507 11.2721 8.75373 11.3185C8.77848 11.6975 8.95343 13.5309 10.0312 13.7969' />
-                                    <path stroke='currentColor' strokeLinecap='round' strokeLinejoin='round' strokeWidth='1.5' d='M18.25 12.75C18.25 12.75 18 17.25 12 17.25C11.6576 17.25 11.334 17.2353 11.028 17.2077M5.75 12.75C5.75 12.75 5.85507 14.6412 7.56374 15.9716' />
-                                    <path stroke='currentColor' strokeLinecap='round' strokeLinejoin='round' strokeWidth='1.5' d='M12 17.75V19.25' />
-                                    <path stroke='currentColor' strokeLinecap='round' strokeLinejoin='round' strokeWidth='1.5' d='M18.25 5.75L5.75 18.25' />
+                                    <path stroke='currentColor' strokeLinecap='round' strokeLinejoin='round'
+                                          strokeWidth='1.5'
+                                          d='M15.25 8.5V8C15.25 6.20507 13.7949 4.75 12 4.75C10.2051 4.75 8.75 6.20507 8.75 8V11.1802C8.75 11.2267 8.7507 11.2721 8.75373 11.3185C8.77848 11.6975 8.95343 13.5309 10.0312 13.7969' />
+                                    <path stroke='currentColor' strokeLinecap='round' strokeLinejoin='round'
+                                          strokeWidth='1.5'
+                                          d='M18.25 12.75C18.25 12.75 18 17.25 12 17.25C11.6576 17.25 11.334 17.2353 11.028 17.2077M5.75 12.75C5.75 12.75 5.85507 14.6412 7.56374 15.9716' />
+                                    <path stroke='currentColor' strokeLinecap='round' strokeLinejoin='round'
+                                          strokeWidth='1.5' d='M12 17.75V19.25' />
+                                    <path stroke='currentColor' strokeLinecap='round' strokeLinejoin='round'
+                                          strokeWidth='1.5' d='M18.25 5.75L5.75 18.25' />
                                 </>
                             )
                         }

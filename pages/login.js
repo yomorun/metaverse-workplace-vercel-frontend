@@ -76,7 +76,7 @@ export default function Login() {
     const handleDevLogin = useCallback(e => {
         localStorage.setItem(process.env.NEXT_PUBLIC_ACCESSTOKENKEY, 'token')
         localStorage.setItem(process.env.NEXT_PUBLIC_USERKEY, JSON.stringify({
-            login: 'xile',
+            login: 'xile' + new Date().getSeconds() % 9,
             avatar: './xilelogo.png',
         }))
         Router.push('/')
