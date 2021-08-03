@@ -11,9 +11,9 @@ const Guide = () => {
                     target='_blank'
                     rel='noreferrer'
                 >
-                    Edge-Mesh-Arch
+                    Geo-distributed
                 </a>&nbsp;
-                <span>online office, use [W/A/S/D] to control movement.</span>&nbsp;
+                <span>Virtual HQ, use [W/A/S/D] to control movement.</span>&nbsp;
                 (<a
                     className='text-blue-900 hover-text-gray'
                     href='https://github.com/yomorun/yomo-vhq-nextjs'
