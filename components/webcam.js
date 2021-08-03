@@ -1,43 +1,90 @@
-import { useState, useEffect, useCallback, memo } from 'react'
+import { useState, useEffect, useCallback, useRef, memo } from 'react'
+import AgoraRTC from 'agora-rtc-sdk-ng'
 import cn from 'classnames'
+import Spin from './spin'
 
-const Webcam = ({ cover, videoTrack, audioTrack, name, rtcClient }) => {
+let rtcClient
+let videoTrack
+let audioTrack
+
+const Webcam = ({ cover, name, rtcJoinedCallback }) => {
     const [videoOn, setVideoOn] = useState(false)
     const [micOn, setMicOn] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
-        if (videoTrack) {
-            if (!videoOn) {
-                videoTrack.stop()
-                rtcClient.unpublish(videoTrack)
-            } else {
-                videoTrack.play(`stream-player-${name}`)
-                rtcClient.publish(videoTrack)
-            }
-        }
-    }, [videoOn, videoTrack])
+        rtcClient = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' })
 
-    useEffect(() => {
-        if (audioTrack) {
-            if (!micOn) {
-                rtcClient.unpublish(audioTrack)
-            } else {
-                rtcClient.publish(audioTrack)
-            }
+        rtcClient.join(
+            process.env.NEXT_PUBLIC_AGORA_APP_ID,
+            process.env.NEXT_PUBLIC_AGORA_APP_CHANNEL,
+            null, name
+        ).then(uid => {
+            rtcJoinedCallback && rtcJoinedCallback(rtcClient)
+        })
+
+        return () => {
+            rtcClient.leave()
         }
-    }, [micOn, audioTrack])
+    }, [])
 
     const toggleVideoSwitch = useCallback(e => {
-        setVideoOn(!videoOn)
+        const _videoOn = !videoOn
+        setVideoOn(_videoOn)
+
+        if (_videoOn) {
+            setLoading(true)
+            AgoraRTC.createCameraVideoTrack().then(track => {
+                videoTrack = track
+
+                // Plays a local video track on the web page.
+                videoTrack.play(`stream-player-${name}`)
+
+                // Publishes a Local Stream
+                rtcClient.publish(videoTrack)
+
+                setLoading(false)
+            })
+        } else {
+            if (videoTrack) {
+                // Unpublishes the Local Stream.
+                rtcClient.unpublish(videoTrack)
+
+                // Stops playing the media track.
+                videoTrack.stop()
+
+                // Closes a local track and releases the video resources that it occupies.
+                // Once you close a local track, you can no longer reuse it.
+                videoTrack.close()
+
+                videoTrack = null
+            }
+        }
     }, [videoOn])
 
     const toggleMicSwitch = useCallback(e => {
-        setMicOn(!micOn)
+        const _micOn = !micOn
+        setMicOn(_micOn)
+
+        if (audioTrack) {
+            if (_micOn) {
+                rtcClient.publish(audioTrack)
+            } else {
+                rtcClient.unpublish(audioTrack)
+                audioTrack.close()
+                audioTrack = null
+            }
+        } else {
+            AgoraRTC.createMicrophoneAudioTrack().then(track => {
+                audioTrack = track
+                rtcClient.publish(audioTrack)
+            })
+        }
     }, [micOn])
 
     return (
         <div className='relative w-40 h-40 flex flex-col items-center'>
-            <div id={`stream-player-${name}`} className='w-full h-full rounded-full overflow-hidden transform translate-0 shadow-lg'>
+            <div id={`stream-player-${name}`} className='w-full h-full rounded-full overflow-hidden transform translate-0 shadow-lg bg-white'>
                 {!videoOn && <img className='w-full h-full' src={cover} alt='avatar' />}
             </div>
             <div className='absolute bottom-3 flex'>
@@ -110,6 +157,12 @@ const Webcam = ({ cover, videoTrack, audioTrack, name, rtcClient }) => {
                     </svg>
                 </div>
             </div>
+            {loading &&
+                <div className='absolute w-full h-full flex justify-center items-center'>
+                    <Spin />
+                    <span className='ml-2 text-base text-black'>loading...</span>
+                </div>
+            }
         </div>
     )
 }

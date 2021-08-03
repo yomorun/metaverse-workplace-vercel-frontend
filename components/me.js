@@ -22,7 +22,7 @@ const keyPressWASD = (e) => {
     }
 }
 
-function Yoser({ name, avatar, initPos, sock, videoTrack, audioTrack, rtcClient }) {
+function Me({ name, avatar, initPos, sock, rtcJoinedCallback }) {
     // position of the avatar
     const [left, setLeft] = useState(0)
     const [top, setTop] = useState(0)
@@ -91,8 +91,8 @@ function Yoser({ name, avatar, initPos, sock, videoTrack, audioTrack, rtcClient 
                 transform: `translate3d(${left}px, ${top}px, 0)`
             }}
         >
-            <Webcam cover={avatar} videoTrack={videoTrack} audioTrack={audioTrack} name={name} rtcClient={rtcClient} />
-            <div className='mt-2 text-base text-center text-black font-bold'>{name}</div>
+            <Webcam cover={avatar} name={name} rtcJoinedCallback={rtcJoinedCallback} />
+            <div className='mt-2 text-base text-center text-white font-bold'>{name}</div>
         </div>
     )
 }
@@ -104,4 +104,4 @@ function areEqual(prevProps, nextProps) {
     return _prev === _next
 }
 
-export default memo(Yoser, areEqual)
+export default memo(Me, areEqual)

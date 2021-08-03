@@ -5,7 +5,7 @@ import Guide from '../components/guide'
 const DynamicComponentWithNoSSR = dynamic(
     () => import('../components/container'),
     { ssr: false }
-);
+)
 
 export default function Home() {
     return (

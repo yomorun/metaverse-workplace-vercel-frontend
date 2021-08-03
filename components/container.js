@@ -6,7 +6,6 @@ import { Vector } from '../libs/movement'
 import { Logger } from '../libs/lib'
 import Me from './me'
 import Mate from './mate'
-import AgoraRTC, { IAgoraRTCClient } from 'agora-rtc-sdk-ng'
 
 // init socket.io client
 const ws = io(process.env.NEXT_PUBLIC_WEBSOCKET_URL, {
@@ -24,12 +23,6 @@ export default function Container() {
     const [me, setMe] = useState(null)
     const [mates, setMates] = useState([])
 
-    const rtc = useRef(null)
-    const [videoTrack, setVideoTrack] = useState(null)
-    const [audioTrack, setAudioTrack] = useState(null)
-    const [rtcJoined, setRtcJoined] = useState(false)
-    const [rtcClient, setRtcClient] = useState(null)
-
     useEffect(() => {
         const accessToken = localStorage.getItem(process.env.NEXT_PUBLIC_ACCESSTOKENKEY)
         if (!accessToken) {
@@ -44,66 +37,6 @@ export default function Container() {
             const u = localStorage.getItem(process.env.NEXT_PUBLIC_USERKEY)
             const me = JSON.parse(u)
             setMe(me)
-
-            const client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' })
-            rtc.current = client
-            setRtcClient(client)
-
-            client.join(process.env.NEXT_PUBLIC_AGORA_APP_ID, process.env.NEXT_PUBLIC_AGORA_APP_CHANNEL, null, me.login)
-                .then(uid => {
-                    AgoraRTC.createMicrophoneAndCameraTracks().then(tracks => {
-                        setAudioTrack(tracks[0])
-                        setVideoTrack(tracks[1])
-                        setRtcJoined(true)
-                    })
-                })
-
-            client.on('user-published', (remoteUser, mediaType) => {
-                // remoteUser:
-                // mediaType: 'audio' | 'video'
-                log.log('[onUserPublished]', remoteUser.uid)
-                if (mediaType === 'video') {
-                    rtc.current.subscribe(remoteUser, mediaType).then(track => {
-                        setMates(arr => {
-                            for (let i = 0; i < arr.length; i++) {
-                                if (arr[i].name === remoteUser.uid) {
-                                    arr[i].track = track
-                                }
-                            }
-                            return [...arr]
-                        })
-                    })
-                }
-
-                if (mediaType === 'audio') {
-                    rtc.current.subscribe(remoteUser, mediaType)
-                    if (remoteUser.audioTrack) {
-                        remoteUser.audioTrack.play()
-                    }
-                }
-            })
-
-            client.on('user-unpublished', (remoteUser, mediaType) => {
-                // remoteUser:
-                // mediaType: 'audio' | 'video'
-                log.log('[onUserUnPublished]', remoteUser.uid)
-                if (mediaType === 'video') {
-                    setMates(arr => {
-                        for (let i = 0; i < arr.length; i++) {
-                            if (arr[i].name === remoteUser.uid) {
-                                arr[i].track = null
-                            }
-                        }
-                        return [...arr]
-                    })
-                }
-            })
-        }
-    }, [logged])
-
-    useEffect(() => {
-        if (logged && rtcJoined) {
-
             log.log('me: ', me)
 
             // `online` event will be occured when user is connected to websocket
@@ -177,9 +110,52 @@ export default function Container() {
                 ws.disconnect('bye')
             }
         }
-    }, [logged, rtcJoined])
+    }, [logged])
 
-    if (!me || !rtcJoined) {
+    const rtcJoinedCallback = useCallback(rtcClient => {
+        rtcClient.on('user-published', (remoteUser, mediaType) => {
+            // remoteUser:
+            // mediaType: 'audio' | 'video'
+            log.log('[onUserPublished]', remoteUser.uid)
+            if (mediaType === 'video') {
+                rtcClient.subscribe(remoteUser, mediaType).then(track => {
+                    setMates(arr => {
+                        for (let i = 0; i < arr.length; i++) {
+                            if (arr[i].name === remoteUser.uid) {
+                                arr[i].track = track
+                            }
+                        }
+                        return [...arr]
+                    })
+                })
+            }
+
+            if (mediaType === 'audio') {
+                rtcClient.subscribe(remoteUser, mediaType)
+                if (remoteUser.audioTrack) {
+                    remoteUser.audioTrack.play()
+                }
+            }
+        })
+
+        rtcClient.on('user-unpublished', (remoteUser, mediaType) => {
+            // remoteUser:
+            // mediaType: 'audio' | 'video'
+            log.log('[onUserUnPublished]', remoteUser.uid)
+            if (mediaType === 'video') {
+                setMates(arr => {
+                    for (let i = 0; i < arr.length; i++) {
+                        if (arr[i].name === remoteUser.uid) {
+                            arr[i].track = null
+                        }
+                    }
+                    return [...arr]
+                })
+            }
+        })
+    }, [])
+
+    if (!me) {
         return null
     }
 
@@ -202,9 +178,7 @@ export default function Container() {
                     avatar={me.avatar}
                     initPos={{ x: 30, y: 0 }}
                     sock={ws}
-                    audioTrack={audioTrack}
-                    videoTrack={videoTrack}
-                    rtcClient={rtcClient}
+                    rtcJoinedCallback={rtcJoinedCallback}
                 />
             </section>
         </>

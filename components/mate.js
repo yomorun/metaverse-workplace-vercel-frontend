@@ -60,7 +60,7 @@ export default function Mate({ name, avatar, pos, sock, track }) {
                     {!track && <img className='w-full h-full' src={avatar} />}
                 </div>
             </div>
-            <div className='mt-2 text-base text-center text-black font-bold'>{name}</div>
+            <div className='mt-2 text-base text-center text-white font-bold'>{name}</div>
         </div>
     )
 }
