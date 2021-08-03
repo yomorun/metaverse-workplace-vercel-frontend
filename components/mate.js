@@ -55,12 +55,10 @@ export default function Mate({ name, avatar, pos, sock, track }) {
                 transform: `translate3d(${left}px, ${top}px, 0)`
             }}
         >
-            <div className='w-32 h-32 rounded-full overflow-hidden shadow-lg'>
-                {
-                    track
-                        ? <div id={`stream-player-${name}`} className='w-full h-full' />
-                        : <img className='w-full h-full' src={avatar} />
-                }
+            <div className='w-40 h-40 rounded-full overflow-hidden transform translate-0 shadow-lg'>
+                <div id={`stream-player-${name}`} className='w-full h-full'>
+                    {!track && <img className='w-full h-full' src={avatar} />}
+                </div>
             </div>
             <div className='mt-2 text-base text-center text-black font-bold'>{name}</div>
         </div>
