@@ -11,7 +11,7 @@ const Guide = () => {
                     target='_blank'
                     rel='noreferrer'
                 >
-                    Geo-distributed
+                    Geo-distributed architecture 
                 </a>&nbsp;
                 <span>Virtual HQ, use [W/A/S/D] to control movement.</span>&nbsp;
                 (<a
