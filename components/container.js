@@ -131,10 +131,9 @@ export default function Container() {
             }
 
             if (mediaType === 'audio') {
-                rtcClient.subscribe(remoteUser, mediaType)
-                if (remoteUser.audioTrack) {
-                    remoteUser.audioTrack.play()
-                }
+                rtcClient.subscribe(remoteUser, mediaType).then(track => {
+                    track.play()
+                })
             }
         })
 

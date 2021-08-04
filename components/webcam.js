@@ -66,19 +66,17 @@ const Webcam = ({ cover, name, rtcJoinedCallback }) => {
         const _micOn = !micOn
         setMicOn(_micOn)
 
-        if (audioTrack) {
-            if (_micOn) {
-                rtcClient.publish(audioTrack)
-            } else {
-                rtcClient.unpublish(audioTrack)
-                audioTrack.close()
-                audioTrack = null
-            }
-        } else {
+        if (_micOn) {
             AgoraRTC.createMicrophoneAudioTrack().then(track => {
                 audioTrack = track
                 rtcClient.publish(audioTrack)
             })
+        } else {
+            if (audioTrack) {
+                rtcClient.unpublish(audioTrack)
+                audioTrack.close()
+                audioTrack = null
+            }
         }
     }, [micOn])
 
