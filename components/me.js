@@ -98,10 +98,7 @@ function Me({ name, avatar, initPos, sock, rtcJoinedCallback }) {
 }
 
 function areEqual(prevProps, nextProps) {
-    const _prev = JSON.stringify(prevProps.name)
-    const _next = JSON.stringify(nextProps.name)
-
-    return _prev === _next
+    return prevProps.name === nextProps.name
 }
 
 export default memo(Me, areEqual)
