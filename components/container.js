@@ -11,7 +11,7 @@ import Mate from './mate'
 const ws = io(process.env.NEXT_PUBLIC_WEBSOCKET_URL, {
     reconnectionDelayMax: 10000,
     transports: ['websocket'],
-    reconnection: false,
+    reconnection: true,
     autoConnect: false
 })
 
