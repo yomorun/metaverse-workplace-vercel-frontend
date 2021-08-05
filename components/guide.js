@@ -6,16 +6,16 @@ const Guide = () => {
             <p className='py-2 px-5 text-sm text-gray-900'>
                 <span>Build a</span>&nbsp;
                 <a
-                    className='text-blue-900'
+                    className='text-blue-500 hover:text-blue-900'
                     href='https://github.com/yomorun/yomo'
                     target='_blank'
                     rel='noreferrer'
                 >
                     Geo-distributed architecture
                 </a>&nbsp;
-                <span>Virtual HQ, use [W/A/S/D] to control movement.</span>&nbsp;
+                <span>Virtual HQ, use <strong className='bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500'>[W/A/S/D]</strong> to control movement.</span>&nbsp;
                 (<a
-                    className='text-blue-900'
+                    className='text-blue-500 hover:text-blue-900'
                     href='https://github.com/yomorun/yomo-vhq-nextjs'
                     target='_blank'
                     rel='noreferrer'

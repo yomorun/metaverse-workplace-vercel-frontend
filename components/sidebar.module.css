@@ -17,8 +17,12 @@
   letter-spacing : 0.025em;
   color          : #333;
   text-transform : uppercase;
-  border         : 1px solid #eaeaea;
   transition     : all 0.125s ease;
+}
+
+.nav>a {
+  background: linear-gradient(to right, #feac5e, #c779d0, #4bc0c8);
+  color: white;
 }
 
 .nav>a:hover {
