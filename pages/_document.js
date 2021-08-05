@@ -1,5 +1,4 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document'
-import Script from 'next/script'
 
 class MyDocument extends Document {
     render() {
@@ -20,8 +19,8 @@ class MyDocument extends Document {
                 <body>
                     <Main />
                     <NextScript />
-                    <Script
-                        src="https://www.googletagmanager.com/gtag/js?id=UA-47208480-12"
+                    <script
+                        src='https://www.googletagmanager.com/gtag/js?id=UA-47208480-12'
                         onLoad={() => {
                             window.dataLayer = window.dataLayer || [];
                             function gtag() { dataLayer.push(arguments); }

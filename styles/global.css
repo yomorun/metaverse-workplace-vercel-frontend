@@ -10,21 +10,20 @@
   min-height    : 100vh;
 }
 
+html {
+  overflow: hidden;
+}
+
 body {
   margin         : 0;
   font-size      : 24px;
   font-family    : 'Exo 2';
   background     : url('/background.png') no-repeat center center;
   background-size: cover;
+  overflow       : scroll;
 }
 
 button,
 input {
   font-family: 'Exo 2';
-}
-
-.video {
-  display: block;
-  width  : 640px;
-  height : 480px;
 }

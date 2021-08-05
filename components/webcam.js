@@ -81,7 +81,7 @@ const Webcam = ({ cover, name, rtcJoinedCallback }) => {
     }, [micOn])
 
     return (
-        <div className='relative w-40 h-40 flex flex-col items-center'>
+        <div className='relative w-32 h-32 flex flex-col items-center'>
             <div id={`stream-player-${name}`} className='w-full h-full rounded-full overflow-hidden transform translate-0 shadow-lg bg-white'>
                 {!videoOn && <img className='w-full h-full' src={cover} alt='avatar' />}
             </div>
