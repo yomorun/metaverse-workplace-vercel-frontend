@@ -5,7 +5,7 @@ import { scan } from 'rxjs/operators'
 import { Vector, move } from '../libs/movement'
 import { Logger } from '../libs/lib'
 
-export default function Mate({ name, avatar, pos, sock, track }) {
+export default function Mate({ name, avatar, initPos, sock, track }) {
     // position of the avatar
     const [left, setLeft] = useState(0)
     const [top, setTop] = useState(0)
@@ -14,7 +14,7 @@ export default function Mate({ name, avatar, pos, sock, track }) {
 
     useEffect(() => {
         // default position
-        const POS = new Vector(pos.x || 0, pos.y || 0)
+        const POS = new Vector(initPos.x || 0, initPos.y || 0)
 
         // Redraw UI
         const renderPosition = (p) => {

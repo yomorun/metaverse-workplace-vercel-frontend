@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Router from 'next/router'
 import io from 'socket.io-client'
 import Sidebar from '../components/sidebar'
@@ -6,6 +6,7 @@ import { Vector } from '../libs/movement'
 import { Logger } from '../libs/lib'
 import Me from './me'
 import Mate from './mate'
+import Distance from './distance'
 
 // init socket.io client
 const ws = io(process.env.NEXT_PUBLIC_WEBSOCKET_URL, {
@@ -22,6 +23,7 @@ export default function Container() {
     const [onlineState, setOnlineState] = useState(false)
     const [me, setMe] = useState(null)
     const [mates, setMates] = useState([])
+    const [calcDistanceCount, setCalcDistanceCount] = useState(0)
 
     useEffect(() => {
         const accessToken = localStorage.getItem(process.env.NEXT_PUBLIC_ACCESSTOKENKEY)
@@ -48,14 +50,12 @@ export default function Container() {
                 mate.key = mate.name
                 mate.pos = new Vector(15, 15)
                 setMates(arr => [...arr, mate])
-                log.log('[online] over: ', mates.length)
             })
 
             // `offline` event will be occured when other users leave
             ws.on('offline', mate => {
                 log.log('[offline]', mate.name)
                 setMates(arr => arr.filter(p => p.name !== mate.name))
-                log.log('[offline] counts: ', mates.length)
             })
 
             ws.on('ask', p => {
@@ -64,6 +64,7 @@ export default function Container() {
 
             ws.on('movement', mv => {
                 log.log('[movement]', mv)
+                setCalcDistanceCount(pre => pre + 1)
             })
 
             ws.on('sync', state => {
@@ -114,9 +115,6 @@ export default function Container() {
 
     const rtcJoinedCallback = useCallback(rtcClient => {
         rtcClient.on('user-published', (remoteUser, mediaType) => {
-            // remoteUser:
-            // mediaType: 'audio' | 'video'
-            log.log('[onUserPublished]', remoteUser.uid)
             if (mediaType === 'video') {
                 rtcClient.subscribe(remoteUser, mediaType).then(track => {
                     setMates(arr => {
@@ -132,15 +130,20 @@ export default function Container() {
 
             if (mediaType === 'audio') {
                 rtcClient.subscribe(remoteUser, mediaType).then(track => {
+                    // const meBox = document.getElementById(`stream-player-${me.login}`)
+                    // const mateBox = document.getElementById(`stream-player-${remoteUser.uid}`)
+                    // if (mateBox && meBox) {
+                    //     const { left: x1, top: y1 } = meBox.getBoundingClientRect()
+                    //     const { left: x2, top: y2 } = mateBox.getBoundingClientRect()
+                    //     const distance = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow( y1 - y2, 2))
+                    // }
+
                     track.play()
                 })
             }
         })
 
         rtcClient.on('user-unpublished', (remoteUser, mediaType) => {
-            // remoteUser:
-            // mediaType: 'audio' | 'video'
-            log.log('[onUserUnPublished]', remoteUser.uid)
             if (mediaType === 'video') {
                 setMates(arr => {
                     for (let i = 0; i < arr.length; i++) {
@@ -161,25 +164,29 @@ export default function Container() {
     return (
         <>
             <Sidebar onlineState={onlineState} count={mates.length + 1} />
-            <section>
-                {mates.map(m => (
-                    <Mate
-                        key={m.name}
-                        name={m.name}
-                        avatar={m.avatar}
-                        pos={m.pos}
-                        sock={ws}
-                        track={m.track}
-                    />
-                ))}
-                <Me
-                    name={me.login}
-                    avatar={me.avatar}
-                    initPos={{ x: 30, y: 0 }}
+            {mates.map(m => (
+                <Mate
+                    key={m.name}
+                    name={m.name}
+                    avatar={m.avatar}
+                    initPos={m.pos}
                     sock={ws}
-                    rtcJoinedCallback={rtcJoinedCallback}
+                    track={m.track}
                 />
-            </section>
+            ))}
+            <Me
+                name={me.login}
+                avatar={me.avatar}
+                initPos={{ x: 30, y: 30 }}
+                sock={ws}
+                rtcJoinedCallback={rtcJoinedCallback}
+            />
+            <Distance
+                calcDistanceCount={calcDistanceCount}
+                elementIdPrefix='stream-player-'
+                meId={me.login}
+                matesIdList={mates.map(item => item.name)}
+            />
         </>
     )
 }
