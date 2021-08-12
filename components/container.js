@@ -130,14 +130,6 @@ export default function Container() {
 
             if (mediaType === 'audio') {
                 rtcClient.subscribe(remoteUser, mediaType).then(track => {
-                    // const meBox = document.getElementById(`stream-player-${me.login}`)
-                    // const mateBox = document.getElementById(`stream-player-${remoteUser.uid}`)
-                    // if (mateBox && meBox) {
-                    //     const { left: x1, top: y1 } = meBox.getBoundingClientRect()
-                    //     const { left: x2, top: y2 } = mateBox.getBoundingClientRect()
-                    //     const distance = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow( y1 - y2, 2))
-                    // }
-
                     track.play()
                 })
             }

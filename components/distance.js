@@ -7,21 +7,33 @@ const Distance = ({ calcDistanceCount, elementIdPrefix, meId, matesIdList }) => 
     useEffect(() => {
         const result = []
         const meBox = document.getElementById(elementIdPrefix + meId)
-        for (let i = 0; i < matesIdList.length; i++) {
-            const mateId = matesIdList[i]
-            const mateBox = document.getElementById(elementIdPrefix + mateId)
-            if (mateBox && meBox) {
-                const { left: x1, top: y1 } = meBox.getBoundingClientRect()
-                const { left: x2, top: y2 } = mateBox.getBoundingClientRect()
-                const distance = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2))
-                result.push({
-                    name: mateId,
-                    value: distance << 0
-                })
-            }
-        }
+        if (meBox) {
+            const radius = meBox.offsetWidth / 2
+            for (let i = 0; i < matesIdList.length; i++) {
+                const mateId = matesIdList[i]
+                const mateBox = document.getElementById(elementIdPrefix + mateId)
+                if (mateBox) {
+                    const { left, top } = meBox.getBoundingClientRect()
+                    const x1 = left + radius
+                    const y1 = top + radius
 
-        setDistanceList(result)
+                    {
+                        const { left, top } = mateBox.getBoundingClientRect()
+                        const x2 = left + radius
+                        const y2 = top + radius
+
+                        const distance = (Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2)) - radius * 2) << 0
+
+                        result.push({
+                            name: mateId,
+                            value: distance > 0 ? distance : 0
+                        })
+                    }
+                }
+            }
+
+            setDistanceList(result)
+        }
     }, [matesIdList])
 
     if (distanceList.length < 1) {
