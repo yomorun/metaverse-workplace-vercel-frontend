@@ -29,7 +29,7 @@ const Distance = ({ calcDistanceCount, elementIdPrefix, meId, matesIdList }) => 
     }
 
     return (
-        <div className='z-10 fixed right-4 bottom-1/2 bg-gradient-to-b from-purple-200 via-pink-200 to-red-200 rounded-md shadow-lg'>
+        <div className='z-10 fixed right-4 bottom-1/2 bg-gray-100 rounded-md shadow-lg'>
             <p className='p-2 text-sm text-center text-black font-bold'>The distance between me and other partners:</p>
             <div className='px-5 text-base font-bold text-center text-black max-h-64 overflow-y-auto'>
                 {
