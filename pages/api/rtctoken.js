@@ -1,4 +1,4 @@
-const { RtcTokenBuilder, RtmTokenBuilder, RtcRole, RtmRole } = require('agora-access-token')
+const { RtcTokenBuilder } = require('agora-access-token')
 
 const rtctoken = async (req, res) => {
     if (req.method === 'POST') {
