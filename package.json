@@ -18,6 +18,7 @@
   "author": "YoMo",
   "license": "MIT",
   "dependencies": {
+    "agora-access-token": "^2.0.4",
     "agora-rtc-sdk-ng": "^4.6.2",
     "axios": "^0.21.1",
     "classnames": "^2.3.1",
