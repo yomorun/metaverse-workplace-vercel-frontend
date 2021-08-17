@@ -3,7 +3,7 @@ import Router from 'next/router'
 import io from 'socket.io-client'
 import Sidebar from '../components/sidebar'
 import { Vector } from '../libs/movement'
-import { Logger } from '../libs/lib'
+import { Logger, debounce } from '../libs/lib'
 import Me from './me'
 import Mate from './mate'
 import Distance from './distance'
@@ -23,7 +23,7 @@ export default function Container() {
     const [onlineState, setOnlineState] = useState(false)
     const [me, setMe] = useState(null)
     const [mates, setMates] = useState([])
-    const [calcDistanceCount, setCalcDistanceCount] = useState(0)
+    const [someoneMoved, setSomeoneMoved] = useState(0)
 
     useEffect(() => {
         const accessToken = localStorage.getItem(process.env.NEXT_PUBLIC_ACCESSTOKENKEY)
@@ -62,9 +62,10 @@ export default function Container() {
                 log.log('[ask]', p)
             })
 
+            const setSomeoneMovedFn = debounce(setSomeoneMoved, 500)
             ws.on('movement', mv => {
                 log.log('[movement]', mv)
-                setCalcDistanceCount(pre => pre + 1)
+                setSomeoneMovedFn(true)
             })
 
             ws.on('sync', state => {
@@ -114,39 +115,31 @@ export default function Container() {
     }, [logged])
 
     const rtcJoinedCallback = useCallback(rtcClient => {
-        rtcClient.on('user-published', (remoteUser, mediaType) => {
-            if (mediaType === 'video') {
-                rtcClient.subscribe(remoteUser, mediaType).then(track => {
-                    setMates(arr => {
-                        for (let i = 0; i < arr.length; i++) {
-                            if (arr[i].name === remoteUser.uid) {
-                                arr[i].track = track
-                            }
-                        }
-                        return [...arr]
-                    })
-                })
-            }
+        const setTrack = (id, mediaType, trackObject) => {
+            setMates(arr => {
+                for (let i = 0, len = arr.length; i < len; i++) {
+                    if (arr[i].name === id) {
+                        arr[i][`${mediaType}Track`] = trackObject
+                        break
+                    }
+                }
+                return [...arr]
+            })
+        }
 
-            if (mediaType === 'audio') {
-                rtcClient.subscribe(remoteUser, mediaType).then(track => {
-                    track.play()
-                })
-            }
+        rtcClient.on('user-published', (remoteUser, mediaType) => {
+            rtcClient.subscribe(remoteUser, mediaType).then(track => {
+                setTrack(remoteUser.uid, mediaType, track)
+            })
         })
 
         rtcClient.on('user-unpublished', (remoteUser, mediaType) => {
-            if (mediaType === 'video') {
-                setMates(arr => {
-                    for (let i = 0; i < arr.length; i++) {
-                        if (arr[i].name === remoteUser.uid) {
-                            arr[i].track = null
-                        }
-                    }
-                    return [...arr]
-                })
-            }
+            setTrack(remoteUser.uid, mediaType, null)
         })
+    }, [])
+
+    const onComplete = useCallback(() => {
+        setSomeoneMoved(false)
     }, [])
 
     if (!me) {
@@ -163,7 +156,9 @@ export default function Container() {
                     avatar={m.avatar}
                     initPos={m.pos}
                     sock={ws}
-                    track={m.track}
+                    videoTrack={m.videoTrack}
+                    audioTrack={m.audioTrack}
+                    hostId={me.login}
                 />
             ))}
             <Me
@@ -174,10 +169,11 @@ export default function Container() {
                 rtcJoinedCallback={rtcJoinedCallback}
             />
             <Distance
-                calcDistanceCount={calcDistanceCount}
                 elementIdPrefix='stream-player-'
                 meId={me.login}
                 matesIdList={mates.map(item => item.name)}
+                someoneMoved={someoneMoved}
+                onComplete={onComplete}
             />
         </>
     )

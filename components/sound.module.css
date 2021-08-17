@@ -1,0 +1,202 @@
+.soundBox {
+  position   : relative;
+  margin     : 0 auto;
+  width      : 20px;
+  height     : 20px;
+  display    : flex;
+  align-items: center;
+}
+
+.soundBox span {
+  position  : absolute;
+  transform : translate(-50%, -50%);
+  width     : 2px;
+  min-height: 2px;
+  background: #038f8f;
+  transition: 0.3s;
+}
+
+.soundBox span.line1 {
+  left: 10%;
+}
+
+.soundBox span.line2 {
+  left: 30%;
+}
+
+.soundBox span.line3 {
+  left: 50%;
+}
+
+.soundBox span.line4 {
+  left: 70%;
+}
+
+.soundBox span.line5 {
+  left: 90%;
+}
+
+.animateSound span {
+  animation-duration       : 1s;
+  animation-iteration-count: infinite;
+  animation-direction      : alternate;
+  animation-delay          : 0.5s;
+  bottom                   : 20%;
+  transform                : translate(-50%, 0);
+}
+
+.animateSound span.line1 {
+  top           : 60%;
+  animation-name: first;
+}
+
+.animateSound span.line2 {
+  top           : 30%;
+  animation-name: second;
+}
+
+.animateSound span.line3 {
+  top           : 0;
+  bottom        : 0;
+  animation-name: third;
+}
+
+.animateSound span.line4 {
+  top           : 30%;
+  animation-name: fourth;
+}
+
+.animateSound span.line5 {
+  top           : 60%;
+  animation-name: fifth;
+}
+
+@keyframes first {
+  0% {
+    top: 60%;
+  }
+
+  30% {
+    top: 48%;
+  }
+
+  50% {
+    top: 52%;
+  }
+
+  55% {
+    top: 56%;
+  }
+
+  80% {
+    top: 65%;
+  }
+
+  100% {
+    top: 54%;
+  }
+}
+
+@keyframes second {
+  0% {
+    top: 30%;
+  }
+
+  30% {
+    top: 39%;
+  }
+
+  50% {
+    top: 32%;
+  }
+
+  55% {
+    top: 36%;
+  }
+
+  80% {
+    top: 35%;
+  }
+
+  100% {
+    top: 44%;
+  }
+}
+
+@keyframes third {
+  0% {
+    top: 0%;
+  }
+
+  30% {
+    top: 1%;
+  }
+
+  50% {
+    top: 6%;
+  }
+
+  55% {
+    top: 2%;
+  }
+
+  80% {
+    top: 9%;
+  }
+
+  100% {
+    top: 14%;
+  }
+}
+
+@keyframes fourth {
+  0% {
+    top: 30%;
+  }
+
+  20% {
+    top: 39%;
+  }
+
+  30% {
+    top: 32%;
+  }
+
+  55% {
+    top: 36%;
+  }
+
+  70% {
+    top: 35%;
+  }
+
+  100% {
+    top: 44%;
+  }
+}
+
+@keyframes fifth {
+  0% {
+    top: 60%;
+  }
+
+  10% {
+    top: 48%;
+  }
+
+  30% {
+    top: 52%;
+  }
+
+  65% {
+    top: 56%;
+  }
+
+  90% {
+    top: 65%;
+  }
+
+  100% {
+    top: 54%;
+  }
+}
