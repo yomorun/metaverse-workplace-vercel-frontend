@@ -1,11 +1,13 @@
 import Script from 'next/script'
-
+import { Provider } from '../context'
 import '../styles/global.css'
 
 export default function MyApp({ Component, pageProps }) {
     return (
         <>
-            <Component {...pageProps} />
+            <Provider>
+                <Component {...pageProps} />
+            </Provider>
             <Script
                 src='https://www.googletagmanager.com/gtag/js?id=UA-47208480-12'
                 onLoad={() => {

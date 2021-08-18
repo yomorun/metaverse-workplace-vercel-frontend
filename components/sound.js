@@ -1,10 +1,14 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useContext } from 'react'
+import { Context } from '../context'
 import { calcDistance } from '../libs/lib'
+
 import styles from './sound.module.css'
 
 const Sound = ({ audioTrack, elementIdPrefix, hostId, mateId, canCalcDistance, onComplete }) => {
     const [volume, setVolume] = useState(100)
-    const [muted, setMuted] = useState(true)
+
+    const { state, dispatch } = useContext(Context)
+    const { muted } = state.sound
 
     useEffect(() => {
         if (canCalcDistance) {
@@ -14,9 +18,7 @@ const Sound = ({ audioTrack, elementIdPrefix, hostId, mateId, canCalcDistance, o
             const diameter = hostBox.offsetWidth
 
             // When `distance >= 4 * diameter`, the volume is reduced by 10% for each additional distance of `diameter`, until 0%
-
             const ratio = distance / diameter
-
             if (ratio <= 1) {
                 audioTrack.setVolume(250)
                 setVolume(250)
@@ -65,32 +67,25 @@ const Sound = ({ audioTrack, elementIdPrefix, hostId, mateId, canCalcDistance, o
         }
     }, [canCalcDistance, audioTrack])
 
-    const toggleMute = useCallback(() => {
-        if (audioTrack) {
-            setMuted(pre => {
-                const muted = !pre
-                if (muted) {
-                    audioTrack.stop()
-                } else {
-                    audioTrack.play()
-                }
 
-                return muted
-            })
+    useEffect(() => {
+        if (audioTrack) {
+            if (muted) {
+                audioTrack.stop()
+            } else {
+                audioTrack.play()
+            }
         }
-    }, [audioTrack])
+    }, [audioTrack, muted])
 
     return (
         <div className='w-32 py-3 rounded-lg shadow-lg bg-white bg-opacity-10'>
-            <div className='w-full flex justify-center'>
-                <div className={`${styles.soundBox} ${muted ? '' : styles.animateSound}`}>
-                    <span className={styles.line1}></span>
-                    <span className={styles.line2}></span>
-                    <span className={styles.line3}></span>
-                    <span className={styles.line4}></span>
-                    <span className={styles.line5}></span>
-                </div>
-                <div className='ml-5 text-base cursor-pointer' onClick={toggleMute}>{muted ? '🔇' : '🔉'}</div>
+            <div className={`${styles.soundBox} ${muted ? '' : styles.animateSound}`}>
+                <span className={styles.line1}></span>
+                <span className={styles.line2}></span>
+                <span className={styles.line3}></span>
+                <span className={styles.line4}></span>
+                <span className={styles.line5}></span>
             </div>
             <div className='mt-2 text-sm text-center text-black font-bold'>volume: {volume}%</div>
         </div>
