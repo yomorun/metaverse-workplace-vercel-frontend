@@ -7,8 +7,10 @@ export default function Sidebar({ onlineState, count }) {
             <Link href='https://github.com/yomorun/yomo' >
                 <a target='_blank' alt='YoMo Github Repository'>Use [W/A/S/D] control moving</a>
             </Link>
-            <span className={onlineState ? styles.online : styles.offline}>{onlineState ? 'Online' : 'Offline'}</span>
-            <span>{count}</span>
+            <p>
+                <span className={onlineState ? styles.online : styles.offline}>{onlineState ? 'Online' : 'Offline'}</span>&nbsp;&nbsp;
+                <span>{count}</span>
+            </p>
         </nav>
     )
 }

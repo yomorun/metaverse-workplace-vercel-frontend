@@ -1,6 +1,5 @@
 .soundBox {
   position   : relative;
-  margin     : 0 auto;
   width      : 20px;
   height     : 20px;
   display    : flex;
