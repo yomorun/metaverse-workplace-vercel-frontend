@@ -3,7 +3,7 @@ import { Observable } from 'rxjs'
 import { scan } from 'rxjs/operators'
 
 import { Vector, move } from '../libs/movement'
-import { Logger } from '../libs/lib'
+import { Logger, addTransition } from '../libs/lib'
 
 import Sound from './sound'
 
@@ -46,6 +46,9 @@ export default function Mate({ name, avatar, initPos, sock, videoTrack, audioTra
         // every direction changing event will cause position movement
         direction$.pipe(scan((currPos, dir) => currPos.add(dir), POS)).subscribe(renderPosition)
 
+        // Add movement transition, it looks smoother
+        addTransition(`${name}-movement-box`, 'movement-transition')
+
         return () => {
             log.log('unload')
         }
@@ -63,6 +66,7 @@ export default function Mate({ name, avatar, initPos, sock, videoTrack, audioTra
 
     return (
         <div
+            id={`${name}-movement-box`}
             className='absolute'
             style={{
                 transform: `translate3d(${left}px, ${top}px, 0)`

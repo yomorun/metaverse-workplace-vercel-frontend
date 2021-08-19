@@ -3,7 +3,7 @@ import { fromEvent } from 'rxjs'
 import { map, filter, scan, auditTime } from 'rxjs/operators'
 
 import { Vector, move } from '../libs/movement'
-import { Logger } from '../libs/lib'
+import { Logger, addTransition } from '../libs/lib'
 
 import Webcam from './webcam'
 
@@ -79,6 +79,9 @@ function Me({ name, avatar, initPos, sock, rtcJoinedCallback }) {
         // connect to socket.io server
         sock.connect()
 
+        // Add movement transition, it looks smoother
+        addTransition('me-movement-box', 'movement-transition')
+
         return () => {
             log.log('[Unmount] event')
         }
@@ -86,6 +89,7 @@ function Me({ name, avatar, initPos, sock, rtcJoinedCallback }) {
 
     return (
         <div
+            id='me-movement-box'
             className='absolute'
             style={{
                 transform: `translate3d(${left}px, ${top}px, 0)`

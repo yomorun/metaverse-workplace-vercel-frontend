@@ -73,3 +73,12 @@ export function throttle(fn, delay) {
         }, delay)
     }
 }
+
+export const addTransition = (elementId, transitionClassName, delay = 1000) => {
+    const box = document.getElementById(elementId)
+    if (box) {
+        setTimeout(() => {
+            box.classList.add(transitionClassName)
+        }, delay)
+    }
+}

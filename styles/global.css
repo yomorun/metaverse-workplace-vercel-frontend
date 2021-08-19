@@ -2,7 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer utilities {}
+@layer utilities {
+  .movement-transition {
+    transition-property: transform;
+    transition-timing-function: linear;
+    transition-duration: 200ms;
+  }
+}
 
 #__next {
   display       : flex;
