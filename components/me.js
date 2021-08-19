@@ -1,13 +1,11 @@
-import { useEffect, useState, memo } from 'react'
+import { useEffect, useRef, memo } from 'react'
 import { fromEvent } from 'rxjs'
 import { map, filter, scan, auditTime } from 'rxjs/operators'
 
 import { Vector, move } from '../libs/movement'
-import { Logger, addTransition } from '../libs/lib'
+import { Logger } from '../libs/lib'
 
 import Webcam from './webcam'
-
-const log = new Logger("Me", "color: white; background: green")
 
 // Only accepts events from the W, A, S and D buttons
 const keyPressWASD = (e) => {
@@ -23,19 +21,19 @@ const keyPressWASD = (e) => {
 }
 
 function Me({ name, avatar, initPos, sock, rtcJoinedCallback }) {
-    // position of the avatar
-    const [left, setLeft] = useState(0)
-    const [top, setTop] = useState(0)
+    const refContainer = useRef(null)
 
     useEffect(() => {
+        const log = new Logger('Me', 'color: white; background: green')
+
         // default position
         const POS = new Vector(initPos.x || 0, initPos.y || 0)
 
         // Redraw UI
         const renderPosition = (p) => {
-            // log.info(`[${name}] pos: ${p.toString()}`)
-            setLeft(p.x)
-            setTop(p.y)
+            if (refContainer.current) {
+                refContainer.current.style = `transform: translate3d(${p.x}px, ${p.y}px, 0);`
+            }
         }
 
         // initial position
@@ -80,7 +78,11 @@ function Me({ name, avatar, initPos, sock, rtcJoinedCallback }) {
         sock.connect()
 
         // Add movement transition, it looks smoother
-        addTransition('me-movement-box', 'movement-transition')
+        setTimeout(() => {
+            if (refContainer.current) {
+                refContainer.current.classList.add('movement-transition')
+            }
+        }, 1000)
 
         return () => {
             log.log('[Unmount] event')
@@ -88,21 +90,11 @@ function Me({ name, avatar, initPos, sock, rtcJoinedCallback }) {
     }, [])
 
     return (
-        <div
-            id='me-movement-box'
-            className='absolute'
-            style={{
-                transform: `translate3d(${left}px, ${top}px, 0)`
-            }}
-        >
+        <div className='absolute' ref={refContainer}>
             <Webcam cover={avatar} name={name} rtcJoinedCallback={rtcJoinedCallback} />
             <div className='mt-2 text-base text-center text-white font-bold'>{name}</div>
         </div>
     )
 }
 
-function areEqual(prevProps, nextProps) {
-    return prevProps.name === nextProps.name
-}
-
-export default memo(Me, areEqual)
+export default memo(Me, () => true)

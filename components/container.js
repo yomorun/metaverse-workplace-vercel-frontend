@@ -3,7 +3,7 @@ import Router from 'next/router'
 import io from 'socket.io-client'
 import Sidebar from '../components/sidebar'
 import { Vector } from '../libs/movement'
-import { Logger, debounce } from '../libs/lib'
+import { Logger } from '../libs/lib'
 import Me from './me'
 import Mate from './mate'
 import Distance from './distance'
@@ -23,7 +23,6 @@ export default function Container() {
     const [onlineState, setOnlineState] = useState(false)
     const [me, setMe] = useState(null)
     const [mates, setMates] = useState([])
-    const [someoneMoved, setSomeoneMoved] = useState(0)
 
     useEffect(() => {
         const accessToken = localStorage.getItem(process.env.NEXT_PUBLIC_ACCESSTOKENKEY)
@@ -62,10 +61,8 @@ export default function Container() {
                 log.log('[ask]', p)
             })
 
-            const setSomeoneMovedFn = debounce(setSomeoneMoved, 500)
             ws.on('movement', mv => {
                 log.log('[movement]', mv)
-                setSomeoneMovedFn(true)
             })
 
             ws.on('sync', state => {
@@ -138,10 +135,6 @@ export default function Container() {
         })
     }, [])
 
-    const onComplete = useCallback(() => {
-        setSomeoneMoved(false)
-    }, [])
-
     if (!me) {
         return null
     }
@@ -172,8 +165,7 @@ export default function Container() {
                 elementIdPrefix='stream-player-'
                 meId={me.login}
                 matesIdList={mates.map(item => item.name)}
-                someoneMoved={someoneMoved}
-                onComplete={onComplete}
+                sock={ws}
             />
         </>
     )

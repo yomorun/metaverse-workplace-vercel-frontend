@@ -1,29 +1,26 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useRef, useCallback, memo } from 'react'
 import { Observable } from 'rxjs'
 import { scan } from 'rxjs/operators'
 
 import { Vector, move } from '../libs/movement'
-import { Logger, addTransition } from '../libs/lib'
+import { Logger } from '../libs/lib'
 
 import Sound from './sound'
 
-export default function Mate({ name, avatar, initPos, sock, videoTrack, audioTrack, hostId }) {
-    // position of the avatar
-    const [left, setLeft] = useState(0)
-    const [top, setTop] = useState(0)
-
-    const [canCalcDistance, setCanCalcDistance] = useState(false)
-
-    const log = new Logger(`Mate:${name}`, 'color: white; background: orange')
+function Mate({ name, avatar, initPos, sock, videoTrack, audioTrack, hostId }) {
+    const refContainer = useRef(null)
 
     useEffect(() => {
+        const log = new Logger(`Mate:${name}`, 'color: white; background: orange')
+
         // default position
         const POS = new Vector(initPos.x || 0, initPos.y || 0)
 
         // Redraw UI
         const renderPosition = (p) => {
-            setLeft(p.x)
-            setTop(p.y)
+            if (refContainer.current) {
+                refContainer.current.style = `transform: translate3d(${p.x}px, ${p.y}px, 0);`
+            }
         }
 
         // initial position
@@ -31,10 +28,6 @@ export default function Mate({ name, avatar, initPos, sock, videoTrack, audioTra
 
         const direction$ = new Observable(obs => {
             sock.on('movement', mv => {
-                if (mv.name === name || mv.name === hostId) {
-                    setCanCalcDistance(true)
-                }
-
                 if (mv.name != name) {
                     return
                 }
@@ -47,7 +40,11 @@ export default function Mate({ name, avatar, initPos, sock, videoTrack, audioTra
         direction$.pipe(scan((currPos, dir) => currPos.add(dir), POS)).subscribe(renderPosition)
 
         // Add movement transition, it looks smoother
-        addTransition(`${name}-movement-box`, 'movement-transition')
+        setTimeout(() => {
+            if (refContainer.current) {
+                refContainer.current.classList.add('movement-transition')
+            }
+        }, 1000)
 
         return () => {
             log.log('unload')
@@ -60,38 +57,49 @@ export default function Mate({ name, avatar, initPos, sock, videoTrack, audioTra
         }
     }, [videoTrack])
 
-    const onComplete = useCallback(() => {
-        setCanCalcDistance(false)
-    }, [])
-
     return (
-        <div
-            id={`${name}-movement-box`}
-            className='absolute'
-            style={{
-                transform: `translate3d(${left}px, ${top}px, 0)`
-            }}
-        >
+        <div className='absolute' ref={refContainer}>
             <div className='relative w-32 h-32'>
                 <div className='w-full h-full rounded-full overflow-hidden transform translate-0 shadow-lg'>
                     <div id={`stream-player-${name}`} className='w-full h-full'>
                         {!videoTrack && <img className='w-full h-full' src={avatar} />}
                     </div>
                 </div>
-                {audioTrack && (
-                    <div className='absolute -top-20 left-0'>
-                        <Sound
-                            audioTrack={audioTrack}
-                            elementIdPrefix='stream-player-'
-                            hostId={hostId}
-                            mateId={name}
-                            canCalcDistance={canCalcDistance}
-                            onComplete={onComplete}
-                        />
-                    </div>
-                )}
+                <div
+                    className='absolute -top-20 left-0'
+                    style={{ display: audioTrack ? 'block' : 'none'}}
+                >
+                    <Sound
+                        audioTrack={audioTrack}
+                        elementIdPrefix='stream-player-'
+                        hostId={hostId}
+                        mateId={name}
+                        sock={sock}
+                    />
+                </div>
             </div>
             <div className='mt-2 text-base text-center text-white font-bold'>{name}</div>
         </div>
     )
 }
+
+function areEqual(prevProps, nextProps) {
+    let audioTrackIsEqual = false
+    if (prevProps.audioTrack && nextProps.audioTrack) {
+        audioTrackIsEqual = prevProps.audioTrack._ID === nextProps.audioTrack._ID
+    } else {
+        audioTrackIsEqual = prevProps.audioTrack == null && nextProps.audioTrack == null
+    }
+
+    let videoTrackIsEqual = false
+    if (prevProps.videoTrack && nextProps.videoTrack) {
+        videoTrackIsEqual = prevProps.videoTrack._ID === nextProps.videoTrack._ID
+    } else {
+        videoTrackIsEqual = prevProps.videoTrack == null && nextProps.videoTrack == null
+    }
+
+    return audioTrackIsEqual && videoTrackIsEqual
+}
+
+
+export default memo(Mate, areEqual)

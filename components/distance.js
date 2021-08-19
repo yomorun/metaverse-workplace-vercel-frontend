@@ -1,36 +1,44 @@
 import { useState, useEffect, memo } from 'react'
 import cn from 'classnames'
-import { calcDistance } from '../libs/lib'
+import { calcDistance, debounce } from '../libs/lib'
 
-const Distance = ({ elementIdPrefix, meId, matesIdList, someoneMoved, onComplete }) => {
+const getCalcResult = (elementIdPrefix, meId, matesIdList) => {
+    const result = []
+    const meBox = document.getElementById(elementIdPrefix + meId)
+    if (meBox) {
+        const radius = meBox.offsetWidth / 2
+        for (let i = 0; i < matesIdList.length; i++) {
+            const mateId = matesIdList[i]
+            const mateBox = document.getElementById(elementIdPrefix + mateId)
+
+            if (mateBox) {
+                const distance = calcDistance(meBox, mateBox)
+
+                result.push({
+                    name: mateId,
+                    value: distance
+                })
+            }
+        }
+    }
+
+    return result
+}
+
+const Distance = ({ elementIdPrefix, meId, matesIdList, sock }) => {
     const [distanceList, setDistanceList] = useState([])
 
     useEffect(() => {
-        if (someoneMoved) {
-            const result = []
-            const meBox = document.getElementById(elementIdPrefix + meId)
-            if (meBox) {
-                const radius = meBox.offsetWidth / 2
-                for (let i = 0; i < matesIdList.length; i++) {
-                    const mateId = matesIdList[i]
-                    const mateBox = document.getElementById(elementIdPrefix + mateId)
-
-                    if (mateBox) {
-                        const distance = calcDistance(meBox, mateBox)
-
-                        result.push({
-                            name: mateId,
-                            value: distance
-                        })
-                    }
-                }
-
-                setDistanceList(result)
-
-                onComplete && onComplete()
-            }
+        const setCalcResult = () => {
+            const result = getCalcResult(elementIdPrefix, meId, matesIdList)
+            setDistanceList(result)
         }
-    }, [someoneMoved, matesIdList])
+
+        const setCalcResultFn = debounce(setCalcResult, 500)
+        sock.on('movement', mv => {
+            setCalcResultFn()
+        })
+    }, [matesIdList])
 
     if (distanceList.length < 1) {
         return null
@@ -67,8 +75,7 @@ const Distance = ({ elementIdPrefix, meId, matesIdList, someoneMoved, onComplete
 }
 
 function areEqual(prevProps, nextProps) {
-    return prevProps.someoneMoved === nextProps.someoneMoved
-        && prevProps.matesIdList.length === nextProps.matesIdList.length
+    return prevProps.matesIdList.length === nextProps.matesIdList.length
 }
 
 export default memo(Distance, areEqual)
