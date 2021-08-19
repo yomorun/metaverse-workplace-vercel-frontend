@@ -37,7 +37,7 @@ function Mate({ name, avatar, initPos, sock, videoTrack, audioTrack, hostId }) {
         })
 
         // every direction changing event will cause position movement
-        direction$.pipe(scan((currPos, dir) => currPos.add(dir), POS)).subscribe(renderPosition)
+        const subscription = direction$.pipe(scan((currPos, dir) => currPos.add(dir), POS)).subscribe(renderPosition)
 
         // Add movement transition, it looks smoother
         setTimeout(() => {
@@ -48,6 +48,7 @@ function Mate({ name, avatar, initPos, sock, videoTrack, audioTrack, hostId }) {
 
         return () => {
             log.log('unload')
+            subscription.unsubscribe()
         }
     }, [])
 
