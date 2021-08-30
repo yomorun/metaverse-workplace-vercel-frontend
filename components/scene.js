@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Router from 'next/router'
 import io from 'socket.io-client'
-import Sidebar from '../components/sidebar'
+import Sidebar from './sidebar'
 import { Vector } from '../libs/movement'
 import { Logger } from '../libs/lib'
 import Me from './me'
@@ -16,9 +16,9 @@ const ws = io(process.env.NEXT_PUBLIC_WEBSOCKET_URL, {
     autoConnect: false
 })
 
-const log = new Logger('Container', 'color: green; background: yellow')
+const log = new Logger('Scene', 'color: green; background: yellow')
 
-export default function Container() {
+export default function Scene({ floor }) {
     const [logged, setLogged] = useState(false)
     const [onlineState, setOnlineState] = useState(false)
     const [me, setMe] = useState(null)
@@ -42,6 +42,7 @@ export default function Container() {
 
             // `online` event will be occured when user is connected to websocket
             ws.on('online', mate => {
+                log.log('[online]', mate.name)
                 if (mate.name === me.login) {
                     log.log('[online] is Me, ignore', me.login)
                     return
@@ -139,6 +140,8 @@ export default function Container() {
         return null
     }
 
+    console.log('mates--------------------------------------------------------', mates)
+
     return (
         <>
             <Sidebar onlineState={onlineState} count={mates.length + 1} />
@@ -160,6 +163,7 @@ export default function Container() {
                 initPos={{ x: 30, y: 30 }}
                 sock={ws}
                 rtcJoinedCallback={rtcJoinedCallback}
+                floor={floor}
             />
             <Distance
                 elementIdPrefix='stream-player-'

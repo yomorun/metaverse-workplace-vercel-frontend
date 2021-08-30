@@ -20,7 +20,7 @@ const keyPressWASD = (e) => {
     }
 }
 
-function Me({ name, avatar, initPos, sock, rtcJoinedCallback }) {
+function Me({ name, avatar, initPos, sock, rtcJoinedCallback, floor }) {
     const refContainer = useRef(null)
 
     useEffect(() => {
@@ -91,7 +91,7 @@ function Me({ name, avatar, initPos, sock, rtcJoinedCallback }) {
 
     return (
         <div className='absolute' ref={refContainer}>
-            <Webcam cover={avatar} name={name} rtcJoinedCallback={rtcJoinedCallback} />
+            <Webcam cover={avatar} name={name} rtcJoinedCallback={rtcJoinedCallback} channel={floor} />
             <div className='mt-2 text-base text-center text-white font-bold'>{name}</div>
         </div>
     )

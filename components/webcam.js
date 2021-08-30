@@ -8,7 +8,7 @@ const getToken = (uid, channelName, role) => {
     return new Promise((resolve, reject) => {
         const rtctoken = JSON.parse(localStorage.getItem(process.env.NEXT_PUBLIC_RTCTOKENKEY))
         const currentTimestamp = Math.floor(Date.now() / 1000)
-        if (rtctoken && currentTimestamp < rtctoken.privilegeExpiredTs) {
+        if (rtctoken && rtctoken.channelName === channelName && currentTimestamp < rtctoken.privilegeExpiredTs) {
             resolve(rtctoken.token)
         } else {
             request({
@@ -31,19 +31,19 @@ let rtcClient
 let videoTrack
 let audioTrack
 
-const Webcam = ({ cover, name, rtcJoinedCallback }) => {
+const Webcam = ({ cover, name, rtcJoinedCallback, channel }) => {
     const [videoOn, setVideoOn] = useState(false)
     const [micOn, setMicOn] = useState(false)
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
-        getToken(name, process.env.NEXT_PUBLIC_AGORA_APP_CHANNEL, 'host')
+        getToken(name, channel, 'host')
             .then(token => {
                 rtcClient = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' })
 
                 rtcClient.join(
                     process.env.NEXT_PUBLIC_AGORA_APP_ID,
-                    process.env.NEXT_PUBLIC_AGORA_APP_CHANNEL,
+                    channel,
                     token,
                     name
                 ).then(uid => {

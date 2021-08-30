@@ -40,36 +40,3 @@ export const calcDistance = (element1, element2) => {
 
     return 0
 }
-
-export function debounce(fn, delay) {
-    let timer
-    return function () {
-        const _this = this
-        const args = arguments
-
-        if (timer) {
-            clearTimeout(timer)
-        }
-
-        timer = setTimeout(function () {
-            fn.apply(_this, args)
-        }, delay)
-    }
-}
-
-export function throttle(fn, delay) {
-    let timer
-    return function () {
-        const _this = this
-        const args = arguments
-
-        if (timer) {
-            return
-        }
-
-        timer = setTimeout(function () {
-            fn.apply(_this, args)
-            timer = null
-        }, delay)
-    }
-}

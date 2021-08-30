@@ -18,7 +18,7 @@ const rtctoken = async (req, res) => {
                     privilegeExpiredTs
                 )
 
-                res.status(200).send({ token, privilegeExpiredTs })
+                res.status(200).send({ token, privilegeExpiredTs, channelName })
             } catch (e) {
                 res.status(500).json({ msg: e.message })
             }

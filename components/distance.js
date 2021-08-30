@@ -1,6 +1,8 @@
 import { useState, useEffect, memo } from 'react'
 import cn from 'classnames'
-import { calcDistance, debounce } from '../libs/lib'
+import { Observable } from 'rxjs'
+import { debounceTime } from 'rxjs/operators'
+import { calcDistance } from '../libs/lib'
 
 const getCalcResult = (elementIdPrefix, meId, matesIdList) => {
     const result = []
@@ -29,15 +31,20 @@ const Distance = ({ elementIdPrefix, meId, matesIdList, sock }) => {
     const [distanceList, setDistanceList] = useState([])
 
     useEffect(() => {
-        const setCalcResult = () => {
+        const movement$ = new Observable(obs => {
+            sock.on('movement', mv => {
+                obs.next(mv)
+            })
+        })
+
+        const subscription = movement$.pipe(debounceTime(500)).subscribe(() => {
             const result = getCalcResult(elementIdPrefix, meId, matesIdList)
             setDistanceList(result)
-        }
-
-        const setCalcResultFn = debounce(setCalcResult, 500)
-        sock.on('movement', mv => {
-            setCalcResultFn()
         })
+
+        return () => {
+            subscription.unsubscribe()
+        }
     }, [matesIdList])
 
     if (distanceList.length < 1) {
@@ -45,7 +52,7 @@ const Distance = ({ elementIdPrefix, meId, matesIdList, sock }) => {
     }
 
     return (
-        <div className='z-10 fixed left-4 top-1/2 rounded-md shadow-lg bg-white bg-opacity-10'>
+        <div className='z-10 fixed right-4 top-1/2 rounded-md shadow-lg bg-white bg-opacity-10'>
             <p className='my-2 px-5 text-sm text-black font-bold'>Distance changing event:</p>
             <div className='px-5 text-base font-bold text-center text-black max-h-64 overflow-y-auto'>
                 {
