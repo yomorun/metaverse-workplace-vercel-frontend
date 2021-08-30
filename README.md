@@ -1,18 +1,18 @@
 # yomo-vhq-nextjs
 
-Open-source Virtual HQ with YoMo and other Geo-distributed System Tech Stacks.
+An open-source [Metaverse Workplace](https://techcrunch.com/2020/11/18/virtual-hqs-race-to-win-over-a-remote-work-fatigued-market/) with Geo-distributed System Tech Stacks.
 
 ## Presence Message Flow
 
-![](vhq-presence.jpg)
+![yomo metaverse virtual hq](vhq-presence.jpg)
 
 ## Tech Stacks
 
 - [Vercel - Frontend Deployment](https://vercel.com)
-- [Next.js - Frontend](https://nextjs.org)
-- [Agora - Video/Audio](https://agora.io)
 - [Macrometa - Geo-distributed Database](https://macrometa.dev/)
 - [YoMo - Geo-distributed Presence server](https://github.com/yomorun/yomo)
+- [Agora - Video/Audio](https://agora.io)
+- [Next.js - Frontend](https://nextjs.org)
 
 ## Development
 
@@ -20,7 +20,7 @@ Open-source Virtual HQ with YoMo and other Geo-distributed System Tech Stacks.
 
 ## Sponsors
 
-[<img src="https://postimg.aliavv.com/mbp2021/1wzcr.png" width="300px">](https://www.agora.io/cn/?utm_source=opensource&utm_medium=refferal&utm_campaign=clubhouseB)
+[<img src="https://postimg.aliavv.com/mbp2021/1wzcr.png" width="300px">](https://www.agora.io/cn/?utm_source=opensource&utm_medium=refferal&utm_campaign=yomo)
 
 ## LICENSE 
 [MIT](LICENSE)
