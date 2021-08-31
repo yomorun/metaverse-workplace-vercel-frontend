@@ -8,18 +8,8 @@ import Me from './me'
 import Mate from './mate'
 import Distance from './distance'
 
-// init socket.io client
-const ws = io(process.env.NEXT_PUBLIC_WEBSOCKET_URL, {
-    reconnectionDelayMax: 10000,
-    transports: ['websocket'],
-    reconnection: true,
-    autoConnect: false
-})
-
-const log = new Logger('Scene', 'color: green; background: yellow')
-
 export default function Scene({ floor }) {
-    const [logged, setLogged] = useState(false)
+    const [ws, setWS] = useState(null)
     const [onlineState, setOnlineState] = useState(false)
     const [me, setMe] = useState(null)
     const [mates, setMates] = useState([])
@@ -30,15 +20,22 @@ export default function Scene({ floor }) {
             Router.push('/login')
             return
         }
-        setLogged(true)
+
+        const me = JSON.parse(localStorage.getItem(process.env.NEXT_PUBLIC_USERKEY))
+        setMe(me)
     }, [])
 
     useEffect(() => {
-        if (logged) {
-            const u = localStorage.getItem(process.env.NEXT_PUBLIC_USERKEY)
-            const me = JSON.parse(u)
-            setMe(me)
-            log.log('me: ', me)
+        if (me) {
+            const log = new Logger('Scene', 'color: green; background: yellow')
+
+            // init socket.io client
+            const ws = io(process.env.NEXT_PUBLIC_WEBSOCKET_URL, {
+                reconnectionDelayMax: 10000,
+                transports: ['websocket'],
+                reconnection: true,
+                autoConnect: false
+            })
 
             // `online` event will be occured when user is connected to websocket
             ws.on('online', mate => {
@@ -92,7 +89,13 @@ export default function Scene({ floor }) {
             // broadcast to others I am online when WebSocket connected
             ws.on('connect', () => {
                 log.log('WS CONNECTED', ws.id, ws.connected)
-                ws.emit('online', { name: me.login, avatar: me.avatar })
+
+                ws.emit('online', {
+                    name: me.login,
+                    avatar: me.avatar,
+                    room: floor
+                })
+
                 setOnlineState(true)
             })
 
@@ -106,11 +109,13 @@ export default function Scene({ floor }) {
                 setOnlineState(false)
             })
 
+            setWS(ws)
+
             return () => {
                 ws.disconnect('bye')
             }
         }
-    }, [logged])
+    }, [me])
 
     const rtcJoinedCallback = useCallback(rtcClient => {
         const setTrack = (id, mediaType, trackObject) => {
@@ -136,11 +141,9 @@ export default function Scene({ floor }) {
         })
     }, [])
 
-    if (!me) {
+    if (!me || !ws) {
         return null
     }
-
-    console.log('mates--------------------------------------------------------', mates)
 
     return (
         <>

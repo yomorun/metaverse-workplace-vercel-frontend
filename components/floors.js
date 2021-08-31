@@ -19,7 +19,7 @@ const Floors = ({ currentPath = 'floor1' }) => {
     ]
 
     return (
-        <div className='z-10 fixed left-0 top-1/2 rounded-md shadow-lg bg-white bg-opacity-20'>
+        <div className='z-10 fixed left-0 top-1/2 shadow-lg bg-white bg-opacity-30'>
             <div className='w-8 flex flex-col items-center text-base'>
                 <svg
                     className='mt-2 fill-current text-black'

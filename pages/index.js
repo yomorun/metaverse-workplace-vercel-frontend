@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import Head from 'next/head'
 import Router from 'next/router'
-import Guide from '../components/guide'
 
 export default function Home() {
     useEffect(() => {
@@ -19,7 +18,6 @@ export default function Home() {
             <Head>
                 <title>Open-source Virtual HQ with Geo-distributed System Tech Stacks</title>
             </Head>
-            <Guide />
         </>
     )
 }

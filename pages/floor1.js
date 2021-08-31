@@ -14,6 +14,7 @@ export default function Floor1() {
             <Head>
                 <title>Open-source Virtual HQ with Geo-distributed System Tech Stacks</title>
             </Head>
+            <div className='fixed top-0 left-0 w-screen h-screen bg-cover bg-no-repeat bg-center' style={{ backgroundImage: 'url(/floor1.png)' }}></div>
             <Scene floor='floor1' />
             <Floors currentPath='floor1' />
             <Guide />

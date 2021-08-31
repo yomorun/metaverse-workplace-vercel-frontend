@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 import Router from 'next/router'
 import request from '../libs/request'
 import Spin from '../components/spin'
+import Guide from '../components/guide'
 
 function getQueryString(name) {
     const reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')
@@ -84,10 +85,11 @@ export default function Login() {
 
     return (
         <>
+            <div className='fixed top-0 left-0 w-screen h-screen bg-cover bg-no-repeat bg-center' style={{ backgroundImage: 'url(/floor1.png)' }}></div>
             {
                 loading
                     ? (
-                        <div className='fixed top-0 left-0 right-0 bottom-0 bg-gray-100 z-50 flex justify-center items-center'>
+                        <div className='z-50 fixed top-0 left-0 right-0 bottom-0 bg-gray-100 z-50 flex justify-center items-center'>
                             <Spin />
                             <span className='ml-2.5 text-base'>loading...</span>
                         </div>
@@ -95,7 +97,7 @@ export default function Login() {
                     : isDev ? (
                         <div className='w-screen h-screen flex flex-col items-center justify-center'>
                             <div
-                                className='px-4 py-2 rounded-lg bg-blue-900 text-xl text-white cursor-pointer hover:bg-blue-800'
+                                className='z-50 px-4 py-2 rounded-lg bg-blue-900 text-xl text-white cursor-pointer hover:bg-blue-800'
                                 onClick={handleDevLogin}
                             >
                                 Login with GitHub
@@ -104,7 +106,7 @@ export default function Login() {
                     ) : (
                         <div className='w-screen h-screen flex flex-col items-center justify-center'>
                             <a
-                                className='px-4 py-2 rounded-lg bg-blue-900 text-xl text-white no-underline hover:bg-blue-800'
+                                className='z-50 px-4 py-2 rounded-lg bg-blue-900 text-xl text-white no-underline hover:bg-blue-800'
                                 role='button'
                                 href={`https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_SITEURL}/login`}
                             >
@@ -113,6 +115,7 @@ export default function Login() {
                         </div>
                     )
             }
+            <Guide />
         </>
     )
 }
