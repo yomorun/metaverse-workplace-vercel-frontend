@@ -10,7 +10,9 @@ export default function Home() {
             return
         }
 
-        Router.push('/floor1')
+        const rtctoken = JSON.parse(localStorage.getItem(process.env.NEXT_PUBLIC_RTCTOKENKEY))
+        const path = rtctoken && rtctoken.channelName ? `/${rtctoken.channelName}` : '/floor1'
+        Router.push(path)
     }, [])
 
     return (

@@ -31,9 +31,10 @@ export default function Scene({ floor }) {
 
             // init socket.io client
             const ws = io(process.env.NEXT_PUBLIC_WEBSOCKET_URL, {
-                reconnectionDelayMax: 10000,
                 transports: ['websocket'],
                 reconnection: true,
+                reconnectionDelayMax: 10000,
+                reconnectionAttempts: 50,
                 autoConnect: false
             })
 
