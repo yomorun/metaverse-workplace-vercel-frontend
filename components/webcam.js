@@ -37,6 +37,7 @@ const Webcam = ({ cover, name, rtcJoinedCallback, channel }) => {
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
+        AgoraRTC.setLogLevel(4)
         getToken(name, channel, 'host')
             .then(token => {
                 rtcClient = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' })
