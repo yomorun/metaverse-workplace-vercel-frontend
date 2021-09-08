@@ -7,6 +7,7 @@ import { Logger } from '../libs/lib'
 import Me from './me'
 import Mate from './mate'
 import Distance from './distance'
+import EnterArea from './enterarea'
 
 export default function Scene({ floor }) {
     const [ws, setWS] = useState(null)
@@ -149,6 +150,7 @@ export default function Scene({ floor }) {
     return (
         <>
             <Sidebar onlineState={onlineState} count={mates.length + 1} />
+            {floor === 'floor1' && <EnterArea sock={ws} elementIdPrefix='stream-player-' hostId={me.login} />}
             {mates.map(m => (
                 <Mate
                     key={m.name}
