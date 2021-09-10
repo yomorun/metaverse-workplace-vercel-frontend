@@ -50,7 +50,7 @@ const EnterArea = ({ sock, elementIdPrefix, hostId }) => {
             {
                 showCircularAreaIframe && (
                     <iframe
-                        className='z-50 fixed top-1/2 left-1/2 transform translate-x-32 -translate-y-1/2'
+                        className='z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-full'
                         title='YoMo'
                         width='800'
                         height='400'
