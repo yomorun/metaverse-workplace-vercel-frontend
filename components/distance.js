@@ -8,7 +8,6 @@ const getCalcResult = (elementIdPrefix, meId, matesIdList) => {
     const result = []
     const meBox = document.getElementById(elementIdPrefix + meId)
     if (meBox) {
-        const radius = meBox.offsetWidth / 2
         for (let i = 0; i < matesIdList.length; i++) {
             const mateId = matesIdList[i]
             const mateBox = document.getElementById(elementIdPrefix + mateId)
