@@ -19,22 +19,19 @@
   "license": "MIT",
   "dependencies": {
     "agora-access-token": "^2.0.4",
-    "agora-rtc-sdk-ng": "^4.6.2",
-    "axios": "^0.21.1",
+    "agora-rtc-sdk-ng": "^4.7.1",
+    "axios": "^0.22.0",
     "classnames": "^2.3.1",
     "jsc8": "^0.16.3",
-    "moment-timezone": "^0.5.33",
-    "next": "^11.1.0",
+    "next": "^11.1.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "rxjs": "^7.1.0",
-    "socket.io-client": "2.4.0"
+    "rxjs": "^7.3.0",
+    "socket.io-client": "2.4.0",
+    "tailwindcss": "^2.2.16"
   },
   "devDependencies": {
-    "autoprefixer": "^10.3.1",
-    "eslint": "^7.29.0",
-    "eslint-config-next": "^11.0.1",
-    "postcss": "^8.3.5",
-    "tailwindcss": "^2.2.4"
+    "eslint": "^7.32.0",
+    "eslint-config-next": "^11.1.2"
   }
 }
