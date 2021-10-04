@@ -47,7 +47,7 @@ export default function Scene({ floor }) {
                     return
                 }
                 mate.key = mate.name
-                mate.pos = new Vector(15, 15)
+                mate.pos = new Vector(30, 30)
                 setMates(arr => [...arr, mate])
             })
 
