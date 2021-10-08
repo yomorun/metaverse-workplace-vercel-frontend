@@ -10,23 +10,23 @@ const Scene = dynamic(
     { ssr: false }
 )
 
-export default function Floor1() {
+export default function Floor4() {
     const [boundary, setBoundary] = useState(null)
 
     useEffect(() => {
         const { width, height } = getViewportSize()
 
-        setBoundary({ top: 0, bottom: height - 128, left: 0, right: width - 128 })
+        setBoundary({ top: 210, bottom: height - 128, left: 0, right: width - 128 })
     }, [])
 
     return (
         <>
             <Head>
-                <title>Open-source Virtual HQ with Geo-distributed System Tech Stacks</title>
+                <title>Live Meeting Floor</title>
             </Head>
-            <div className='fixed top-0 left-0 w-screen h-screen bg-cover bg-no-repeat bg-center' style={{ backgroundImage: 'url(/floor1.png)' }}></div>
-            {boundary && <Scene showEnterArea floor='floor1' boundary={boundary} initialPosition={{ x: 30, y: 60 }} />}
-            <Floors currentPath='floor1' />
+            <div className='fixed top-0 left-0 w-full h-52 bg-blue-600 bg-opacity-30 border-4 rounded border-blue-600 border-dotted'></div>
+            {boundary && <Scene floor='floor5' boundary={boundary} initialPosition={{ x: 30, y: 210 }} />}
+            <Floors currentPath='floor5' />
             <Guide />
         </>
     )

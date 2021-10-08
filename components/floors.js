@@ -1,9 +1,13 @@
-import { useState, useEffect, memo } from 'react'
+import { memo } from 'react'
 import Link from 'next/link'
 import cn from 'classnames'
 
 const Floors = ({ currentPath = 'floor1' }) => {
     const data = [
+        {
+            name: '5',
+            path: 'floor5',
+        },
         {
             name: '4',
             path: 'floor4',

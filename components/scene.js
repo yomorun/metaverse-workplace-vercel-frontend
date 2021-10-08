@@ -3,19 +3,22 @@ import Router from 'next/router'
 import io from 'socket.io-client'
 import Sidebar from './sidebar'
 import { Vector } from '../libs/movement'
-import { Logger } from '../libs/lib'
+import { Logger, isMobile } from '../libs/lib'
 import Me from './me'
 import Mate from './mate'
 import Distance from './distance'
 import EnterArea from './enterarea'
 
-export default function Scene({ floor }) {
+export default function Scene({ floor, boundary, initialPosition = { x: 30, y: 60 }, showEnterArea = false }) {
     const [ws, setWS] = useState(null)
     const [onlineState, setOnlineState] = useState(false)
     const [me, setMe] = useState(null)
     const [mates, setMates] = useState([])
+    const [ismobile, setIsMobile] = useState(false)
 
     useEffect(() => {
+        setIsMobile(isMobile())
+
         const accessToken = localStorage.getItem(process.env.NEXT_PUBLIC_ACCESSTOKENKEY)
         if (!accessToken) {
             Router.push('/login')
@@ -47,7 +50,7 @@ export default function Scene({ floor }) {
                     return
                 }
                 mate.key = mate.name
-                mate.pos = new Vector(30, 30)
+                mate.pos = new Vector(initialPosition.x, initialPosition.y)
                 setMates(arr => [...arr, mate])
             })
 
@@ -150,33 +153,37 @@ export default function Scene({ floor }) {
     return (
         <>
             <Sidebar onlineState={onlineState} count={mates.length + 1} />
-            {floor === 'floor1' && <EnterArea sock={ws} elementIdPrefix='stream-player-' hostId={me.login} />}
-            {mates.map(m => (
-                <Mate
-                    key={m.name}
-                    name={m.name}
-                    avatar={m.avatar}
-                    initPos={m.pos}
+            {showEnterArea && !ismobile && <EnterArea sock={ws} elementIdPrefix='stream-player-' hostId={me.login} />}
+            <div className='fixed w-screen h-screen sm:overflow-y-auto sm:grid sm:grid-cols-3 sm:gap-2'>
+                <Me
+                    name={me.login}
+                    avatar={me.avatar}
+                    initPos={initialPosition}
                     sock={ws}
-                    videoTrack={m.videoTrack}
-                    audioTrack={m.audioTrack}
-                    hostId={me.login}
+                    rtcJoinedCallback={rtcJoinedCallback}
+                    floor={floor}
+                    boundary={boundary}
                 />
-            ))}
-            <Me
-                name={me.login}
-                avatar={me.avatar}
-                initPos={{ x: 30, y: 30 }}
-                sock={ws}
-                rtcJoinedCallback={rtcJoinedCallback}
-                floor={floor}
-            />
-            <Distance
+                {mates.map(m => (
+                    <Mate
+                        key={m.name}
+                        name={m.name}
+                        avatar={m.avatar}
+                        initPos={m.pos}
+                        sock={ws}
+                        videoTrack={m.videoTrack}
+                        audioTrack={m.audioTrack}
+                        hostId={me.login}
+                        boundary={boundary}
+                    />
+                ))}
+            </div>
+            {!ismobile && <Distance
                 elementIdPrefix='stream-player-'
                 meId={me.login}
                 matesIdList={mates.map(item => item.name)}
                 sock={ws}
-            />
+            />}
         </>
     )
 }

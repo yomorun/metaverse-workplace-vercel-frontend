@@ -3,7 +3,7 @@ import { fromEvent } from 'rxjs'
 import { map, filter, scan, auditTime } from 'rxjs/operators'
 
 import { Vector, move } from '../libs/movement'
-import { Logger } from '../libs/lib'
+import { Logger, isMobile } from '../libs/lib'
 
 import Webcam from './webcam'
 
@@ -20,14 +20,51 @@ const keyPressWASD = (e) => {
     }
 }
 
-function Me({ name, avatar, initPos, sock, rtcJoinedCallback, floor }) {
+const boundaryProcess = (p, boundary) => {
+    const { currPos } = p
+    let isPodiumBoundary = false
+
+    if (currPos.x < boundary.left) {
+        currPos.x = boundary.left
+        isPodiumBoundary = true
+    }
+
+    if (currPos.x > boundary.right) {
+        currPos.x = boundary.right
+        isPodiumBoundary = true
+    }
+
+    if (currPos.y < boundary.top) {
+        currPos.y = boundary.top
+        isPodiumBoundary = true
+    }
+
+    if (currPos.y > boundary.bottom) {
+        currPos.y = boundary.bottom
+        isPodiumBoundary = true
+    }
+
+    return {
+        isPodiumBoundary,
+        ...p
+    }
+}
+
+function Me({ name, avatar, initPos, sock, rtcJoinedCallback, floor, boundary = { top: 0, bottom: 2000, left: 0, right: 2000 } }) {
     const refContainer = useRef(null)
 
     useEffect(() => {
         const log = new Logger('Me', 'color: white; background: green')
 
+        const _isMobile = isMobile()
+
         // default position
         const POS = new Vector(initPos.x || 0, initPos.y || 0)
+
+        if (_isMobile) {
+            POS.x = 0
+            POS.y = boundary.top + 60
+        }
 
         // Redraw UI
         const renderPosition = (p) => {
@@ -69,10 +106,20 @@ function Me({ name, avatar, initPos, sock, rtcJoinedCallback, floor }) {
         )
 
         // every direction changing event will cause position movement
-        direction$.pipe(scan((_currPos, _dir) => _currPos.add(_dir), POS)).subscribe(renderPosition)
+        direction$
+            .pipe(
+                scan(({ currPos = POS }, _dir) => ({ currPos: currPos.add(_dir), dir: _dir }), POS),
+                map(p => boundaryProcess(p, boundary))
+            )
+            .subscribe(({ currPos, dir, isPodiumBoundary }) => {
 
-        // every direction changing will emit to others over websocket
-        direction$.subscribe(broadcastEvent)
+                renderPosition(currPos)
+
+                if (!isPodiumBoundary) {
+                    // emit to others over websocket
+                    broadcastEvent(dir)
+                }
+            })
 
         // connect to socket.io server
         sock.connect()
@@ -90,7 +137,7 @@ function Me({ name, avatar, initPos, sock, rtcJoinedCallback, floor }) {
     }, [])
 
     return (
-        <div className='absolute' ref={refContainer}>
+        <div className='absolute sm:relative max-h-40' ref={refContainer}>
             <Webcam cover={avatar} name={name} rtcJoinedCallback={rtcJoinedCallback} channel={floor} />
             <div className='mt-2 text-base text-center text-white font-bold'>{name}</div>
         </div>

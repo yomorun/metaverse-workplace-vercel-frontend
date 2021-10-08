@@ -2,19 +2,26 @@ import { useEffect, useState, useRef, useCallback, memo } from 'react'
 import { Observable } from 'rxjs'
 import { scan } from 'rxjs/operators'
 
-import { Vector, move } from '../libs/movement'
-import { Logger } from '../libs/lib'
+import { Vector } from '../libs/movement'
+import { Logger, isMobile } from '../libs/lib'
 
 import Sound from './sound'
 
-function Mate({ name, avatar, initPos, sock, videoTrack, audioTrack, hostId }) {
+function Mate({ name, avatar, initPos, sock, videoTrack, audioTrack, hostId, boundary = { top: 0, bottom: 2000, left: 0, right: 2000 } }) {
     const refContainer = useRef(null)
 
     useEffect(() => {
         const log = new Logger(`Mate:${name}`, 'color: white; background: orange')
 
+        const _isMobile = isMobile()
+
         // default position
         const POS = new Vector(initPos.x || 0, initPos.y || 0)
+
+        if (_isMobile) {
+            POS.x = 0
+            POS.y = boundary.top + 60
+        }
 
         // Redraw UI
         const renderPosition = (p) => {
@@ -28,7 +35,7 @@ function Mate({ name, avatar, initPos, sock, videoTrack, audioTrack, hostId }) {
 
         const direction$ = new Observable(obs => {
             sock.on('movement', mv => {
-                if (mv.name != name) {
+                if (mv.name != name || _isMobile) {
                     return
                 }
 
@@ -59,8 +66,8 @@ function Mate({ name, avatar, initPos, sock, videoTrack, audioTrack, hostId }) {
     }, [videoTrack])
 
     return (
-        <div className='absolute' ref={refContainer}>
-            <div className='relative w-32 h-32'>
+        <div className='absolute sm:relative max-h-40' ref={refContainer}>
+            <div className='relative w-32 h-32 sm:w-28 sm:h-28'>
                 <div className='w-full h-full rounded-full overflow-hidden transform translate-0 shadow-lg'>
                     <div id={`stream-player-${name}`} className='w-full h-full'>
                         {!videoTrack && <img className='w-full h-full' src={avatar} />}
