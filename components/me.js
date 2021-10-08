@@ -22,30 +22,30 @@ const keyPressWASD = (e) => {
 
 const boundaryProcess = (p, boundary) => {
     const { currPos } = p
-    let isPodiumBoundary = false
+    let isBoundary = false
 
     if (currPos.x < boundary.left) {
         currPos.x = boundary.left
-        isPodiumBoundary = true
+        isBoundary = true
     }
 
     if (currPos.x > boundary.right) {
         currPos.x = boundary.right
-        isPodiumBoundary = true
+        isBoundary = true
     }
 
     if (currPos.y < boundary.top) {
         currPos.y = boundary.top
-        isPodiumBoundary = true
+        isBoundary = true
     }
 
     if (currPos.y > boundary.bottom) {
         currPos.y = boundary.bottom
-        isPodiumBoundary = true
+        isBoundary = true
     }
 
     return {
-        isPodiumBoundary,
+        isBoundary,
         ...p
     }
 }
@@ -111,11 +111,11 @@ function Me({ name, avatar, initPos, sock, rtcJoinedCallback, floor, boundary = 
                 scan(({ currPos = POS }, _dir) => ({ currPos: currPos.add(_dir), dir: _dir }), POS),
                 map(p => boundaryProcess(p, boundary))
             )
-            .subscribe(({ currPos, dir, isPodiumBoundary }) => {
+            .subscribe(({ currPos, dir, isBoundary }) => {
 
                 renderPosition(currPos)
 
-                if (!isPodiumBoundary) {
+                if (!isBoundary) {
                     // emit to others over websocket
                     broadcastEvent(dir)
                 }
