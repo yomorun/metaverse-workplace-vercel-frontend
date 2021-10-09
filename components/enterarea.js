@@ -69,7 +69,7 @@ const EnterArea = ({ sock, elementIdPrefix, hostId }) => {
                 showSemicircleAreaIframe && (
                     <iframe
                         className='z-50 fixed top-1/2 left-0 transform translate-x-32 -translate-y-1/2'
-                        title='YoMo blog'
+                        title='rustpad'
                         width='1000'
                         height='800'
                         src='https://rustpad.io/#vkBcNy'
