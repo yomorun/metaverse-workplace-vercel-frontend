@@ -5,8 +5,10 @@ import styles from './sidebar.module.css'
 
 const signList = [
     'Use [W/A/S/D] control moving',
-    'Click the button on the right to turn on the sound',
-    'Follow YoMo'
+    'Click 🔇 button on the right to turn on sound',
+    'Visit YoMo on Github',
+    'Database is provided by Macrometa',
+    'WebRTC is provided by Agora.io'
 ]
 
 export default function Sidebar({ onlineState, count }) {
@@ -21,7 +23,7 @@ export default function Sidebar({ onlineState, count }) {
                     setCurrentSign(index + 1)
                 }
             })
-        }, 30000)
+        }, 10000)
 
         return () => {
             clearInterval(intervalID)
