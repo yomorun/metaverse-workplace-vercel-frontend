@@ -74,3 +74,12 @@ export const getViewportSize = () => {
         height: window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
     }
 }
+
+export const getQueryString = name => {
+    const reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')
+    const r = window.location.search.slice(1).match(reg)
+    if (r != null) {
+        return decodeURI(r[2])
+    }
+    return null
+}

@@ -3,15 +3,7 @@ import Router from 'next/router'
 import request from '../libs/request'
 import Spin from '../components/spin'
 import Guide from '../components/guide'
-
-function getQueryString(name) {
-    const reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')
-    const r = window.location.search.substr(1).match(reg)
-    if (r != null) {
-        return unescape(r[2])
-    }
-    return null
-}
+import { getQueryString, uuidv4 } from '../libs/lib'
 
 export default function Login() {
     const [loading, setLoading] = useState(true)
@@ -74,11 +66,12 @@ export default function Login() {
         })
     }, [])
 
-    const handleDevLogin = useCallback(e => {
+    const handleAnonymousLogin = useCallback(e => {
+        const login = 'Guid-' + uuidv4().slice(0, 8)
         localStorage.setItem(process.env.NEXT_PUBLIC_ACCESSTOKENKEY, 'token')
         localStorage.setItem(process.env.NEXT_PUBLIC_USERKEY, JSON.stringify({
-            login: 'xile' + new Date().getSeconds() % 9,
-            avatar: './xilelogo.png',
+            login,
+            avatar: `https://avatars.dicebear.com/api/big-ears-neutral/${login}.svg`,
         }))
         Router.push('/')
     }, [])
@@ -98,9 +91,9 @@ export default function Login() {
                         <div className='w-screen h-screen flex flex-col items-center justify-center'>
                             <div
                                 className='z-50 px-4 py-2 rounded-lg bg-blue-900 text-xl text-white cursor-pointer hover:bg-blue-800'
-                                onClick={handleDevLogin}
+                                onClick={handleAnonymousLogin}
                             >
-                                Login with GitHub
+                                Login
                             </div>
                         </div>
                     ) : (
@@ -112,6 +105,13 @@ export default function Login() {
                             >
                                 Login with GitHub
                             </a>
+                            <br />
+                            <div
+                                className='z-50 px-4 py-2 rounded-lg bg-blue-900 text-xl text-white cursor-pointer hover:bg-blue-800'
+                                onClick={handleAnonymousLogin}
+                            >
+                                Anonymous Login
+                            </div>
                         </div>
                     )
             }
