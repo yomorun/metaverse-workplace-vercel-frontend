@@ -9,7 +9,7 @@ import Mate from './mate'
 import Distance from './distance'
 import AnchorArea from './anchorarea'
 
-export default function Scene({ floor, backgroundImage, boundary, playerInitialPosition = { x: 30, y: 60 }, anchorAreaList }) {
+export default function Scene({ floor, backgroundImage, boundary, playerInitialPosition = { x: 30, y: 60 }, anchorAreaList, showDistanceChange = false }) {
     const [ws, setWS] = useState(null)
     const [onlineState, setOnlineState] = useState(false)
     const [me, setMe] = useState(null)
@@ -153,7 +153,7 @@ export default function Scene({ floor, backgroundImage, boundary, playerInitialP
     return (
         <>
             <Sidebar onlineState={onlineState} count={mates.length + 1} />
-            <div className='relative w-1200px h-675px'>
+            <div className='relative w-1200px h-675px wall'>
                 <img className='absolute top-0 left-0 w-full h-full sm:invisible' src={backgroundImage} />
                 {!ismobile && anchorAreaList &&
                     <AnchorArea
@@ -188,7 +188,7 @@ export default function Scene({ floor, backgroundImage, boundary, playerInitialP
                     ))}
                 </div>
             </div>
-            {!ismobile &&
+            {!ismobile && showDistanceChange &&
                 <Distance
                     elementIdPrefix='stream-player-'
                     hostPlayerId={me.login}

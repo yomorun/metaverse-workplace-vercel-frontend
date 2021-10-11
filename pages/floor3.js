@@ -12,22 +12,21 @@ export default function Floor3() {
     const bgW = 1200
     const bgH = 675
     const playerDiameter = 128
-    const wallThickness = 0
 
     return (
         <>
             <Head>
                 <title>Open-source Virtual HQ with Geo-distributed System Tech Stacks</title>
             </Head>
-            <div className='w-screen h-screen flex justify-center items-center bg-floor-3 min-w-1300'>
+            <div className='w-screen h-screen flex justify-center items-center bg-floor-3 min-w-1300px'>
                 <Scene
                     floor='floor3'
                     backgroundImage='/bg-floor-3.png'
                     boundary={{
-                        top: wallThickness,
-                        left: wallThickness,
-                        bottom: bgH - playerDiameter - wallThickness,
-                        right: bgW - playerDiameter - wallThickness
+                        top: 0,
+                        left: 0,
+                        bottom: bgH - playerDiameter,
+                        right: bgW - playerDiameter
                     }}
                     playerInitialPosition={{ x: 30, y: 60 }}
                 />

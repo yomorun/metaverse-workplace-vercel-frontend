@@ -12,21 +12,22 @@ export default function Floor5() {
     const bgW = 1200
     const bgH = 675
     const playerDiameter = 128
-    const wallThickness = 10
+
     return (
         <>
             <Head>
                 <title>Live Meeting Floor</title>
             </Head>
-            <div className='w-screen h-screen flex justify-center items-center bg-black min-w-1300'>
+            <div className='w-screen h-screen flex justify-center items-center bg-black min-w-1300px'>
                 <Scene
+                    showDistanceChange
                     floor='floor4'
                     backgroundImage='/bg-floor-4.png'
                     boundary={{
-                        top: wallThickness,
-                        left: wallThickness,
-                        bottom: bgH - playerDiameter - wallThickness,
-                        right: bgW - playerDiameter - wallThickness
+                        top: 0,
+                        left: 0,
+                        bottom: bgH - playerDiameter,
+                        right: bgW - playerDiameter
                     }}
                     playerInitialPosition={{ x: 30, y: 60 }}
                 />

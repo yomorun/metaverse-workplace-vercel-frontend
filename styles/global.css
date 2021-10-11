@@ -4,9 +4,9 @@
 
 @layer utilities {
   .movement-transition {
-    transition-property: transform;
+    transition-property       : transform;
     transition-timing-function: linear;
-    transition-duration: 200ms;
+    transition-duration       : 200ms;
   }
 
   .w-1200px {
@@ -32,6 +32,11 @@
   .bg-floor-3 {
     background-color: #CBB19A;
   }
+
+  .wall {
+    box-sizing: content-box;
+    border    : 10px solid #93511E;
+  }
 }
 
 #__next {
@@ -45,10 +50,10 @@ html {
 }
 
 body {
-  margin         : 0;
-  font-size      : 24px;
-  font-family    : 'Exo 2';
-  overflow       : scroll;
+  margin     : 0;
+  font-size  : 24px;
+  font-family: 'Exo 2';
+  overflow   : scroll;
 }
 
 button,
