@@ -41,7 +41,7 @@ export const calcDistance = (element1, element2) => {
     return 0
 }
 
-export const checkCircularCollision = (element1, element2) => {
+export const checkCircularCollisionByDom = (element1, element2) => {
     if (element1 && element2) {
         const r1 = element1.offsetWidth / 2
         const r2 = element2.offsetWidth / 2
@@ -62,6 +62,11 @@ export const checkCircularCollision = (element1, element2) => {
     }
 
     return false
+}
+
+export const checkCircularCollision = (x1, y1, r1, x2, y2, r2) => {
+    const distance = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2))
+    return distance < r1 + r2
 }
 
 export const isMobile = () => {

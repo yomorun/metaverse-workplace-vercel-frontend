@@ -1,10 +1,12 @@
 .nav {
   z-index        : 1000;
+  position       : fixed;
+  right          : 0;
+  top            : 0;
   display        : flex;
   justify-content: flex-end;
   width          : 100%;
   max-height     : 75px;
-  border-right   : 1px solid #eaeaea;
 }
 
 .nav>* {

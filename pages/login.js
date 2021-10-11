@@ -78,7 +78,7 @@ export default function Login() {
 
     return (
         <>
-            <div className='fixed top-0 left-0 w-screen h-screen bg-cover bg-no-repeat bg-center' style={{ backgroundImage: 'url(/floor1.png)' }}></div>
+            <div className='fixed top-0 left-0 w-screen h-screen bg-floor-1'></div>
             {
                 loading
                     ? (

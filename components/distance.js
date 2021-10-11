@@ -4,9 +4,9 @@ import { Observable } from 'rxjs'
 import { debounceTime } from 'rxjs/operators'
 import { calcDistance } from '../libs/lib'
 
-const getCalcResult = (elementIdPrefix, meId, matesIdList) => {
+const getCalcResult = (elementIdPrefix, hostPlayerId, matesIdList) => {
     const result = []
-    const meBox = document.getElementById(elementIdPrefix + meId)
+    const meBox = document.getElementById(elementIdPrefix + hostPlayerId)
     if (meBox) {
         for (let i = 0; i < matesIdList.length; i++) {
             const mateId = matesIdList[i]
@@ -26,7 +26,7 @@ const getCalcResult = (elementIdPrefix, meId, matesIdList) => {
     return result
 }
 
-const Distance = ({ elementIdPrefix, meId, matesIdList, sock }) => {
+const Distance = ({ elementIdPrefix, hostPlayerId, matesIdList, sock }) => {
     const [distanceList, setDistanceList] = useState([])
 
     useEffect(() => {
@@ -37,7 +37,7 @@ const Distance = ({ elementIdPrefix, meId, matesIdList, sock }) => {
         })
 
         const subscription = movement$.pipe(debounceTime(500)).subscribe(() => {
-            const result = getCalcResult(elementIdPrefix, meId, matesIdList)
+            const result = getCalcResult(elementIdPrefix, hostPlayerId, matesIdList)
             setDistanceList(result)
         })
 
@@ -51,7 +51,7 @@ const Distance = ({ elementIdPrefix, meId, matesIdList, sock }) => {
     }
 
     return (
-        <div className='z-10 fixed right-4 top-1/2 rounded-md shadow-lg bg-white bg-opacity-10'>
+        <div className='z-10 fixed right-4 top-1/2 rounded-md shadow-lg bg-white'>
             <p className='my-2 px-5 text-sm text-black font-bold'>Distance changing event:</p>
             <div className='px-5 text-base font-bold text-center text-black max-h-64 overflow-y-auto'>
                 {
@@ -60,13 +60,13 @@ const Distance = ({ elementIdPrefix, meId, matesIdList, sock }) => {
                             className='py-1 w-full flex justify-between'
                             key={item.name}
                         >
-                            <span>{meId} &lt;---&gt; {item.name}</span>
+                            <span>{hostPlayerId} &lt;---&gt; {item.name}</span>
                             <span
                                 className={
                                     cn('ml-5', {
                                         'text-green-400': item.value <= 300,
-                                        'text-yellow-500': item.value > 300 && item.value <= 900,
-                                        'text-red-600': item.value > 900
+                                        'text-yellow-500': item.value > 300 && item.value <= 700,
+                                        'text-red-600': item.value > 700
                                     })
                                 }
                             >

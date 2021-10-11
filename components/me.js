@@ -20,6 +20,7 @@ const keyPressWASD = (e) => {
     }
 }
 
+// Stop player from stepping out of borders
 const boundaryProcess = (p, boundary) => {
     const { currPos } = p
     let isBoundary = false
@@ -137,7 +138,7 @@ function Me({ name, avatar, initPos, sock, rtcJoinedCallback, floor, boundary = 
     }, [])
 
     return (
-        <div className='absolute sm:relative max-h-40' ref={refContainer}>
+        <div className='absolute sm:relative max-h-40' id='host-player-box' ref={refContainer}>
             <Webcam cover={avatar} name={name} rtcJoinedCallback={rtcJoinedCallback} channel={floor} />
             <div className='mt-2 text-base text-center text-white font-bold'>{name}</div>
         </div>

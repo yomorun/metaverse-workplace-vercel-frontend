@@ -5,10 +5,6 @@ import cn from 'classnames'
 const Floors = ({ currentPath = 'floor1' }) => {
     const data = [
         {
-            name: '5',
-            path: 'floor5',
-        },
-        {
             name: '4',
             path: 'floor4',
         },
@@ -27,7 +23,7 @@ const Floors = ({ currentPath = 'floor1' }) => {
     ]
 
     return (
-        <div className='z-10 fixed left-0 top-1/2 shadow-lg bg-white bg-opacity-30'>
+        <div className='z-10 fixed left-0 top-1/2 shadow-lg bg-white bg-opacity-80'>
             <div className='w-8 flex flex-col items-center text-base'>
                 <svg
                     className='mt-2 fill-current text-black'

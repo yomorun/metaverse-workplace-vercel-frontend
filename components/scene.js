@@ -7,9 +7,9 @@ import { Logger, isMobile } from '../libs/lib'
 import Me from './me'
 import Mate from './mate'
 import Distance from './distance'
-import EnterArea from './enterarea'
+import AnchorArea from './anchorarea'
 
-export default function Scene({ floor, boundary, initialPosition = { x: 30, y: 60 }, showEnterArea = false }) {
+export default function Scene({ floor, backgroundImage, boundary, playerInitialPosition = { x: 30, y: 60 }, anchorAreaList }) {
     const [ws, setWS] = useState(null)
     const [onlineState, setOnlineState] = useState(false)
     const [me, setMe] = useState(null)
@@ -50,7 +50,7 @@ export default function Scene({ floor, boundary, initialPosition = { x: 30, y: 6
                     return
                 }
                 mate.key = mate.name
-                mate.pos = new Vector(initialPosition.x, initialPosition.y)
+                mate.pos = new Vector(playerInitialPosition.x, playerInitialPosition.y)
                 setMates(arr => [...arr, mate])
             })
 
@@ -153,37 +153,49 @@ export default function Scene({ floor, boundary, initialPosition = { x: 30, y: 6
     return (
         <>
             <Sidebar onlineState={onlineState} count={mates.length + 1} />
-            {showEnterArea && !ismobile && <EnterArea sock={ws} elementIdPrefix='stream-player-' hostId={me.login} />}
-            <div className='fixed w-screen h-screen sm:overflow-y-auto sm:grid sm:grid-cols-3 sm:gap-2'>
-                <Me
-                    name={me.login}
-                    avatar={me.avatar}
-                    initPos={initialPosition}
-                    sock={ws}
-                    rtcJoinedCallback={rtcJoinedCallback}
-                    floor={floor}
-                    boundary={boundary}
-                />
-                {mates.map(m => (
-                    <Mate
-                        key={m.name}
-                        name={m.name}
-                        avatar={m.avatar}
-                        initPos={m.pos}
+            <div className='relative w-1200px h-675px'>
+                <img className='absolute top-0 left-0 w-full h-full sm:invisible' src={backgroundImage} />
+                {!ismobile && anchorAreaList &&
+                    <AnchorArea
                         sock={ws}
-                        videoTrack={m.videoTrack}
-                        audioTrack={m.audioTrack}
-                        hostId={me.login}
+                        hostPlayerId={me.login}
+                        hostPlayerBoxId='host-player-box'
+                        anchorAreaList={anchorAreaList}
+                    />
+                }
+                <div className='relative w-full h-full sm:fixed sm:overflow-y-auto sm:grid sm:grid-cols-3 sm:gap-2'>
+                    <Me
+                        name={me.login}
+                        avatar={me.avatar}
+                        initPos={playerInitialPosition}
+                        sock={ws}
+                        rtcJoinedCallback={rtcJoinedCallback}
+                        floor={floor}
                         boundary={boundary}
                     />
-                ))}
+                    {mates.map(m => (
+                        <Mate
+                            key={m.name}
+                            name={m.name}
+                            avatar={m.avatar}
+                            initPos={m.pos}
+                            sock={ws}
+                            videoTrack={m.videoTrack}
+                            audioTrack={m.audioTrack}
+                            hostPlayerId={me.login}
+                            boundary={boundary}
+                        />
+                    ))}
+                </div>
             </div>
-            {!ismobile && <Distance
-                elementIdPrefix='stream-player-'
-                meId={me.login}
-                matesIdList={mates.map(item => item.name)}
-                sock={ws}
-            />}
+            {!ismobile &&
+                <Distance
+                    elementIdPrefix='stream-player-'
+                    hostPlayerId={me.login}
+                    matesIdList={mates.map(item => item.name)}
+                    sock={ws}
+                />
+            }
         </>
     )
 }

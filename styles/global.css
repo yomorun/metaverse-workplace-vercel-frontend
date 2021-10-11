@@ -8,6 +8,30 @@
     transition-timing-function: linear;
     transition-duration: 200ms;
   }
+
+  .w-1200px {
+    width: 1200px;
+  }
+
+  .h-675px {
+    height: 675px;
+  }
+
+  .min-w-1300px {
+    min-width: 1300px;
+  }
+
+  .bg-floor-1 {
+    background-color: #D4C9B8;
+  }
+
+  .bg-floor-2 {
+    background-color: #E39A59;
+  }
+
+  .bg-floor-3 {
+    background-color: #CBB19A;
+  }
 }
 
 #__next {

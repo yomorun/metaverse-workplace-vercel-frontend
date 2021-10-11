@@ -6,7 +6,7 @@ import { calcDistance } from '../libs/lib'
 
 import styles from './sound.module.css'
 
-const Sound = ({ audioTrack, elementIdPrefix, hostId, mateId, sock }) => {
+const Sound = ({ audioTrack, elementIdPrefix, hostPlayerId, mateId, sock }) => {
     const [volume, setVolume] = useState(100)
 
     const { state } = useContext(Context)
@@ -19,14 +19,14 @@ const Sound = ({ audioTrack, elementIdPrefix, hostId, mateId, sock }) => {
 
         const movement$ = new Observable(obs => {
             sock.on('movement', mv => {
-                if (mv.name === mateId || mv.name === hostId) {
+                if (mv.name === mateId || mv.name === hostPlayerId) {
                     obs.next(mv)
                 }
             })
         })
 
         const subscription = movement$.pipe(debounceTime(500)).subscribe(() => {
-            const hostBox = document.getElementById(elementIdPrefix + hostId)
+            const hostBox = document.getElementById(elementIdPrefix + hostPlayerId)
             const mateBox = document.getElementById(elementIdPrefix + mateId)
             const distance = calcDistance(hostBox, mateBox)
             const diameter = hostBox.offsetWidth

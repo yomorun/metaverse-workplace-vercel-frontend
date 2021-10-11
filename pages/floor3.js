@@ -1,9 +1,7 @@
 import Head from 'next/head'
 import dynamic from 'next/dynamic'
-import { useEffect, useState } from 'react'
 import Floors from '../components/floors'
 import Guide from '../components/guide'
-import { getViewportSize } from '../libs/lib'
 
 const Scene = dynamic(
     () => import('../components/scene'),
@@ -11,21 +9,29 @@ const Scene = dynamic(
 )
 
 export default function Floor3() {
-    const [boundary, setBoundary] = useState(null)
-
-    useEffect(() => {
-        const { width, height } = getViewportSize()
-
-        setBoundary({ top: 0, bottom: height - 128, left: 0, right: width - 128 })
-    }, [])
+    const bgW = 1200
+    const bgH = 675
+    const playerDiameter = 128
+    const wallThickness = 0
 
     return (
         <>
             <Head>
                 <title>Open-source Virtual HQ with Geo-distributed System Tech Stacks</title>
             </Head>
-            <div className='fixed top-0 left-0 w-screen h-screen bg-cover bg-no-repeat bg-center' style={{ backgroundImage: 'url(/floor3.png)' }}></div>
-            {boundary && <Scene floor='floor3' boundary={boundary} initialPosition={{ x: 30, y: 60 }} />}
+            <div className='w-screen h-screen flex justify-center items-center bg-floor-3 min-w-1300'>
+                <Scene
+                    floor='floor3'
+                    backgroundImage='/bg-floor-3.png'
+                    boundary={{
+                        top: wallThickness,
+                        left: wallThickness,
+                        bottom: bgH - playerDiameter - wallThickness,
+                        right: bgW - playerDiameter - wallThickness
+                    }}
+                    playerInitialPosition={{ x: 30, y: 60 }}
+                />
+            </div>
             <Floors currentPath='floor3' />
             <Guide />
         </>

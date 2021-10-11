@@ -7,7 +7,7 @@ import { Logger, isMobile } from '../libs/lib'
 
 import Sound from './sound'
 
-function Mate({ name, avatar, initPos, sock, videoTrack, audioTrack, hostId, boundary = { top: 0, bottom: 2000, left: 0, right: 2000 } }) {
+function Mate({ name, avatar, initPos, sock, videoTrack, audioTrack, hostPlayerId, boundary = { top: 0, bottom: 2000, left: 0, right: 2000 } }) {
     const refContainer = useRef(null)
 
     useEffect(() => {
@@ -67,7 +67,7 @@ function Mate({ name, avatar, initPos, sock, videoTrack, audioTrack, hostId, bou
 
     return (
         <div className='absolute sm:relative max-h-40' ref={refContainer}>
-            <div className='relative w-32 h-32 sm:w-28 sm:h-28'>
+            <div className='relative w-32 h-32 sm:w-28 sm:h-28 transition duration-500 ease-in-out transform-gpu hover:scale-200'>
                 <div className='w-full h-full rounded-full overflow-hidden transform translate-0 shadow-lg'>
                     <div id={`stream-player-${name}`} className='w-full h-full'>
                         {!videoTrack && <img className='w-full h-full' src={avatar} />}
@@ -80,7 +80,7 @@ function Mate({ name, avatar, initPos, sock, videoTrack, audioTrack, hostId, bou
                     <Sound
                         audioTrack={audioTrack}
                         elementIdPrefix='stream-player-'
-                        hostId={hostId}
+                        hostPlayerId={hostPlayerId}
                         mateId={name}
                         sock={sock}
                     />
