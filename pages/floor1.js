@@ -22,13 +22,22 @@ export default function Floor1() {
                     playerInitialPosition={{ x: 30, y: 60 }}
                     anchorAreaList={[
                         {
-                            id: 'flowerpot-area',
+                            id: 'rte2021-area',
                             position: {
                                 x: 495,
                                 y: 405
                             },
                             diameter: 80,
-                            iframeSrc: 'https://rte2021.agora.io/'
+                            iframeSrc: 'https://rte2021.agora.io/?'
+                        },
+                        {
+                            id: 'yomo-area',
+                            position: {
+                                x: 495,
+                                y: 405
+                            },
+                            diameter: 80,
+                            iframeSrc: 'https://yomo.run/'
                         },
                         {
                             id: 'rustpad-area',
