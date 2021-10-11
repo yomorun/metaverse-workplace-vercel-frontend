@@ -28,7 +28,7 @@ export default function Floor1() {
                                 y: 405
                             },
                             diameter: 80,
-                            iframeSrc: 'https://yomo.run'
+                            iframeSrc: 'https://rte2021.agora.io/'
                         },
                         {
                             id: 'rustpad-area',
@@ -37,7 +37,7 @@ export default function Floor1() {
                                 y: 80
                             },
                             diameter: 120,
-                            iframeSrc: 'https://rustpad.io/#vkBcNy'
+                            iframeSrc: 'https://rustpad.io/#yomo'
                         },
                     ]}
                 />
