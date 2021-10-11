@@ -153,7 +153,7 @@ export default function Scene({ floor, backgroundImage, boundary, playerInitialP
     return (
         <>
             <Sidebar onlineState={onlineState} count={mates.length + 1} />
-            <div className='relative w-1200px h-675px wall'>
+            <div className='relative w-1200px h-675px wall sm:w-full sm:h-full sm:border-0'>
                 <img className='absolute top-0 left-0 w-full h-full sm:invisible' src={backgroundImage} />
                 {!ismobile && anchorAreaList &&
                     <AnchorArea
