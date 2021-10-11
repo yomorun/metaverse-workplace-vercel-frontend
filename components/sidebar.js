@@ -43,7 +43,7 @@ export default function Sidebar({ onlineState, count }) {
     return (
         <nav className={styles.nav}>
             <Link href='https://github.com/yomorun/yomo'>
-                <a className='sm:invisible' target='_blank' alt='YoMo Github Repository'>{signList[currentSign]}</a>
+                <a className='sm:hidden' target='_blank' alt='YoMo Github Repository'>{signList[currentSign]}</a>
             </Link>
             <p>
                 <span className={onlineState ? styles.online : styles.offline}>{onlineState ? 'Online' : 'Offline'}</span>&nbsp;&nbsp;

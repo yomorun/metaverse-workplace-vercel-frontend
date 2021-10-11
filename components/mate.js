@@ -7,7 +7,7 @@ import { Logger, isMobile } from '../libs/lib'
 
 import Sound from './sound'
 
-function Mate({ name, avatar, initPos, sock, videoTrack, audioTrack, hostPlayerId, boundary = { top: 0, bottom: 2000, left: 0, right: 2000 } }) {
+const Mate = ({ name, avatar, initPos, sock, videoTrack, audioTrack, hostPlayerId }) => {
     const refContainer = useRef(null)
 
     useEffect(() => {
@@ -20,7 +20,7 @@ function Mate({ name, avatar, initPos, sock, videoTrack, audioTrack, hostPlayerI
 
         if (_isMobile) {
             POS.x = 0
-            POS.y = boundary.top + 60
+            POS.y = 60
         }
 
         // Redraw UI
@@ -86,7 +86,7 @@ function Mate({ name, avatar, initPos, sock, videoTrack, audioTrack, hostPlayerI
                     />
                 </div>
             </div>
-            <div className='mt-2 text-base text-center text-white font-bold'>{name}</div>
+            <div className='mt-4 text-sm text-center text-white font-bold'>{name}</div>
         </div>
     )
 }

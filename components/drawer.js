@@ -1,7 +1,7 @@
 import { useEffect, useCallback } from 'react'
 import S from './drawer.module.css'
 
-export default ({ isOpen, onClose, children }) => {
+const Drawer = ({ isOpen, onClose, children }) => {
     useEffect(() => {
         if (isOpen) {
             document.body.style = 'overflow: hidden'
@@ -24,3 +24,5 @@ export default ({ isOpen, onClose, children }) => {
         </div>
     )
 }
+
+export default Drawer

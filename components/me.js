@@ -23,35 +23,39 @@ const keyPressWASD = (e) => {
 // Stop player from stepping out of borders
 const boundaryProcess = (p, boundary) => {
     const { currPos } = p
-    let isBoundary = false
+    let isBorder = false
 
     if (currPos.x < boundary.left) {
         currPos.x = boundary.left
-        isBoundary = true
+        isBorder = true
     }
 
     if (currPos.x > boundary.right) {
         currPos.x = boundary.right
-        isBoundary = true
+        isBorder = true
     }
 
     if (currPos.y < boundary.top) {
         currPos.y = boundary.top
-        isBoundary = true
+        isBorder = true
     }
 
     if (currPos.y > boundary.bottom) {
         currPos.y = boundary.bottom
-        isBoundary = true
+        isBorder = true
     }
 
     return {
-        isBoundary,
+        isBorder,
         ...p
     }
 }
 
-function Me({ name, avatar, initPos, sock, rtcJoinedCallback, floor, boundary = { top: 0, bottom: 2000, left: 0, right: 2000 } }) {
+const Me = ({
+    name, avatar, initPos, sock, rtcJoinedCallback, floor,
+    boundary = { top: 0, bottom: 1000, left: 0, right: 1200 },
+    loginType = 'visitor'
+}) => {
     const refContainer = useRef(null)
 
     useEffect(() => {
@@ -64,7 +68,7 @@ function Me({ name, avatar, initPos, sock, rtcJoinedCallback, floor, boundary = 
 
         if (_isMobile) {
             POS.x = 0
-            POS.y = boundary.top + 60
+            POS.y = 60
         }
 
         // Redraw UI
@@ -112,11 +116,11 @@ function Me({ name, avatar, initPos, sock, rtcJoinedCallback, floor, boundary = 
                 scan(({ currPos = POS }, _dir) => ({ currPos: currPos.add(_dir), dir: _dir }), POS),
                 map(p => boundaryProcess(p, boundary))
             )
-            .subscribe(({ currPos, dir, isBoundary }) => {
+            .subscribe(({ currPos, dir, isBorder }) => {
 
                 renderPosition(currPos)
 
-                if (!isBoundary) {
+                if (!isBorder) {
                     // emit to others over websocket
                     broadcastEvent(dir)
                 }
@@ -137,12 +141,25 @@ function Me({ name, avatar, initPos, sock, rtcJoinedCallback, floor, boundary = 
         }
     }, [])
 
-    return (
-        <div className='absolute sm:relative max-h-40' id='host-player-box' ref={refContainer}>
-            <Webcam cover={avatar} name={name} rtcJoinedCallback={rtcJoinedCallback} channel={floor} />
-            <div className='mt-2 text-base text-center text-white font-bold'>{name}</div>
-        </div>
-    )
+    if (loginType === 'host') {
+        return (
+            <div className='absolute sm:relative max-h-40' id='host-player-box' ref={refContainer}>
+                <Webcam cover={avatar} name={name} rtcJoinedCallback={rtcJoinedCallback} channel={floor} />
+                <div className='absolute top-36 sm:top-32 left-1/2 transform -translate-x-1/2 text-sm text-white font-bold whitespace-nowrap'>{name}</div>
+            </div>
+        )
+    } else if (loginType === 'visitor') {
+        return (
+            <div className='absolute sm:relative max-h-40' id='host-player-box' ref={refContainer}>
+                <div className='relative mx-auto w-16 h-16 sm:w-28 sm:h-28 rounded-full overflow-hidden shadow-lg bg-white'>
+                    <img className='w-full h-full' src={avatar} alt='avatar' />
+                </div>
+                <div className='absolute top-20 sm:top-32 left-1/2 transform -translate-x-1/2 text-sm text-white font-bold whitespace-nowrap'>{name}</div>
+            </div>
+        )
+    } else {
+        return null
+    }
 }
 
 export default memo(Me, () => true)

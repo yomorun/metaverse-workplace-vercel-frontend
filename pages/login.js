@@ -43,14 +43,13 @@ export default function Login() {
                     data: {
                         accessToken,
                         login: userRes.login,
-                        name: userRes.name,
                         avatar: userRes.avatar_url
                     }
                 }).then(res => {
                     const user = {
                         login: userRes.login,
-                        name: userRes.name,
                         avatar: userRes.avatar_url,
+                        loginType: 'host'
                     }
                     localStorage.setItem(process.env.NEXT_PUBLIC_ACCESSTOKENKEY, accessToken)
                     localStorage.setItem(process.env.NEXT_PUBLIC_USERKEY, JSON.stringify(user))
@@ -67,11 +66,12 @@ export default function Login() {
     }, [])
 
     const handleAnonymousLogin = useCallback(e => {
-        const login = 'Guid-' + uuidv4().slice(0, 8)
-        localStorage.setItem(process.env.NEXT_PUBLIC_ACCESSTOKENKEY, 'token')
+        const login = 'visitor-' + uuidv4().slice(0, 8)
+        localStorage.setItem(process.env.NEXT_PUBLIC_ACCESSTOKENKEY, 'visitor')
         localStorage.setItem(process.env.NEXT_PUBLIC_USERKEY, JSON.stringify({
             login,
-            avatar: `https://avatars.dicebear.com/api/big-ears-neutral/${login}.svg`,
+            avatar: './yomo.png',
+            loginType: 'visitor'
         }))
         Router.push('/')
     }, [])

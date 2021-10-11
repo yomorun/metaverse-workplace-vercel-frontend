@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import Router from 'next/router'
+import cn from 'classnames'
 import io from 'socket.io-client'
 import Sidebar from './sidebar'
 import { Vector } from '../libs/movement'
@@ -9,7 +10,11 @@ import Mate from './mate'
 import Distance from './distance'
 import AnchorArea from './anchorarea'
 
-export default function Scene({ floor, backgroundImage, boundary, playerInitialPosition = { x: 30, y: 60 }, anchorAreaList, showDistanceChange = false }) {
+const Scene = ({
+    floor, backgroundImage, anchorAreaList,
+    playerInitialPosition = { x: 30, y: 60 },
+    showDistanceChange = false, showWall = false
+}) => {
     const [ws, setWS] = useState(null)
     const [onlineState, setOnlineState] = useState(false)
     const [me, setMe] = useState(null)
@@ -64,9 +69,9 @@ export default function Scene({ floor, backgroundImage, boundary, playerInitialP
                 log.log('[ask]', p)
             })
 
-            ws.on('movement', mv => {
-                log.log('[movement]', mv)
-            })
+            // ws.on('movement', mv => {
+            //     log.log('[movement]', mv)
+            // })
 
             ws.on('sync', state => {
                 log.log('[sync]', state, ', Me:', me.login)
@@ -150,11 +155,19 @@ export default function Scene({ floor, backgroundImage, boundary, playerInitialP
         return null
     }
 
+    const playerDiameter = me.loginType === 'host' ? 128 : 64
+
     return (
         <>
             <Sidebar onlineState={onlineState} count={mates.length + 1} />
-            <div className='relative w-1200px h-675px wall sm:w-full sm:h-full sm:border-0'>
-                <img className='absolute top-0 left-0 w-full h-full sm:invisible' src={backgroundImage} />
+            <div
+                className={
+                    cn('relative w-1200px h-675px sm:w-full sm:h-full sm:border-0', {
+                        'wall': showWall,
+                    })
+                }
+            >
+                <img className='absolute top-0 left-0 w-full h-full sm:hidden' src={backgroundImage} />
                 {!ismobile && anchorAreaList &&
                     <AnchorArea
                         sock={ws}
@@ -165,13 +178,19 @@ export default function Scene({ floor, backgroundImage, boundary, playerInitialP
                 }
                 <div className='relative w-full h-full sm:fixed sm:overflow-y-auto sm:grid sm:grid-cols-3 sm:gap-2'>
                     <Me
+                        loginType={me.loginType}
                         name={me.login}
                         avatar={me.avatar}
                         initPos={playerInitialPosition}
                         sock={ws}
                         rtcJoinedCallback={rtcJoinedCallback}
                         floor={floor}
-                        boundary={boundary}
+                        boundary={{
+                            top: 0,
+                            left: 0,
+                            bottom: 675 - playerDiameter,
+                            right: 1200 - playerDiameter
+                        }}
                     />
                     {mates.map(m => (
                         <Mate
@@ -183,7 +202,6 @@ export default function Scene({ floor, backgroundImage, boundary, playerInitialP
                             videoTrack={m.videoTrack}
                             audioTrack={m.audioTrack}
                             hostPlayerId={me.login}
-                            boundary={boundary}
                         />
                     ))}
                 </div>
@@ -199,3 +217,5 @@ export default function Scene({ floor, backgroundImage, boundary, playerInitialP
         </>
     )
 }
+
+export default Scene

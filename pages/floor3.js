@@ -9,10 +9,6 @@ const Scene = dynamic(
 )
 
 export default function Floor3() {
-    const bgW = 1200
-    const bgH = 675
-    const playerDiameter = 128
-
     return (
         <>
             <Head>
@@ -20,14 +16,9 @@ export default function Floor3() {
             </Head>
             <div className='w-screen h-screen flex justify-center items-center bg-floor-3 min-w-1300px'>
                 <Scene
+                    showWall
                     floor='floor3'
                     backgroundImage='/bg-floor-3.png'
-                    boundary={{
-                        top: 0,
-                        left: 0,
-                        bottom: bgH - playerDiameter,
-                        right: bgW - playerDiameter
-                    }}
                     playerInitialPosition={{ x: 30, y: 60 }}
                 />
             </div>

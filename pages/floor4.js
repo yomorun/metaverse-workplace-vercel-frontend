@@ -9,10 +9,6 @@ const Scene = dynamic(
 )
 
 export default function Floor5() {
-    const bgW = 1200
-    const bgH = 675
-    const playerDiameter = 128
-
     return (
         <>
             <Head>
@@ -23,12 +19,6 @@ export default function Floor5() {
                     showDistanceChange
                     floor='floor4'
                     backgroundImage='/bg-floor-4.png'
-                    boundary={{
-                        top: 0,
-                        left: 0,
-                        bottom: bgH - playerDiameter,
-                        right: bgW - playerDiameter
-                    }}
                     playerInitialPosition={{ x: 30, y: 60 }}
                 />
             </div>
