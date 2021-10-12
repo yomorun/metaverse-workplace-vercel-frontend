@@ -69,7 +69,7 @@ export const checkCircularCollision = (x1, y1, r1, x2, y2, r2) => {
     return distance < r1 + r2
 }
 
-export const isMobile = () => {
+export const checkMobileDevice = () => {
     return !!window.navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
 }
 

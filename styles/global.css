@@ -9,16 +9,16 @@
     transition-duration       : 200ms;
   }
 
-  .w-1200px {
-    width: 1200px;
+  .w-1600px {
+    width: 1600px;
   }
 
-  .h-675px {
-    height: 675px;
+  .h-800px {
+    height: 800px;
   }
 
-  .min-w-1300px {
-    min-width: 1300px;
+  .min-w-1700px {
+    min-width: 1700px;
   }
 
   .bg-floor-1 {

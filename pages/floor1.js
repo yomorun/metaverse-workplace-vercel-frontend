@@ -14,7 +14,7 @@ export default function Floor1() {
             <Head>
                 <title>Open-source Virtual HQ with Geo-distributed System Tech Stacks</title>
             </Head>
-            <div className='w-screen h-screen flex justify-center items-center bg-floor-1 min-w-1300px'>
+            <div className='w-screen h-screen flex justify-center items-center bg-floor-1 min-w-1700px'>
                 <Scene
                     showWall
                     floor='floor1'

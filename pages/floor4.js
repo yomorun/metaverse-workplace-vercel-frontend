@@ -14,7 +14,7 @@ export default function Floor5() {
             <Head>
                 <title>Live Meeting Floor</title>
             </Head>
-            <div className='w-screen h-screen flex justify-center items-center bg-black min-w-1300px'>
+            <div className='w-screen h-screen flex justify-center items-center bg-black min-w-1700px'>
                 <Scene
                     floor='floor4'
                     backgroundImage='/bg-floor-4.png'

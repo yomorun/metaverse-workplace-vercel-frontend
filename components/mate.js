@@ -6,7 +6,7 @@ import cn from 'classnames'
 import Sound from './sound'
 
 import { Vector } from '../libs/movement'
-import { Logger, isMobile } from '../libs/lib'
+import { Logger, checkMobileDevice } from '../libs/lib'
 import { fetchUser } from '../libs/request'
 
 const Mate = ({ name, avatar, initPos, sock, videoTrack, audioTrack, hostPlayerId }) => {
@@ -16,12 +16,12 @@ const Mate = ({ name, avatar, initPos, sock, videoTrack, audioTrack, hostPlayerI
     useEffect(() => {
         const log = new Logger(`Mate:${name}`, 'color: white; background: orange')
 
-        const _isMobile = isMobile()
+        const isMobile = checkMobileDevice()
 
         // default position
         const POS = new Vector(initPos.x || 0, initPos.y || 0)
 
-        if (_isMobile) {
+        if (isMobile) {
             POS.x = 0
             POS.y = 60
         }
@@ -38,7 +38,7 @@ const Mate = ({ name, avatar, initPos, sock, videoTrack, audioTrack, hostPlayerI
 
         const direction$ = new Observable(obs => {
             sock.on('movement', mv => {
-                if (mv.name != name || _isMobile) {
+                if (mv.name != name || isMobile) {
                     return
                 }
 

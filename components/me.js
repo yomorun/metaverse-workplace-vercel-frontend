@@ -6,7 +6,7 @@ import cn from 'classnames'
 import Webcam from './webcam'
 
 import { Vector, move } from '../libs/movement'
-import { Logger, isMobile } from '../libs/lib'
+import { Logger, checkMobileDevice } from '../libs/lib'
 
 // Only accepts events from the W, A, S and D buttons
 const keyPressWASD = (e) => {
@@ -61,12 +61,10 @@ const Me = ({
     useEffect(() => {
         const log = new Logger('Me', 'color: white; background: green')
 
-        const _isMobile = isMobile()
-
         // default position
         const POS = new Vector(initPos.x || 0, initPos.y || 0)
 
-        if (_isMobile) {
+        if (checkMobileDevice()) {
             POS.x = 0
             POS.y = 60
         }
