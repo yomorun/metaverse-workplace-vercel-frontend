@@ -1,12 +1,12 @@
 import { useEffect, useRef, memo } from 'react'
 import { fromEvent } from 'rxjs'
 import { map, filter, scan, auditTime } from 'rxjs/operators'
+import cn from 'classnames'
+
+import Webcam from './webcam'
 
 import { Vector, move } from '../libs/movement'
 import { Logger, isMobile } from '../libs/lib'
-
-import Webcam from './webcam'
-import VisitorWebcam from './visitor-webcam'
 
 // Only accepts events from the W, A, S and D buttons
 const keyPressWASD = (e) => {
@@ -143,19 +143,17 @@ const Me = ({
 
     return (
         <div className='absolute sm:relative max-h-40' id='host-player-box' ref={refContainer}>
-            {
-                role === 'broadcast' ? (
-                    <>
-                        <Webcam cover={avatar} name={name} rtcJoinedCallback={rtcJoinedCallback} channel={floor} />
-                        <div className='absolute top-36 sm:top-32 left-1/2 transform -translate-x-1/2 text-sm text-white font-bold whitespace-nowrap'>{name}</div>
-                    </>
-                ) : (
-                    <>
-                        <VisitorWebcam cover={avatar} name={name} rtcJoinedCallback={rtcJoinedCallback} channel={floor} />
-                        <div className='absolute top-20 sm:top-32 left-1/2 transform -translate-x-1/2 text-sm text-white font-bold whitespace-nowrap'>{name}</div>
-                    </>
-                )
-            }
+            <Webcam cover={avatar} name={name} rtcJoinedCallback={rtcJoinedCallback} channel={floor} role={role} />
+            <div
+                className={
+                    cn('absolute left-1/2 transform -translate-x-1/2 text-sm text-white font-bold whitespace-nowrap', {
+                        'top-36 sm:top-32': role === 'broadcast',
+                        'top-20 sm:top-32': role !== 'broadcast'
+                    })
+                }
+            >
+                {name}
+            </div>
         </div>
     )
 }

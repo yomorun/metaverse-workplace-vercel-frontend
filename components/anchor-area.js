@@ -19,13 +19,12 @@ const AnchorArea = ({ sock, hostPlayerId, hostPlayerBoxId, anchorAreaList = [] }
             })
         })
 
-
-        const hostBox = document.getElementById(hostPlayerBoxId)
-
         // Offset position of the background map
         let parentLeft = null, parentTop = null
 
         const subscription = movement$.pipe(debounceTime(500)).subscribe(mv => {
+            const hostBox = document.getElementById(hostPlayerBoxId)
+
             if (!hostBox) {
                 return
             }

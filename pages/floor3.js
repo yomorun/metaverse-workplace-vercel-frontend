@@ -17,6 +17,7 @@ export default function Floor3() {
             <div className='w-screen h-screen flex justify-center items-center bg-floor-3 min-w-1300px'>
                 <Scene
                     showWall
+                    showDistanceChange
                     floor='floor3'
                     backgroundImage='/bg-floor-3.png'
                     playerInitialPosition={{ x: 30, y: 60 }}

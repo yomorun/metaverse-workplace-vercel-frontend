@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, memo } from 'react'
 import { Observable } from 'rxjs'
 import { scan } from 'rxjs/operators'
+import cn from 'classnames'
 
 import Sound from './sound'
 
@@ -77,39 +78,46 @@ const Mate = ({ name, avatar, initPos, sock, videoTrack, audioTrack, hostPlayerI
 
     return (
         <div className='absolute sm:relative max-h-40' ref={refContainer}>
-            {
-                role === 'broadcast' ? (
-                    <>
-                        <div className='relative w-32 h-32 sm:w-28 sm:h-28 transition duration-500 ease-in-out transform-gpu hover:scale-200'>
-                            <div className='w-full h-full rounded-full overflow-hidden transform translate-0 shadow-lg'>
-                                <div id={`stream-player-${name}`} className='w-full h-full'>
-                                    {!videoTrack && <img className='w-full h-full' src={avatar} />}
-                                </div>
-                            </div>
-                            <div
-                                className='absolute -top-20 left-0'
-                                style={{ display: audioTrack ? 'block' : 'none' }}
-                            >
-                                <Sound
-                                    audioTrack={audioTrack}
-                                    elementIdPrefix='stream-player-'
-                                    hostPlayerId={hostPlayerId}
-                                    mateId={name}
-                                    sock={sock}
-                                />
-                            </div>
+            <div
+                className={
+                    cn('relative mx-auto flex flex-col items-center', {
+                        'w-32 h-32 sm:w-28 sm:h-28': role === 'broadcast',
+                        'w-16 h-16 sm:w-28 sm:h-28': role !== 'broadcast'
+                    })
+                }
+            >
+                <div className='w-full h-full rounded-full overflow-hidden transform translate-0 shadow-lg'>
+                    <div id={`stream-player-${name}`} className='w-full h-full'>
+                        {!videoTrack && <img className='w-full h-full' src={avatar} />}
+                    </div>
+                </div>
+                {
+                    role === 'broadcast' && (
+                        <div
+                            className='absolute -top-20 left-0'
+                            style={{ display: audioTrack ? 'block' : 'none' }}
+                        >
+                            <Sound
+                                audioTrack={audioTrack}
+                                elementIdPrefix='stream-player-'
+                                hostPlayerId={hostPlayerId}
+                                mateId={name}
+                                sock={sock}
+                            />
                         </div>
-                        <div className='absolute top-36 sm:top-32 left-1/2 transform -translate-x-1/2 text-sm text-white font-bold whitespace-nowrap'>{name}</div>
-                    </>
-                ) : (
-                    <>
-                        <div className='relative mx-auto w-16 h-16 sm:w-28 sm:h-28 rounded-full overflow-hidden shadow-lg bg-white'>
-                            <img className='w-full h-full' src={avatar} alt='avatar' />
-                        </div>
-                        <div className='absolute top-20 sm:top-32 left-1/2 transform -translate-x-1/2 text-sm text-white font-bold whitespace-nowrap'>{name}</div>
-                    </>
-                )
-            }
+                    )
+                }
+            </div>
+            <div
+                className={
+                    cn('absolute left-1/2 transform -translate-x-1/2 text-sm text-white font-bold whitespace-nowrap', {
+                        'top-36 sm:top-32': role === 'broadcast',
+                        'top-20 sm:top-32': role !== 'broadcast'
+                    })
+                }
+            >
+                {name}
+            </div>
         </div>
     )
 }
