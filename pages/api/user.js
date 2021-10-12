@@ -5,7 +5,19 @@ const client = new jsc8({
 })
 
 const user = async (req, res) => {
-    if (req.method === 'POST') {
+    if (req.method === 'GET') {
+        const { login } = req.query
+        if (login) {
+            const result = await client.executeQuery(`FOR u IN vhq FILTER u.login == '${login}' RETURN u`)
+            if (result.length) {
+                res.status(200).json({ data: result[0], msg: 'success' })
+            } else{
+                res.status(404).json({ data: null, msg: 'success' })
+            }
+        } else {
+            res.status(400).json({ msg: 'Missing parameter: "login" is required.' })
+        }
+    } else if (req.method === 'POST') {
         const { login, accessToken, avatar } = req.body
         if (login && accessToken) {
             const result = await client.executeQuery(`FOR u IN vhq FILTER u.login == '${login}' RETURN u`)

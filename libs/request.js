@@ -38,3 +38,38 @@ export default function request(config) {
         ...config
     })
 }
+
+export const getRtcToken = async (uid, channelName, role) => {
+    const rtctoken = JSON.parse(localStorage.getItem(process.env.NEXT_PUBLIC_RTCTOKENKEY))
+    const currentTimestamp = Math.floor(Date.now() / 1000)
+    if (
+        rtctoken &&
+        rtctoken.channelName === channelName &&
+        currentTimestamp < rtctoken.privilegeExpiredTs
+    ) {
+        return Promise.resolve(rtctoken.token)
+    } else {
+        try {
+            const response = await request({
+                url: `${process.env.NEXT_PUBLIC_SITEURL}/api/rtctoken`,
+                method: 'post',
+                data: { uid, channelName, role }
+            })
+
+            localStorage.setItem(process.env.NEXT_PUBLIC_RTCTOKENKEY, JSON.stringify(response))
+            return Promise.resolve(response.token)
+        } catch (error) {
+            return Promise.reject(error)
+        }
+    }
+}
+
+export const fetchUser = async (login) => {
+    return request({
+        url: `${process.env.NEXT_PUBLIC_SITEURL}/api/user`,
+        method: 'get',
+        params: {
+            login
+        }
+    })
+}

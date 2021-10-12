@@ -2,6 +2,7 @@ import { useState, useEffect, memo } from 'react'
 import cn from 'classnames'
 import { Observable } from 'rxjs'
 import { debounceTime } from 'rxjs/operators'
+
 import { calcDistance } from '../libs/lib'
 
 const getCalcResult = (elementIdPrefix, hostPlayerId, matesIdList) => {

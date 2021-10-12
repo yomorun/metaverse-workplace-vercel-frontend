@@ -2,13 +2,15 @@ import { useCallback, useEffect, useState } from 'react'
 import Router from 'next/router'
 import cn from 'classnames'
 import io from 'socket.io-client'
+
 import Sidebar from './sidebar'
-import { Vector } from '../libs/movement'
-import { Logger, isMobile } from '../libs/lib'
 import Me from './me'
 import Mate from './mate'
 import Distance from './distance'
-import AnchorArea from './anchorarea'
+import AnchorArea from './anchor-area'
+
+import { Vector } from '../libs/movement'
+import { Logger, isMobile } from '../libs/lib'
 
 const Scene = ({
     floor, backgroundImage, anchorAreaList,
@@ -54,6 +56,7 @@ const Scene = ({
                     log.log('[online] is Me, ignore', me.login)
                     return
                 }
+
                 mate.key = mate.name
                 mate.pos = new Vector(playerInitialPosition.x, playerInitialPosition.y)
                 setMates(arr => [...arr, mate])
@@ -88,7 +91,6 @@ const Scene = ({
                         return true
                     })
                     if (shouldAdd) {
-                        log.log('[sync] add', state)
                         state.key = state.name
                         return [...arr, state]
                     }
@@ -155,7 +157,7 @@ const Scene = ({
         return null
     }
 
-    const playerDiameter = me.loginType === 'host' ? 128 : 64
+    const playerDiameter = me.role === 'broadcast' ? 128 : 64
 
     return (
         <>
@@ -178,7 +180,7 @@ const Scene = ({
                 }
                 <div className='relative w-full h-full sm:fixed sm:overflow-y-auto sm:grid sm:grid-cols-3 sm:gap-2'>
                     <Me
-                        loginType={me.loginType}
+                        role={me.role}
                         name={me.login}
                         avatar={me.avatar}
                         initPos={playerInitialPosition}

@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback, memo } from 'react'
 import { Observable } from 'rxjs'
 import { debounceTime } from 'rxjs/operators'
+
 import Drawer from './drawer'
+
 import { checkCircularCollision } from '../libs/lib'
 
 const AnchorArea = ({ sock, hostPlayerId, hostPlayerBoxId, anchorAreaList = [] }) => {

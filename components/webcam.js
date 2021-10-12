@@ -1,31 +1,10 @@
 import { useState, useEffect, useCallback, useRef, memo } from 'react'
 import AgoraRTC from 'agora-rtc-sdk-ng'
 import cn from 'classnames'
-import Spin from './spin'
-import request from '../libs/request'
 
-const getToken = (uid, channelName, role) => {
-    return new Promise((resolve, reject) => {
-        const rtctoken = JSON.parse(localStorage.getItem(process.env.NEXT_PUBLIC_RTCTOKENKEY))
-        const currentTimestamp = Math.floor(Date.now() / 1000)
-        if (rtctoken && rtctoken.channelName === channelName && currentTimestamp < rtctoken.privilegeExpiredTs) {
-            resolve(rtctoken.token)
-        } else {
-            request({
-                url: `${process.env.NEXT_PUBLIC_SITEURL}/api/rtctoken`,
-                method: 'post',
-                data: { uid, channelName, role }
-            })
-                .then(response => {
-                    localStorage.setItem(process.env.NEXT_PUBLIC_RTCTOKENKEY, JSON.stringify(response))
-                    resolve(response.token)
-                })
-                .catch(error => {
-                    reject(error)
-                })
-        }
-    })
-}
+import Spin from './spin'
+
+import { getRtcToken } from '../libs/request'
 
 let rtcClient
 let videoTrack
@@ -38,7 +17,7 @@ const Webcam = ({ cover, name, rtcJoinedCallback, channel }) => {
 
     useEffect(() => {
         AgoraRTC.setLogLevel(4)
-        getToken(name, channel, 'host')
+        getRtcToken(name, channel, 'host')
             .then(token => {
                 rtcClient = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' })
 

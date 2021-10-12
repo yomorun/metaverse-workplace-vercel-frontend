@@ -6,6 +6,7 @@ import { Vector, move } from '../libs/movement'
 import { Logger, isMobile } from '../libs/lib'
 
 import Webcam from './webcam'
+import VisitorWebcam from './visitor-webcam'
 
 // Only accepts events from the W, A, S and D buttons
 const keyPressWASD = (e) => {
@@ -52,9 +53,8 @@ const boundaryProcess = (p, boundary) => {
 }
 
 const Me = ({
-    name, avatar, initPos, sock, rtcJoinedCallback, floor,
+    name, avatar, role, initPos, sock, rtcJoinedCallback, floor,
     boundary = { top: 0, bottom: 1000, left: 0, right: 1200 },
-    loginType = 'visitor'
 }) => {
     const refContainer = useRef(null)
 
@@ -141,25 +141,23 @@ const Me = ({
         }
     }, [])
 
-    if (loginType === 'host') {
-        return (
-            <div className='absolute sm:relative max-h-40' id='host-player-box' ref={refContainer}>
-                <Webcam cover={avatar} name={name} rtcJoinedCallback={rtcJoinedCallback} channel={floor} />
-                <div className='absolute top-36 sm:top-32 left-1/2 transform -translate-x-1/2 text-sm text-white font-bold whitespace-nowrap'>{name}</div>
-            </div>
-        )
-    } else if (loginType === 'visitor') {
-        return (
-            <div className='absolute sm:relative max-h-40' id='host-player-box' ref={refContainer}>
-                <div className='relative mx-auto w-16 h-16 sm:w-28 sm:h-28 rounded-full overflow-hidden shadow-lg bg-white'>
-                    <img className='w-full h-full' src={avatar} alt='avatar' />
-                </div>
-                <div className='absolute top-20 sm:top-32 left-1/2 transform -translate-x-1/2 text-sm text-white font-bold whitespace-nowrap'>{name}</div>
-            </div>
-        )
-    } else {
-        return null
-    }
+    return (
+        <div className='absolute sm:relative max-h-40' id='host-player-box' ref={refContainer}>
+            {
+                role === 'broadcast' ? (
+                    <>
+                        <Webcam cover={avatar} name={name} rtcJoinedCallback={rtcJoinedCallback} channel={floor} />
+                        <div className='absolute top-36 sm:top-32 left-1/2 transform -translate-x-1/2 text-sm text-white font-bold whitespace-nowrap'>{name}</div>
+                    </>
+                ) : (
+                    <>
+                        <VisitorWebcam cover={avatar} name={name} rtcJoinedCallback={rtcJoinedCallback} channel={floor} />
+                        <div className='absolute top-20 sm:top-32 left-1/2 transform -translate-x-1/2 text-sm text-white font-bold whitespace-nowrap'>{name}</div>
+                    </>
+                )
+            }
+        </div>
+    )
 }
 
 export default memo(Me, () => true)

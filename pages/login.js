@@ -1,9 +1,16 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import Router from 'next/router'
-import request from '../libs/request'
+
 import Spin from '../components/spin'
 import Guide from '../components/guide'
+
+import request, { fetchUser } from '../libs/request'
 import { getQueryString, uuidv4 } from '../libs/lib'
+
+function saveToLocal(login, avatar, role, accessToken) {
+    localStorage.setItem(process.env.NEXT_PUBLIC_ACCESSTOKENKEY, accessToken)
+    localStorage.setItem(process.env.NEXT_PUBLIC_USERKEY, JSON.stringify({ login, avatar, role }))
+}
 
 export default function Login() {
     const [loading, setLoading] = useState(true)
@@ -21,58 +28,55 @@ export default function Login() {
             return null
         }
 
-        request({
-            url: `${process.env.NEXT_PUBLIC_SITEURL}/api/login`,
-            method: 'get',
-            params: {
-                code
-            }
-        }).then(tokenRes => {
-            const accessToken = tokenRes.access_token
-            request({
-                url: 'https://api.github.com/user',
-                method: 'get',
-                headers: {
-                    'accept': 'application/vnd.github.v3+json',
-                    'Authorization': `token ${accessToken}`
-                },
-            }).then(userRes => {
-                request({
-                    url: `${process.env.NEXT_PUBLIC_SITEURL}/api/user`,
-                    method: 'post',
-                    data: {
-                        accessToken,
-                        login: userRes.login,
-                        avatar: userRes.avatar_url
+        async function processIO() {
+            try {
+                const tokenRes = await request({
+                    url: `${process.env.NEXT_PUBLIC_SITEURL}/api/login`,
+                    method: 'get',
+                    params: {
+                        code
                     }
-                }).then(res => {
-                    const user = {
-                        login: userRes.login,
-                        avatar: userRes.avatar_url,
-                        loginType: 'host'
-                    }
-                    localStorage.setItem(process.env.NEXT_PUBLIC_ACCESSTOKENKEY, accessToken)
-                    localStorage.setItem(process.env.NEXT_PUBLIC_USERKEY, JSON.stringify(user))
-                    Router.push('/')
-                }).catch(error => {
-
                 })
-            }).catch(error => {
 
-            })
-        }).catch(error => {
+                const accessToken = tokenRes.access_token
 
-        })
+                const githubUserRes = await request({
+                    url: 'https://api.github.com/user',
+                    method: 'get',
+                    headers: {
+                        'accept': 'application/vnd.github.v3+json',
+                        'Authorization': `token ${accessToken}`
+                    },
+                })
+
+                try {
+                    const { data } = await fetchUser(githubUserRes.login)
+                    saveToLocal(data.login, data.avatar, data.role, accessToken)
+                    Router.push('/')
+                } catch (error) {
+                    await request({
+                        url: `${process.env.NEXT_PUBLIC_SITEURL}/api/user`,
+                        method: 'post',
+                        data: {
+                            accessToken,
+                            login: githubUserRes.login,
+                            avatar: githubUserRes.avatar_url
+                        }
+                    })
+
+                    saveToLocal(githubUserRes.login, githubUserRes.avatar_url, 'visitor', accessToken)
+                    Router.push('/')
+                }
+            } catch (error) {
+
+            }
+        }
+
+        processIO()
     }, [])
 
     const handleAnonymousLogin = useCallback(e => {
-        const login = 'visitor-' + uuidv4().slice(0, 8)
-        localStorage.setItem(process.env.NEXT_PUBLIC_ACCESSTOKENKEY, 'visitor')
-        localStorage.setItem(process.env.NEXT_PUBLIC_USERKEY, JSON.stringify({
-            login,
-            avatar: './yomo.png',
-            loginType: 'visitor'
-        }))
+        saveToLocal('visitor-' + uuidv4().slice(0, 8), './yomo.png', 'visitor', 'visitor')
         Router.push('/')
     }, [])
 

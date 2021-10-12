@@ -1,13 +1,24 @@
-import { useEffect, useState, useRef, useCallback, memo } from 'react'
+import { useEffect, useState, useRef, memo } from 'react'
 import { Observable } from 'rxjs'
 import { scan } from 'rxjs/operators'
 
-import { Vector } from '../libs/movement'
-import { Logger, isMobile } from '../libs/lib'
-
 import Sound from './sound'
 
+import { Vector } from '../libs/movement'
+import { Logger, isMobile } from '../libs/lib'
+import { fetchUser } from '../libs/request'
+
 const Mate = ({ name, avatar, initPos, sock, videoTrack, audioTrack, hostPlayerId }) => {
+    const [role, setRole] = useState(null)
+
+    useEffect(() => {
+        fetchUser(name).then(({ data }) => {
+            setRole(data.role)
+        }).catch(() => {
+            setRole('visitor')
+        })
+    }, [])
+
     const refContainer = useRef(null)
 
     useEffect(() => {
@@ -65,28 +76,45 @@ const Mate = ({ name, avatar, initPos, sock, videoTrack, audioTrack, hostPlayerI
         }
     }, [videoTrack])
 
+    if (role == null) {
+        return null
+    }
+
     return (
         <div className='absolute sm:relative max-h-40' ref={refContainer}>
-            <div className='relative w-32 h-32 sm:w-28 sm:h-28 transition duration-500 ease-in-out transform-gpu hover:scale-200'>
-                <div className='w-full h-full rounded-full overflow-hidden transform translate-0 shadow-lg'>
-                    <div id={`stream-player-${name}`} className='w-full h-full'>
-                        {!videoTrack && <img className='w-full h-full' src={avatar} />}
-                    </div>
-                </div>
-                <div
-                    className='absolute -top-20 left-0'
-                    style={{ display: audioTrack ? 'block' : 'none'}}
-                >
-                    <Sound
-                        audioTrack={audioTrack}
-                        elementIdPrefix='stream-player-'
-                        hostPlayerId={hostPlayerId}
-                        mateId={name}
-                        sock={sock}
-                    />
-                </div>
-            </div>
-            <div className='mt-4 text-sm text-center text-white font-bold'>{name}</div>
+            {
+                role === 'broadcast' ? (
+                    <>
+                        <div className='relative w-32 h-32 sm:w-28 sm:h-28 transition duration-500 ease-in-out transform-gpu hover:scale-200'>
+                            <div className='w-full h-full rounded-full overflow-hidden transform translate-0 shadow-lg'>
+                                <div id={`stream-player-${name}`} className='w-full h-full'>
+                                    {!videoTrack && <img className='w-full h-full' src={avatar} />}
+                                </div>
+                            </div>
+                            <div
+                                className='absolute -top-20 left-0'
+                                style={{ display: audioTrack ? 'block' : 'none' }}
+                            >
+                                <Sound
+                                    audioTrack={audioTrack}
+                                    elementIdPrefix='stream-player-'
+                                    hostPlayerId={hostPlayerId}
+                                    mateId={name}
+                                    sock={sock}
+                                />
+                            </div>
+                        </div>
+                        <div className='absolute top-36 sm:top-32 left-1/2 transform -translate-x-1/2 text-sm text-white font-bold whitespace-nowrap'>{name}</div>
+                    </>
+                ) : (
+                    <>
+                        <div className='relative mx-auto w-16 h-16 sm:w-28 sm:h-28 rounded-full overflow-hidden shadow-lg bg-white'>
+                            <img className='w-full h-full' src={avatar} alt='avatar' />
+                        </div>
+                        <div className='absolute top-20 sm:top-32 left-1/2 transform -translate-x-1/2 text-sm text-white font-bold whitespace-nowrap'>{name}</div>
+                    </>
+                )
+            }
         </div>
     )
 }
