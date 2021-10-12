@@ -18,7 +18,7 @@ export default function Floor5() {
                 <Scene
                     floor='floor4'
                     backgroundImage='/bg-floor-4.png'
-                    playerInitialPosition={{ x: 30, y: 60 }}
+                    playerInitialPosition={{ x: 200, y: 600 }}
                 />
             </div>
             <Floors currentPath='floor4' />

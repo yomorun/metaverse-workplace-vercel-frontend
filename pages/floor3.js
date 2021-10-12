@@ -20,7 +20,7 @@ export default function Floor3() {
                     showDistanceChange
                     floor='floor3'
                     backgroundImage='/bg-floor-3.png'
-                    playerInitialPosition={{ x: 30, y: 60 }}
+                    playerInitialPosition={{ x: 600, y: 500 }}
                 />
             </div>
             <Floors currentPath='floor3' />

@@ -24,8 +24,8 @@ export default function Floor1() {
                         {
                             id: 'flowerpot-area',
                             position: {
-                                x: 495,
-                                y: 405
+                                x: 680,
+                                y: 490
                             },
                             diameter: 80,
                             iframeSrc: 'https://rte2021.agora.io/'
@@ -33,8 +33,8 @@ export default function Floor1() {
                         {
                             id: 'rustpad-area',
                             position: {
-                                x: 420,
-                                y: 80
+                                x: 600,
+                                y: 90
                             },
                             diameter: 120,
                             iframeSrc: 'https://rustpad.io/#yomo'
