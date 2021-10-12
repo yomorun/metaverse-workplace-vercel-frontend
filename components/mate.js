@@ -9,17 +9,8 @@ import { Logger, isMobile } from '../libs/lib'
 import { fetchUser } from '../libs/request'
 
 const Mate = ({ name, avatar, initPos, sock, videoTrack, audioTrack, hostPlayerId }) => {
-    const [role, setRole] = useState(null)
-
-    useEffect(() => {
-        fetchUser(name).then(({ data }) => {
-            setRole(data.role)
-        }).catch(() => {
-            setRole('visitor')
-        })
-    }, [])
-
     const refContainer = useRef(null)
+    const [role, setRole] = useState('broadcast')
 
     useEffect(() => {
         const log = new Logger(`Mate:${name}`, 'color: white; background: orange')
@@ -76,9 +67,13 @@ const Mate = ({ name, avatar, initPos, sock, videoTrack, audioTrack, hostPlayerI
         }
     }, [videoTrack])
 
-    if (role == null) {
-        return null
-    }
+    useEffect(() => {
+        fetchUser(name).then(({ data }) => {
+            setRole(data.role)
+        }).catch(() => {
+            setRole('visitor')
+        })
+    }, [])
 
     return (
         <div className='absolute sm:relative max-h-40' ref={refContainer}>
