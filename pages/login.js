@@ -7,7 +7,7 @@ import Guide from '../components/guide'
 import request, { fetchUser } from '../libs/request'
 import { getQueryString, uuidv4 } from '../libs/lib'
 
-function saveToLocal(login, avatar, role, accessToken) {
+function saveUserToLocal(login, avatar, role, accessToken) {
     localStorage.setItem(process.env.NEXT_PUBLIC_ACCESSTOKENKEY, accessToken)
     localStorage.setItem(process.env.NEXT_PUBLIC_USERKEY, JSON.stringify({ login, avatar, role }))
 }
@@ -20,6 +20,9 @@ export default function Login() {
         if (process.env.NODE_ENV == 'development') {
             setIsDev(true)
         }
+
+        const redirect = getQueryString('redirect')
+        localStorage.setItem('FLOOR', redirect ? redirect : '')
 
         const code = getQueryString('code')
 
@@ -51,8 +54,8 @@ export default function Login() {
 
                 try {
                     const { data } = await fetchUser(githubUserRes.login)
-                    saveToLocal(data.login, data.avatar, data.role, accessToken)
-                    Router.push('/')
+                    saveUserToLocal(data.login, data.avatar, data.role, accessToken)
+                    Router.push(`/${localStorage.getItem('FLOOR')}`)
                 } catch (error) {
                     await request({
                         url: `${process.env.NEXT_PUBLIC_SITEURL}/api/user`,
@@ -64,8 +67,8 @@ export default function Login() {
                         }
                     })
 
-                    saveToLocal(githubUserRes.login, githubUserRes.avatar_url, 'visitor', accessToken)
-                    Router.push('/')
+                    saveUserToLocal(githubUserRes.login, githubUserRes.avatar_url, 'visitor', accessToken)
+                    Router.push(`/${localStorage.getItem('FLOOR')}`)
                 }
             } catch (error) {
 
@@ -76,8 +79,8 @@ export default function Login() {
     }, [])
 
     const handleAnonymousLogin = useCallback(e => {
-        saveToLocal('visitor-' + uuidv4().slice(0, 8), './yomo.png', 'visitor', 'visitor')
-        Router.push('/')
+        saveUserToLocal('visitor-' + uuidv4().slice(0, 8), './yomo.png', 'visitor', 'visitor')
+        Router.push(`/${localStorage.getItem('FLOOR')}`)
     }, [])
 
     return (

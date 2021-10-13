@@ -28,7 +28,7 @@ const Scene = ({
 
         const accessToken = localStorage.getItem(process.env.NEXT_PUBLIC_ACCESSTOKENKEY)
         if (!accessToken) {
-            Router.push('/login')
+            Router.push(`/login?redirect=${floor}`)
             return
         }
 
