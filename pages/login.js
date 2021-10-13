@@ -21,6 +21,9 @@ export default function Login() {
             setIsDev(true)
         }
 
+        const redirect = getQueryString('redirect')
+        localStorage.setItem('FLOOR', redirect ? redirect : '')
+
         const code = getQueryString('code')
 
         if (!code) {
