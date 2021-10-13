@@ -28,7 +28,7 @@ export default function Floor1() {
                                 y: 490
                             },
                             diameter: 80,
-                            iframeSrc: 'https://rte2021.agora.io/'
+                            iframeSrc: 'https://www.rteconf.com/2021'
                         },
                         {
                             id: 'rustpad-area',
