@@ -4,10 +4,10 @@ import cn from 'classnames'
 
 const Floors = ({ currentPath = 'floor1' }) => {
     const data = [
-        {
-            name: '4',
-            path: 'floor4',
-        },
+        // {
+        //     name: '4',
+        //     path: 'floor4',
+        // },
         {
             name: '3',
             path: 'floor3',
