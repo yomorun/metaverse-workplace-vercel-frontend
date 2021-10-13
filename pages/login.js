@@ -21,9 +21,6 @@ export default function Login() {
             setIsDev(true)
         }
 
-        const redirect = getQueryString('redirect')
-        localStorage.setItem('FLOOR', redirect ? redirect : '')
-
         const code = getQueryString('code')
 
         if (!code) {
@@ -55,7 +52,7 @@ export default function Login() {
                 try {
                     const { data } = await fetchUser(githubUserRes.login)
                     saveUserToLocal(data.login, data.avatar, data.role, accessToken)
-                    Router.push(`/${localStorage.getItem('FLOOR')}`)
+                    Router.push(`/${localStorage.getItem(process.env.NEXT_PUBLIC_FLOOR)}`)
                 } catch (error) {
                     await request({
                         url: `${process.env.NEXT_PUBLIC_SITEURL}/api/user`,
@@ -68,7 +65,7 @@ export default function Login() {
                     })
 
                     saveUserToLocal(githubUserRes.login, githubUserRes.avatar_url, 'visitor', accessToken)
-                    Router.push(`/${localStorage.getItem('FLOOR')}`)
+                    Router.push(`/${localStorage.getItem(process.env.NEXT_PUBLIC_FLOOR)}`)
                 }
             } catch (error) {
 
@@ -80,7 +77,7 @@ export default function Login() {
 
     const handleAnonymousLogin = useCallback(e => {
         saveUserToLocal('visitor-' + uuidv4().slice(0, 8), './yomo.png', 'visitor', 'visitor')
-        Router.push(`/${localStorage.getItem('FLOOR')}`)
+        Router.push(`/${localStorage.getItem(process.env.NEXT_PUBLIC_FLOOR)}`)
     }, [])
 
     return (

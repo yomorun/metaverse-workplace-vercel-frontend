@@ -111,8 +111,8 @@ const Mate = ({ name, avatar, initPos, sock, videoTrack, audioTrack, hostPlayerI
             <div
                 className={
                     cn('absolute left-1/2 transform -translate-x-1/2 text-sm text-white font-bold whitespace-nowrap', {
-                        'top-36 sm:top-32': role === 'broadcast',
-                        'top-20 sm:top-32': role !== 'broadcast'
+                        'top-32 sm:top-28': role === 'broadcast',
+                        'top-16 sm:top-28': role !== 'broadcast'
                     })
                 }
             >
