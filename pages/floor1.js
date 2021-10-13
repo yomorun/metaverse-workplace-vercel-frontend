@@ -31,15 +31,6 @@ export default function Floor1() {
                             iframeSrc: 'https://www.rteconf.com/2021'
                         },
                         {
-                            id: 'yomo-area',
-                            position: {
-                                x: 495,
-                                y: 405
-                            },
-                            diameter: 80,
-                            iframeSrc: 'https://yomo.run/'
-                        },
-                        {
                             id: 'rustpad-area',
                             position: {
                                 x: 600,
