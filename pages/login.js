@@ -52,7 +52,8 @@ export default function Login() {
                 try {
                     const { data } = await fetchUser(githubUserRes.login)
                     saveUserToLocal(data.login, data.avatar, data.role, accessToken)
-                    Router.push(`/${localStorage.getItem(process.env.NEXT_PUBLIC_FLOOR)}`)
+                    // Router.push(`/${localStorage.getItem(process.env.NEXT_PUBLIC_FLOOR)}`)
+                    Router.push('/floor1')
                 } catch (error) {
                     await request({
                         url: `${process.env.NEXT_PUBLIC_SITEURL}/api/user`,
@@ -65,7 +66,8 @@ export default function Login() {
                     })
 
                     saveUserToLocal(githubUserRes.login, githubUserRes.avatar_url, 'visitor', accessToken)
-                    Router.push(`/${localStorage.getItem(process.env.NEXT_PUBLIC_FLOOR)}`)
+                    // Router.push(`/${localStorage.getItem(process.env.NEXT_PUBLIC_FLOOR)}`)
+                    Router.push('/floor1')
                 }
             } catch (error) {
 
