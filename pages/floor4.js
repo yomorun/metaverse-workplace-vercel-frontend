@@ -14,12 +14,11 @@ export default function Floor5() {
             <Head>
                 <title>Live Meeting Floor</title>
             </Head>
-            <div className='w-screen h-screen flex justify-center items-center bg-black min-w-1300px'>
+            <div className='w-screen h-screen flex justify-center items-center bg-black min-w-1700px'>
                 <Scene
-                    showDistanceChange
                     floor='floor4'
                     backgroundImage='/bg-floor-4.png'
-                    playerInitialPosition={{ x: 30, y: 60 }}
+                    playerInitialPosition={{ x: 200, y: 600 }}
                 />
             </div>
             <Floors currentPath='floor4' />

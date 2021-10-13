@@ -1,9 +1,4 @@
 const axios = require('axios')
-const jsc8 = require('jsc8')
-const client = new jsc8({
-    url: [process.env.C8URL],
-    apiKey: process.env.C8APIKEY
-})
 
 const login = async (req, res) => {
     if (req.method === 'GET') {

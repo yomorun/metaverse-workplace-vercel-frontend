@@ -1,11 +1,12 @@
 import { useEffect, useRef, memo } from 'react'
 import { fromEvent } from 'rxjs'
 import { map, filter, scan, auditTime } from 'rxjs/operators'
-
-import { Vector, move } from '../libs/movement'
-import { Logger, isMobile } from '../libs/lib'
+import cn from 'classnames'
 
 import Webcam from './webcam'
+
+import { Vector, move } from '../libs/movement'
+import { Logger, checkMobileDevice } from '../libs/lib'
 
 // Only accepts events from the W, A, S and D buttons
 const keyPressWASD = (e) => {
@@ -52,21 +53,18 @@ const boundaryProcess = (p, boundary) => {
 }
 
 const Me = ({
-    name, avatar, initPos, sock, rtcJoinedCallback, floor,
+    name, avatar, role, initPos, sock, rtcJoinedCallback, floor,
     boundary = { top: 0, bottom: 1000, left: 0, right: 1200 },
-    loginType = 'visitor'
 }) => {
     const refContainer = useRef(null)
 
     useEffect(() => {
         const log = new Logger('Me', 'color: white; background: green')
 
-        const _isMobile = isMobile()
-
         // default position
         const POS = new Vector(initPos.x || 0, initPos.y || 0)
 
-        if (_isMobile) {
+        if (checkMobileDevice()) {
             POS.x = 0
             POS.y = 60
         }
@@ -141,25 +139,21 @@ const Me = ({
         }
     }, [])
 
-    if (loginType === 'host') {
-        return (
-            <div className='absolute sm:relative max-h-40' id='host-player-box' ref={refContainer}>
-                <Webcam cover={avatar} name={name} rtcJoinedCallback={rtcJoinedCallback} channel={floor} />
-                <div className='absolute top-36 sm:top-32 left-1/2 transform -translate-x-1/2 text-sm text-white font-bold whitespace-nowrap'>{name}</div>
+    return (
+        <div className='absolute sm:relative max-h-40' id='host-player-box' ref={refContainer}>
+            <Webcam cover={avatar} name={name} rtcJoinedCallback={rtcJoinedCallback} channel={floor} role={role} />
+            <div
+                className={
+                    cn('absolute left-1/2 transform -translate-x-1/2 text-sm text-white font-bold whitespace-nowrap', {
+                        'top-32 sm:top-28': role === 'broadcast',
+                        'top-16 sm:top-28': role !== 'broadcast'
+                    })
+                }
+            >
+                {name}
             </div>
-        )
-    } else if (loginType === 'visitor') {
-        return (
-            <div className='absolute sm:relative max-h-40' id='host-player-box' ref={refContainer}>
-                <div className='relative mx-auto w-16 h-16 sm:w-28 sm:h-28 rounded-full overflow-hidden shadow-lg bg-white'>
-                    <img className='w-full h-full' src={avatar} alt='avatar' />
-                </div>
-                <div className='absolute top-20 sm:top-32 left-1/2 transform -translate-x-1/2 text-sm text-white font-bold whitespace-nowrap'>{name}</div>
-            </div>
-        )
-    } else {
-        return null
-    }
+        </div>
+    )
 }
 
 export default memo(Me, () => true)

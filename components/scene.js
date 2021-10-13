@@ -2,13 +2,15 @@ import { useCallback, useEffect, useState } from 'react'
 import Router from 'next/router'
 import cn from 'classnames'
 import io from 'socket.io-client'
+
 import Sidebar from './sidebar'
-import { Vector } from '../libs/movement'
-import { Logger, isMobile } from '../libs/lib'
 import Me from './me'
 import Mate from './mate'
 import Distance from './distance'
-import AnchorArea from './anchorarea'
+import AnchorArea from './anchor-area'
+
+import { Vector } from '../libs/movement'
+import { Logger, checkMobileDevice } from '../libs/lib'
 
 const Scene = ({
     floor, backgroundImage, anchorAreaList,
@@ -19,13 +21,14 @@ const Scene = ({
     const [onlineState, setOnlineState] = useState(false)
     const [me, setMe] = useState(null)
     const [mates, setMates] = useState([])
-    const [ismobile, setIsMobile] = useState(false)
+    const [isMobile, setIsMobile] = useState(false)
 
     useEffect(() => {
-        setIsMobile(isMobile())
+        setIsMobile(checkMobileDevice())
 
         const accessToken = localStorage.getItem(process.env.NEXT_PUBLIC_ACCESSTOKENKEY)
         if (!accessToken) {
+            localStorage.setItem(process.env.NEXT_PUBLIC_FLOOR, floor)
             Router.push('/login')
             return
         }
@@ -54,6 +57,7 @@ const Scene = ({
                     log.log('[online] is Me, ignore', me.login)
                     return
                 }
+
                 mate.key = mate.name
                 mate.pos = new Vector(playerInitialPosition.x, playerInitialPosition.y)
                 setMates(arr => [...arr, mate])
@@ -88,7 +92,6 @@ const Scene = ({
                         return true
                     })
                     if (shouldAdd) {
-                        log.log('[sync] add', state)
                         state.key = state.name
                         return [...arr, state]
                     }
@@ -155,20 +158,21 @@ const Scene = ({
         return null
     }
 
-    const playerDiameter = me.loginType === 'host' ? 128 : 64
+    const playerDiameter = me.role === 'broadcast' ? 128 : 64
 
     return (
         <>
             <Sidebar onlineState={onlineState} count={mates.length + 1} />
             <div
                 className={
-                    cn('relative w-1200px h-675px sm:w-full sm:h-full sm:border-0', {
+                    cn('relative w-1600px h-800px overflow-hidden sm:w-full sm:h-full sm:border-0', {
                         'wall': showWall,
+                        // 'transform scale-125': !isMobile,
                     })
                 }
             >
                 <img className='absolute top-0 left-0 w-full h-full sm:hidden' src={backgroundImage} />
-                {!ismobile && anchorAreaList &&
+                {!isMobile && anchorAreaList &&
                     <AnchorArea
                         sock={ws}
                         hostPlayerId={me.login}
@@ -178,7 +182,7 @@ const Scene = ({
                 }
                 <div className='relative w-full h-full sm:fixed sm:overflow-y-auto sm:grid sm:grid-cols-3 sm:gap-2'>
                     <Me
-                        loginType={me.loginType}
+                        role={me.role}
                         name={me.login}
                         avatar={me.avatar}
                         initPos={playerInitialPosition}
@@ -188,8 +192,8 @@ const Scene = ({
                         boundary={{
                             top: 0,
                             left: 0,
-                            bottom: 675 - playerDiameter,
-                            right: 1200 - playerDiameter
+                            bottom: 800 - playerDiameter,
+                            right: 1600 - playerDiameter
                         }}
                     />
                     {mates.map(m => (
@@ -206,7 +210,7 @@ const Scene = ({
                     ))}
                 </div>
             </div>
-            {!ismobile && showDistanceChange &&
+            {!isMobile && showDistanceChange &&
                 <Distance
                     elementIdPrefix='stream-player-'
                     hostPlayerId={me.login}

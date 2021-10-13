@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback, memo } from 'react'
 import { Observable } from 'rxjs'
 import { debounceTime } from 'rxjs/operators'
+
 import Drawer from './drawer'
+
 import { checkCircularCollision } from '../libs/lib'
 
 const AnchorArea = ({ sock, hostPlayerId, hostPlayerBoxId, anchorAreaList = [] }) => {
@@ -17,13 +19,12 @@ const AnchorArea = ({ sock, hostPlayerId, hostPlayerBoxId, anchorAreaList = [] }
             })
         })
 
-
-        const hostBox = document.getElementById(hostPlayerBoxId)
-
         // Offset position of the background map
         let parentLeft = null, parentTop = null
 
         const subscription = movement$.pipe(debounceTime(500)).subscribe(mv => {
+            const hostBox = document.getElementById(hostPlayerBoxId)
+
             if (!hostBox) {
                 return
             }

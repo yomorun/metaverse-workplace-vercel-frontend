@@ -14,7 +14,7 @@ export default function Floor1() {
             <Head>
                 <title>Open-source Virtual HQ with Geo-distributed System Tech Stacks</title>
             </Head>
-            <div className='w-screen h-screen flex justify-center items-center bg-floor-1 min-w-1300px'>
+            <div className='w-screen h-screen flex justify-center items-center bg-floor-1 min-w-1700px'>
                 <Scene
                     showWall
                     floor='floor1'
@@ -24,8 +24,8 @@ export default function Floor1() {
                         {
                             id: 'rte2021-area',
                             position: {
-                                x: 495,
-                                y: 405
+                                x: 680,
+                                y: 490
                             },
                             diameter: 80,
                             iframeSrc: 'https://rte2021.agora.io/?'
@@ -42,8 +42,8 @@ export default function Floor1() {
                         {
                             id: 'rustpad-area',
                             position: {
-                                x: 420,
-                                y: 80
+                                x: 600,
+                                y: 90
                             },
                             diameter: 120,
                             iframeSrc: 'https://rustpad.io/#yomo'

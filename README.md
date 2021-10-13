@@ -2,6 +2,12 @@
 
 An open-source [Metaverse Workplace](https://techcrunch.com/2020/11/18/virtual-hqs-race-to-win-over-a-remote-work-fatigued-market/) with Geo-distributed System Tech Stacks.
 
+## RTE2021 Conf
+
+For RTE2021 Realtime Engagement Global Conf, Oct 23, Bejing China, goes here: [RTE2021 instructions - YoMo](rte2021.md)
+
+10月23日，在北京举行的全球 RTE2021 大会，[👉🏼 贡献者指南在这里 👈🏼](rte2021.md)
+
 ## Presence Message Flow
 
 ![yomo metaverse virtual hq](vhq-presence.jpg)
