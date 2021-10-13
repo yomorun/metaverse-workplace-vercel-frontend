@@ -48,6 +48,15 @@ export default function Floor1() {
                             diameter: 160,
                             iframeSrc: 'https://rustpad.io/#yomo'
                         },
+                        {
+                            id: 'rustpad-area-3',
+                            position: {
+                                x: 600,
+                                y: 180
+                            },
+                            diameter: 200,
+                            iframeSrc: 'https://rustpad.io/#yomo'
+                        },
                     ]}
                 />
             </div>
