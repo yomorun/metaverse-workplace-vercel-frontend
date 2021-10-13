@@ -77,7 +77,8 @@ export default function Login() {
 
     const handleAnonymousLogin = useCallback(e => {
         saveUserToLocal('visitor-' + uuidv4().slice(0, 8), './yomo.png', 'visitor', 'visitor')
-        Router.push(`/${localStorage.getItem(process.env.NEXT_PUBLIC_FLOOR)}`)
+        // Router.push(`/${localStorage.getItem(process.env.NEXT_PUBLIC_FLOOR)}`)
+        Router.push('/floor1')
     }, [])
 
     return (
