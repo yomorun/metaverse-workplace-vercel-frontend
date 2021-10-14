@@ -28,7 +28,8 @@ const Scene = ({
 
         const accessToken = localStorage.getItem(process.env.NEXT_PUBLIC_ACCESSTOKENKEY)
         if (!accessToken) {
-            Router.push(`/login?redirect=${floor}`)
+            localStorage.setItem(process.env.NEXT_PUBLIC_FLOOR, floor)
+            Router.push('/login')
             return
         }
 
@@ -68,14 +69,6 @@ const Scene = ({
                 setMates(arr => arr.filter(p => p.name !== mate.name))
             })
 
-            ws.on('ask', p => {
-                log.log('[ask]', p)
-            })
-
-            // ws.on('movement', mv => {
-            //     log.log('[movement]', mv)
-            // })
-
             ws.on('sync', state => {
                 log.log('[sync]', state, ', Me:', me.login)
                 if (state.name === me.login) {
@@ -100,7 +93,7 @@ const Scene = ({
 
             // broadcast to others I am online when WebSocket connected
             ws.on('connect', () => {
-                log.log('WS CONNECTED', ws.id, ws.connected)
+                // log.log('WS CONNECTED', ws.id, ws.connected)
 
                 ws.emit('online', {
                     name: me.login,
@@ -112,7 +105,7 @@ const Scene = ({
             })
 
             ws.on('disconnect', (reason) => {
-                console.error('WS DISCONNECT', reason)
+                // console.log('WS DISCONNECT', reason)
                 setOnlineState(false)
             })
 

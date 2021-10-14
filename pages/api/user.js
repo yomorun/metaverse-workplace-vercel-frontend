@@ -10,9 +10,17 @@ const user = async (req, res) => {
         if (login) {
             const result = await client.executeQuery(`FOR u IN vhq FILTER u.login == '${login}' RETURN u`)
             if (result.length) {
-                res.status(200).json({ data: result[0], msg: 'success' })
-            } else{
-                res.status(404).json({ data: null, msg: 'success' })
+                const user = result[0]
+                res.status(200).json({
+                    data: {
+                        role: user.role,
+                        login: user.login,
+                        avatar: user.avatar
+                    },
+                    msg: 'success'
+                })
+            } else {
+                res.status(200).json({ data: null, msg: 'success' })
             }
         } else {
             res.status(400).json({ msg: 'Missing parameter: "login" is required.' })
