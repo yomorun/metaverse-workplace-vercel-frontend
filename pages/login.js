@@ -54,11 +54,12 @@ export default function Login() {
                     },
                 })
 
-                try {
-                    const { data } = await fetchUser(githubUserRes.login)
+                const { data } = await fetchUser(githubUserRes.login)
+
+                if (data) {
                     saveUserToLocal(data.login, data.avatar, data.role, accessToken)
                     Router.push(getFloorRoutePath())
-                } catch (error) {
+                } else {
                     await request({
                         url: `${process.env.NEXT_PUBLIC_SITEURL}/api/user`,
                         method: 'post',
