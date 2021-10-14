@@ -69,11 +69,17 @@ const Mate = ({ name, avatar, initPos, sock, videoTrack, audioTrack, hostPlayerI
     }, [videoTrack])
 
     useEffect(() => {
-        fetchUser(name).then(({ data }) => {
-            setRole(data.role)
-        }).catch(() => {
+        if (name.split('-')[0] === 'visitor') {
             setRole('visitor')
-        })
+        } else {
+            fetchUser(name).then(({ data }) => {
+                if (data) {
+                    setRole(data.role)
+                } else {
+                    setRole('visitor')
+                }
+            })
+        }
     }, [])
 
     return (
