@@ -82,7 +82,9 @@ export default function Login() {
     }, [])
 
     const handleAnonymousLogin = useCallback(e => {
-        saveUserToLocal('visitor-' + uuidv4().slice(0, 8), './yomo.png', 'visitor', 'visitor')
+        const login = `visitor-${uuidv4().slice(0, 8)}`
+        const avatar = `./visitor-avatar-${new Date().getSeconds() % 9}.png`
+        saveUserToLocal(login, avatar, 'visitor', 'visitor')
         Router.push(getFloorRoutePath())
     }, [])
 
