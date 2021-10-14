@@ -12,6 +12,11 @@ function saveUserToLocal(login, avatar, role, accessToken) {
     localStorage.setItem(process.env.NEXT_PUBLIC_USERKEY, JSON.stringify({ login, avatar, role }))
 }
 
+function getFloorRoutePath() {
+    const floor = localStorage.getItem(process.env.NEXT_PUBLIC_FLOOR)
+    return floor ? `/${floor}` : '/floor1'
+}
+
 export default function Login() {
     const [loading, setLoading] = useState(true)
     const [isDev, setIsDev] = useState(false)
@@ -52,8 +57,7 @@ export default function Login() {
                 try {
                     const { data } = await fetchUser(githubUserRes.login)
                     saveUserToLocal(data.login, data.avatar, data.role, accessToken)
-                    // Router.push(`/${localStorage.getItem(process.env.NEXT_PUBLIC_FLOOR)}`)
-                    Router.push('/floor1')
+                    Router.push(getFloorRoutePath())
                 } catch (error) {
                     await request({
                         url: `${process.env.NEXT_PUBLIC_SITEURL}/api/user`,
@@ -66,8 +70,7 @@ export default function Login() {
                     })
 
                     saveUserToLocal(githubUserRes.login, githubUserRes.avatar_url, 'visitor', accessToken)
-                    // Router.push(`/${localStorage.getItem(process.env.NEXT_PUBLIC_FLOOR)}`)
-                    Router.push('/floor1')
+                    Router.push(getFloorRoutePath())
                 }
             } catch (error) {
 
@@ -79,8 +82,7 @@ export default function Login() {
 
     const handleAnonymousLogin = useCallback(e => {
         saveUserToLocal('visitor-' + uuidv4().slice(0, 8), './yomo.png', 'visitor', 'visitor')
-        // Router.push(`/${localStorage.getItem(process.env.NEXT_PUBLIC_FLOOR)}`)
-        Router.push('/floor1')
+        Router.push(getFloorRoutePath())
     }, [])
 
     return (
