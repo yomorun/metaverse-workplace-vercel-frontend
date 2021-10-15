@@ -16,10 +16,11 @@ export default function Floor2() {
             </Head>
             <div className='w-screen h-screen flex justify-center items-center bg-floor-2 min-w-1700px'>
                 <Scene
-                    showWall
+                    className='w-1600px h-800px wall'
                     floor='floor2'
                     backgroundImage='/bg-floor-2.png'
                     playerInitialPosition={{ x: 30, y: 60 }}
+                    boundary={{ top: 0, left: 0, bottom: 800, right: 1600 }}
                 />
             </div>
             <Floors currentPath='floor2' />

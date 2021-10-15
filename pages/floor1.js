@@ -16,10 +16,11 @@ export default function Floor1() {
             </Head>
             <div className='w-screen h-screen flex justify-center items-center bg-floor-1 min-w-1700px'>
                 <Scene
-                    showWall
+                    className='w-1600px h-800px wall'
                     floor='floor1'
                     backgroundImage='/bg-floor-1.png'
                     playerInitialPosition={{ x: 30, y: 60 }}
+                    boundary={{ top: 0, left: 0, bottom: 800, right: 1600 }}
                     anchorAreaList={[
                         {
                             id: 'rte2021-area',
