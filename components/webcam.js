@@ -113,8 +113,25 @@ const Webcam = ({ cover, name, rtcJoinedCallback, channel, role }) => {
                 })
             }
         >
-            <div id={`stream-player-${name}`} className='w-full h-full rounded-full overflow-hidden transform translate-0 shadow-lg bg-white'>
-                {!videoOn && <img className='w-full h-full' src={cover} alt='avatar' />}
+            <div id={`stream-player-${name}`}
+                style={{
+                    borderRadius: "9999px",
+                    padding: "2px",
+                    backgroundImage: "-webkit-linear-gradient(90deg, rgba(24, 191, 246), rgba(24, 117, 246))",
+
+                }}
+                className='w-full h-full rounded-full overflow-hidden transform translate-0 shadow-lg bg-white'>
+                {!videoOn && 
+                <img
+                className='w-full h-full' 
+                style={{
+                    borderRadius: "9999px",
+                    background: "#fff"
+                }} 
+                src={cover} 
+                alt='avatar'
+                />
+                }
             </div>
             {
                 role === 'broadcast' && (
