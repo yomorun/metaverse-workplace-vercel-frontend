@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
 import Router from 'next/router'
-import cn from 'classnames'
 import io from 'socket.io-client'
 
 import Sidebar from './sidebar'
@@ -8,14 +7,15 @@ import Me from './me'
 import Mate from './mate'
 import Distance from './distance'
 import AnchorArea from './anchor-area'
+import CheckPoint from './check-point'
 
 import { Vector } from '../libs/movement'
 import { Logger, checkMobileDevice } from '../libs/lib'
 
 const Scene = ({
-    floor, backgroundImage, anchorAreaList,
-    playerInitialPosition = { x: 30, y: 60 },
-    showDistanceChange = false, showWall = false
+    className, floor, backgroundImage, anchorAreaList, checkPointList,
+    playerInitialPosition = { x: 30, y: 60 }, showDistanceChange = false,
+    boundary = { top: 0, left: 0, bottom: 1000, right: 1600}
 }) => {
     const [ws, setWS] = useState(null)
     const [onlineState, setOnlineState] = useState(false)
@@ -155,14 +155,7 @@ const Scene = ({
     return (
         <>
             <Sidebar onlineState={onlineState} count={mates.length + 1} />
-            <div
-                className={
-                    cn('relative w-1600px h-800px overflow-hidden sm:w-full sm:h-full sm:border-0', {
-                        'wall': showWall,
-                        // 'transform scale-125': !isMobile,
-                    })
-                }
-            >
+            <div className={`relative overflow-hidden sm:w-full sm:h-full sm:border-0 ${className}`}>
                 <img className='absolute top-0 left-0 w-full h-full sm:hidden' src={backgroundImage} />
                 {!isMobile && anchorAreaList &&
                     <AnchorArea
@@ -170,6 +163,14 @@ const Scene = ({
                         hostPlayerId={me.login}
                         hostPlayerBoxId='host-player-box'
                         anchorAreaList={anchorAreaList}
+                    />
+                }
+                {!isMobile && checkPointList &&
+                    <CheckPoint
+                        sock={ws}
+                        hostPlayerId={me.login}
+                        hostPlayerBoxId='host-player-box'
+                        checkPointList={checkPointList}
                     />
                 }
                 <div className='relative w-full h-full sm:fixed sm:overflow-y-auto sm:grid sm:grid-cols-3 sm:gap-2'>
@@ -182,10 +183,10 @@ const Scene = ({
                         rtcJoinedCallback={rtcJoinedCallback}
                         floor={floor}
                         boundary={{
-                            top: 0,
-                            left: 0,
-                            bottom: 800 - playerDiameter,
-                            right: 1600 - playerDiameter
+                            top: boundary.top,
+                            left: boundary.left,
+                            bottom: boundary.bottom - playerDiameter,
+                            right: boundary.right - playerDiameter
                         }}
                     />
                     {mates.map(m => (

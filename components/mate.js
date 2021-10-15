@@ -92,7 +92,7 @@ const Mate = ({ name, avatar, initPos, sock, videoTrack, audioTrack, hostPlayerI
                     })
                 }
             >
-                <div className='w-full h-full rounded-full overflow-hidden transform translate-0 shadow-lg'>
+                <div className='w-full h-full rounded-full overflow-hidden transform translate-0 shadow-lg bg-white'>
                     <div id={`stream-player-${name}`} className='w-full h-full'>
                         {!videoTrack && <img className='w-full h-full' src={avatar} />}
                     </div>
