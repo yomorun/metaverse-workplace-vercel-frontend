@@ -38,7 +38,7 @@ export default function Floor1() {
                                 y: 90
                             },
                             diameter: 120,
-                            iframeSrc: 'https://rustpad.io/#yomo'
+                            iframeSrc: 'https://composing.studio/yomo'
                         },
                     ]}
                 />
