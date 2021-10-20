@@ -14,14 +14,19 @@ const Guide = () => {
                     Geo-distributed architecture
                 </a>&nbsp;
                 <span>Virtual HQ, use <strong className='bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500'>[W/A/S/D]</strong> to control movement.</span>&nbsp;
-                (<a
+                (Source Code: <a
                     className='text-blue-500 hover:text-blue-900'
-                    href='https://github.com/yomorun/yomo-vhq-nextjs'
+                    href='https://github.com/yomorun/yomo-metaverse-workplace-nextjs'
                     target='_blank'
                     rel='noreferrer'
                 >
-                    Full Source Code can be found here
-                </a>)
+                    Frontend
+                </a>&nbsp;<a
+                    className='text-blue-500 hover:text-blue-900'
+                    href='https://github.com/yomorun/yomo-vhq-backend'
+                    target='_blank'
+                    rel='noreferrer'
+                > Backend </a>)
             </p>
         </div>
     )
