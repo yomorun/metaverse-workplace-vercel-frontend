@@ -56,7 +56,7 @@ export default function Floor1() {
                                 y: 90
                             },
                             diameter: 90,
-                            iframeSrc: 'http://8.141.73.118:8888/'
+                            iframeSrc: 'https://minecraftart.netlify.app/editor'
                         },
                     ]}
                 />
