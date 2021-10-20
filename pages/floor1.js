@@ -46,7 +46,7 @@ export default function Floor1() {
                                 x: 720,
                                 y: 490
                             },
-                            diameter: 80,
+                            diameter: 90,
                             iframeSrc: 'http://8.141.73.118:8888/'
                         },
                         {
@@ -55,7 +55,7 @@ export default function Floor1() {
                                 x: 780,
                                 y: 90
                             },
-                            diameter: 80,
+                            diameter: 90,
                             iframeSrc: 'http://8.141.73.118:8888/'
                         },
                     ]}
