@@ -40,6 +40,24 @@ export default function Floor1() {
                             diameter: 120,
                             iframeSrc: 'https://composing.studio/yomo'
                         },
+                        {
+                            id: 'face-detection-area',
+                            position: {
+                                x: 720,
+                                y: 490
+                            },
+                            diameter: 80,
+                            iframeSrc: 'http://8.141.73.118:8888/'
+                        },
+                        {
+                            id: 'ntf-area',
+                            position: {
+                                x: 780,
+                                y: 90
+                            },
+                            diameter: 80,
+                            iframeSrc: 'http://8.141.73.118:8888/'
+                        },
                     ]}
                 />
             </div>
