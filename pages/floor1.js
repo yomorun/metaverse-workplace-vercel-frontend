@@ -205,7 +205,7 @@ export default function Floor1() {
                                     id: 1,
                                     startAt: '2021-10-21 01:00:00',
                                     endAt: '2021-10-22 23:59:00',
-                                    src: 'https://rte-conference.oss-accelerate.aliyuncs.com/static/web/APP%E5%BC%80%E5%8F%91%E8%80%85%E4%B8%AA%E4%BA%BA%E4%BF%A1%E6%81%AF%E4%BF%9D%E6%8A%A4%E5%AE%A3%E8%AE%B2%E4%BC%9A.jpg'
+                                    src: 'https://rte-conference.oss-accelerate.aliyuncs.com/static/web/%E4%B8%AA%E4%BA%BA%E4%BF%A1%E6%81%AF%E4%BF%9D%E6%8A%A4.jpg'
                                 },
                             ]
                         },
