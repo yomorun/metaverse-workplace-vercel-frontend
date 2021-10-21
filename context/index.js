@@ -1,9 +1,15 @@
 import { useReducer, createContext } from 'react'
 import { sound } from './reducers/sound'
+import { drawer } from './reducers/drawer'
 
 const initialState = {
     sound: {
         muted: true
+    },
+    drawer: {
+        isOpen: false,
+        iframeSrc: '',
+        imgList: [],
     },
 }
 
@@ -19,7 +25,7 @@ const combineReducers = (...reducers) => (state, action) => {
 
 const Provider = ({ children }) => {
     const [state, dispatch] = useReducer(
-        combineReducers(sound),
+        combineReducers(sound, drawer),
         initialState
     )
 

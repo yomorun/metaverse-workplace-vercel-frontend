@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from 'react'
 import Router from 'next/router'
 
 import Spin from '../components/spin'
-import Guide from '../components/guide'
 
 import request, { fetchUser } from '../libs/request'
 import { getQueryString, uuidv4 } from '../libs/lib'
@@ -90,7 +89,7 @@ export default function Login() {
 
     return (
         <>
-            <div className='fixed top-0 left-0 w-screen h-screen bg-floor-1'></div>
+            <div className='fixed top-0 left-0 w-screen h-screen bg-black'></div>
             {
                 loading
                     ? (
@@ -127,7 +126,6 @@ export default function Login() {
                         </div>
                     )
             }
-            <Guide />
         </>
     )
 }

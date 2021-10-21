@@ -22,32 +22,45 @@ const keyPressWASD = (e) => {
 }
 
 // Stop player from stepping out of borders
-const boundaryProcess = (p, boundary) => {
-    const { currPos } = p
-    let isBorder = false
+const boundaryProcess = (p, boundary, playerDiameter, role) => {
+    const { currPos, dir } = p
+    let collided = false
 
     if (currPos.x < boundary.left) {
         currPos.x = boundary.left
-        isBorder = true
+        collided = true
     }
 
-    if (currPos.x > boundary.right) {
-        currPos.x = boundary.right
-        isBorder = true
+    if (currPos.x > boundary.right - playerDiameter) {
+        currPos.x = boundary.right - playerDiameter
+        collided = true
     }
 
     if (currPos.y < boundary.top) {
         currPos.y = boundary.top
-        isBorder = true
+        collided = true
     }
 
-    if (currPos.y > boundary.bottom) {
-        currPos.y = boundary.bottom
-        isBorder = true
+    if (currPos.y > boundary.bottom - playerDiameter) {
+        currPos.y = boundary.bottom - playerDiameter
+        collided = true
+    }
+
+    if (boundary.lectern && role !== 'broadcast') {
+        const lecternCollided = currPos.x > boundary.lectern.left - playerDiameter && currPos.y < boundary.lectern.bottom
+        if (lecternCollided) {
+            if (dir.x === 1) {
+                currPos.x = boundary.lectern.left - playerDiameter
+                collided = true
+            } else if (dir.y === -1) {
+                currPos.y = boundary.lectern.bottom
+                collided = true
+            }
+        }
     }
 
     return {
-        isBorder,
+        collided,
         ...p
     }
 }
@@ -64,10 +77,7 @@ const Me = ({
         // default position
         const POS = new Vector(initPos.x || 0, initPos.y || 0)
 
-        if (checkMobileDevice()) {
-            POS.x = 0
-            POS.y = 60
-        }
+        const playerDiameter = role === 'broadcast' ? 128 : 64
 
         // Redraw UI
         const renderPosition = (p) => {
@@ -76,8 +86,12 @@ const Me = ({
             }
         }
 
-        // initial position
-        renderPosition(POS)
+        const isMobile = checkMobileDevice()
+
+        if (!isMobile) {
+            // initial position
+            renderPosition(POS)
+        }
 
         // Answer server query, when other mates go online, server will ask others' states,
         // this is the response
@@ -112,13 +126,13 @@ const Me = ({
         direction$
             .pipe(
                 scan(({ currPos = POS }, _dir) => ({ currPos: currPos.add(_dir), dir: _dir }), POS),
-                map(p => boundaryProcess(p, boundary))
+                map(p => boundaryProcess(p, boundary, playerDiameter, role))
             )
-            .subscribe(({ currPos, dir, isBorder }) => {
+            .subscribe(({ currPos, dir, collided }) => {
 
                 renderPosition(currPos)
 
-                if (!isBorder) {
+                if (!collided) {
                     // emit to others over websocket
                     broadcastEvent(dir)
                 }
@@ -140,7 +154,7 @@ const Me = ({
     }, [])
 
     return (
-        <div className='absolute sm:relative max-h-40' id='host-player-box' ref={refContainer}>
+        <div className='z-10 absolute max-h-40 sm:relative sm-grid-card' id='host-player-box' ref={refContainer}>
             <Webcam cover={avatar} name={name} rtcJoinedCallback={rtcJoinedCallback} channel={floor} role={role} />
             <div
                 className={

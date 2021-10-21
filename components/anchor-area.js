@@ -1,14 +1,12 @@
-import { useState, useEffect, useCallback, memo } from 'react'
+import { useEffect, useContext, memo } from 'react'
+import { Context } from '../context'
 import { Observable } from 'rxjs'
 import { debounceTime } from 'rxjs/operators'
 
-import Drawer from './drawer'
-
 import { checkCircularCollision } from '../libs/lib'
 
-const AnchorArea = ({ sock, hostPlayerId, hostPlayerBoxId, anchorAreaList = [] }) => {
-    const [showDrawer, setShowDrawer] = useState(false)
-    const [iframeSrc, setIframeSrc] = useState('')
+const AnchorArea = ({ sock, hostPlayerId, hostPlayerBoxId, anchorAreaList = [], scale = 1 }) => {
+    const { dispatch } = useContext(Context)
 
     useEffect(() => {
         const movement$ = new Observable(obs => {
@@ -19,7 +17,7 @@ const AnchorArea = ({ sock, hostPlayerId, hostPlayerBoxId, anchorAreaList = [] }
             })
         })
 
-        const subscription = movement$.pipe(debounceTime(500)).subscribe(() => {
+        const subscription = movement$.pipe(debounceTime(200)).subscribe(() => {
             const hostBox = document.getElementById(hostPlayerBoxId)
 
             if (!hostBox) {
@@ -41,17 +39,27 @@ const AnchorArea = ({ sock, hostPlayerId, hostPlayerBoxId, anchorAreaList = [] }
             for (let i = 0; i < anchorAreaList.length; i++) {
                 const item = anchorAreaList[i]
 
-                const r2 = item.diameter / 2
-                const x2 = item.position.x + r2
-                const y2 = item.position.y + r2
+                const r2 = (item.diameter / 2) * scale
+                const x2 = item.position.x * scale + r2
+                const y2 = item.position.y * scale + r2
 
                 // Calculate the distance between two circle centers and determine if they collide
                 const { collided } = checkCircularCollision(x1, y1, r1, x2, y2, r2)
 
-                if (collided) {
-                    setIframeSrc(item.iframeSrc)
-                    setShowDrawer(true)
+                if (collided && item.iframeSrc) {
+                    if (item.entered) {
+                        return
+                    }
+                    item.entered = true
+                    dispatch({
+                        type: 'OPEN_DRAWER',
+                        payload: {
+                            iframeSrc: item.iframeSrc
+                        }
+                    })
                     return
+                } else {
+                    item.entered = false
                 }
             }
         })
@@ -61,39 +69,23 @@ const AnchorArea = ({ sock, hostPlayerId, hostPlayerBoxId, anchorAreaList = [] }
         }
     }, [])
 
-    const closeDrawer = useCallback(() => {
-        setIframeSrc('')
-        setShowDrawer(false)
-    }, [])
+    if (!anchorAreaList.length) {
+        return null
+    }
 
-    return (
-        <>
-            {
-                anchorAreaList.map(item => (
-                    <div
-                        className='bg-blue-600 bg-opacity-30 border-4 rounded-full border-blue-600 border-dotted animate-pulse'
-                        key={item.id}
-                        id={item.id}
-                        style={{
-                            position: 'absolute',
-                            left: `${item.position.x}px`,
-                            top: `${item.position.y}px`,
-                            width: item.diameter,
-                            height: item.diameter,
-                        }}
-                    />
-                ))
-            }
-            <Drawer isOpen={showDrawer} onClose={closeDrawer}>
-                <iframe
-                    title=''
-                    width='100%'
-                    height='100%'
-                    src={iframeSrc}
-                />
-            </Drawer>
-        </>
-    )
+    return anchorAreaList.map(item => (
+        <div
+            className='absolute bg-blue-600 bg-opacity-30 border-4 rounded-full border-blue-600 border-dotted animate-pulse'
+            key={item.id}
+            id={item.id}
+            style={{
+                left: `${item.position.x}px`,
+                top: `${item.position.y}px`,
+                width: item.diameter,
+                height: item.diameter,
+            }}
+        />
+    ))
 }
 
 export default memo(AnchorArea, () => true)

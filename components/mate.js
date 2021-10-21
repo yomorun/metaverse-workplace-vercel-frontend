@@ -6,7 +6,7 @@ import cn from 'classnames'
 import Sound from './sound'
 
 import { Vector } from '../libs/movement'
-import { Logger, checkMobileDevice } from '../libs/lib'
+import { Logger, checkMobileDevice, stringToColor } from '../libs/lib'
 import { fetchUser } from '../libs/request'
 
 const Mate = ({ name, avatar, initPos, sock, videoTrack, audioTrack, hostPlayerId }) => {
@@ -21,11 +21,6 @@ const Mate = ({ name, avatar, initPos, sock, videoTrack, audioTrack, hostPlayerI
         // default position
         const POS = new Vector(initPos.x || 0, initPos.y || 0)
 
-        if (isMobile) {
-            POS.x = 0
-            POS.y = 60
-        }
-
         // Redraw UI
         const renderPosition = (p) => {
             if (refContainer.current) {
@@ -33,8 +28,10 @@ const Mate = ({ name, avatar, initPos, sock, videoTrack, audioTrack, hostPlayerI
             }
         }
 
-        // initial position
-        renderPosition(POS)
+        if (!isMobile) {
+            // initial position
+            renderPosition(POS)
+        }
 
         const direction$ = new Observable(obs => {
             sock.on('movement', mv => {
@@ -72,25 +69,32 @@ const Mate = ({ name, avatar, initPos, sock, videoTrack, audioTrack, hostPlayerI
         if (name.split('-')[0] === 'visitor') {
             setRole('visitor')
         } else {
-            fetchUser(name).then(({ data }) => {
-                if (data) {
-                    setRole(data.role)
-                } else {
+            fetchUser(name)
+                .then(({ data }) => {
+                    if (data) {
+                        setRole(data.role)
+                    } else {
+                        setRole('visitor')
+                    }
+                })
+                .catch(() => {
                     setRole('visitor')
-                }
-            })
+                })
         }
     }, [])
 
     return (
-        <div className='absolute sm:relative max-h-40' ref={refContainer}>
+        <div className='z-10 absolute max-h-40 sm:relative sm-grid-card' ref={refContainer}>
             <div
                 className={
                     cn('relative mx-auto flex flex-col items-center', {
                         'w-32 h-32 sm:w-28 sm:h-28': role === 'broadcast',
-                        'w-16 h-16 sm:w-28 sm:h-28': role !== 'broadcast'
+                        'w-16 h-16 sm:w-28 sm:h-28 box-border border-4 rounded-full': role !== 'broadcast'
                     })
                 }
+                style={{
+                    borderColor: stringToColor(name)
+                }}
             >
                 <div className='w-full h-full rounded-full overflow-hidden transform translate-0 shadow-lg bg-white'>
                     <div id={`stream-player-${name}`} className='w-full h-full'>
