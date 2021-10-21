@@ -16,7 +16,6 @@
     top             : 0;
     width           : 1000px;
     height          : 100vh;
-    background-color: #ffffff;
     transition      : transform 1s ease-in-out;
     transform       : translate(1000px);
 }

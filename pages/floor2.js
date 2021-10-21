@@ -72,23 +72,20 @@ export default function Floor2() {
                                 }
                             ]
                         },
-                        {
-                            id: 'area-4',
-                            position: {
-                                x: 1250,
-                                y: 90
-                            },
-                            rectangle: {
-                                width: 200,
-                                height: 200
-                            },
-                            imgList: [
-                                {
-                                    id: 1,
-                                    src: 'http://rte-conference.oss-cn-beijing.aliyuncs.com/static/web/%E6%96%87%E5%AD%97%E4%BA%8C%E7%BA%A7%E5%BC%B9%E7%AA%97_%203.png'
-                                }
-                            ]
-                        },
+                        // {
+                        //     id: 'area-4',
+                        //     position: {
+                        //         x: 1250,
+                        //         y: 90
+                        //     },
+                        //     rectangle: {
+                        //         width: 200,
+                        //         height: 200
+                        //     },
+                        //     // imgList: [
+
+                        //     // ]
+                        // },
                         {
                             id: 'area-5',
                             position: {

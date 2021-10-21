@@ -22,17 +22,6 @@ export default function Floor1() {
                     boundary={{ top: 5, left: 5, bottom: 900 - 5, right: 1800 - 5 }}
                     checkAreaList={[
                         {
-                            id: 'area-yomo',
-                            position: {
-                                x: 90,
-                                y: 320
-                            },
-                            circle: {
-                                diameter: 120,
-                            },
-                            iframeSrc: 'https://composing.studio/yomo'
-                        },
-                        {
                             id: 'area-1',
                             position: {
                                 x: 10,
@@ -43,12 +32,12 @@ export default function Floor1() {
                                 height: 340
                             },
                             imgList: [
-                                // {
-                                //     id: 1,
-                                //     startAt: '2021-10-22 12:00:10',
-                                //     endAt: '2021-10-23 23:59:00',
-                                //     src: ''
-                                // },
+                                {
+                                    id: 1,
+                                    startAt: '2021-10-21 01:00:00',
+                                    endAt: '2021-10-23 23:59:00',
+                                    src: 'https://rte-conference.oss-accelerate.aliyuncs.com/static/web/%E5%B1%95%E5%95%86%E5%90%8D%E5%BD%95.png'
+                                },
                             ]
                         },
                         {
@@ -64,7 +53,7 @@ export default function Floor1() {
                             imgList: [
                                 {
                                     id: 1,
-                                    startAt: '2021-10-22 01:00:00',
+                                    startAt: '2021-10-21 01:00:00',
                                     endAt: '2021-10-22 12:00:00',
                                     src: 'https://rte-conference.oss-accelerate.aliyuncs.com/static/web/%E5%AE%9E%E6%97%B6%E4%B8%87%E8%B1%A1%E9%A2%91%E9%81%93%C2%B7%E4%B8%BB%E8%AE%BA%E5%9D%9B.jpg'
                                 },
@@ -95,7 +84,7 @@ export default function Floor1() {
                             imgList: [
                                 {
                                     id: 1,
-                                    startAt: '2021-10-22 01:00:00',
+                                    startAt: '2021-10-21 01:00:00',
                                     endAt: '2021-10-22 12:00:00',
                                     src: 'https://rte-conference.oss-accelerate.aliyuncs.com/static/web/%E5%AE%9E%E6%97%B6%E4%B8%87%E8%B1%A1%E9%A2%91%E9%81%93%C2%B7%E4%B8%BB%E8%AE%BA%E5%9D%9B.jpg'
                                 },
@@ -132,7 +121,7 @@ export default function Floor1() {
                             imgList: [
                                 {
                                     id: 1,
-                                    startAt: '2021-10-22 01:00:00',
+                                    startAt: '2021-10-21 01:00:00',
                                     endAt: '2021-10-22 12:00:00',
                                     src: 'https://rte-conference.oss-accelerate.aliyuncs.com/static/web/%E5%AE%9E%E6%97%B6%E4%B8%87%E8%B1%A1%E9%A2%91%E9%81%93%C2%B7%E4%B8%BB%E8%AE%BA%E5%9D%9B.jpg'
                                 },
@@ -169,7 +158,7 @@ export default function Floor1() {
                             imgList: [
                                 {
                                     id: 1,
-                                    startAt: '2021-10-22 12:00:10',
+                                    startAt: '2021-10-21 01:00:00',
                                     endAt: '2021-10-22 23:59:00',
                                     src: 'https://rte-conference.oss-accelerate.aliyuncs.com/static/web/%E5%A4%A7%E5%89%8D%E7%AB%AF%E4%B8%8E%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91%E4%B8%93%E5%9C%BA.jpg'
                                 },
@@ -187,20 +176,20 @@ export default function Floor1() {
                                 },
                             ]
                         },
-                        {
-                            id: 'area-6',
-                            position: {
-                                x: 1000,
-                                y: 270
-                            },
-                            rectangle: {
-                                width: 460,
-                                height: 120
-                            },
-                            imgList: [
+                        // {
+                        //     id: 'area-6',
+                        //     position: {
+                        //         x: 1000,
+                        //         y: 270
+                        //     },
+                        //     rectangle: {
+                        //         width: 460,
+                        //         height: 120
+                        //     },
+                        //     // imgList: [
 
-                            ]
-                        },
+                        //     // ]
+                        // },
                         {
                             id: 'area-7',
                             position: {
@@ -214,7 +203,7 @@ export default function Floor1() {
                             imgList: [
                                 {
                                     id: 1,
-                                    startAt: '2021-10-22 12:00:10',
+                                    startAt: '2021-10-21 01:00:00',
                                     endAt: '2021-10-22 23:59:00',
                                     src: 'https://rte-conference.oss-accelerate.aliyuncs.com/static/web/APP%E5%BC%80%E5%8F%91%E8%80%85%E4%B8%AA%E4%BA%BA%E4%BF%A1%E6%81%AF%E4%BF%9D%E6%8A%A4%E5%AE%A3%E8%AE%B2%E4%BC%9A.jpg'
                                 },

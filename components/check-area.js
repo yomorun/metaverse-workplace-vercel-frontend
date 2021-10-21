@@ -37,6 +37,12 @@ const CheckArea = ({ sock, hostPlayerId, hostPlayerBoxId, checkAreaList = [], sc
             }
         }
 
+        const closeDrawer = () => {
+            dispatch({
+                type: 'CLOSE_DRAWER'
+            })
+        }
+
         const subscription = movement$.pipe(throttleTime(500)).subscribe(() => {
             const hostBox = document.getElementById(hostPlayerBoxId)
 
@@ -92,11 +98,14 @@ const CheckArea = ({ sock, hostPlayerId, hostPlayerBoxId, checkAreaList = [], sc
 
                         return
                     } else {
-                        item.entered = false
-                        const rectangleBox = document.getElementById(item.id)
-                        if (rectangleBox) {
-                            rectangleBox.classList.add('hidden')
-                            rectangleBox.classList.remove('animate-pulse')
+                        if (item.entered) {
+                            item.entered = false
+                            closeDrawer()
+                            const rectangleBox = document.getElementById(item.id)
+                            if (rectangleBox) {
+                                rectangleBox.classList.add('hidden')
+                                rectangleBox.classList.remove('animate-pulse')
+                            }
                         }
                     }
                 } else if (item.circle) {
@@ -106,8 +115,6 @@ const CheckArea = ({ sock, hostPlayerId, hostPlayerBoxId, checkAreaList = [], sc
 
                     // Calculate the distance between two circle centers
                     const { collided } = checkCircularCollision(x1, y1, r1, x2, y2, r2)
-
-
 
                     if (collided) {
                         if (item.entered) {
@@ -135,11 +142,14 @@ const CheckArea = ({ sock, hostPlayerId, hostPlayerBoxId, checkAreaList = [], sc
 
                         return
                     } else {
-                        item.entered = false
-                        const checkAreaAnimateBox = document.getElementById(`${item.id}-animate-box`)
-                        if (checkAreaAnimateBox) {
-                            checkAreaAnimateBox.classList.add('hidden')
-                            checkAreaAnimateBox.classList.remove('animate-pulse')
+                        if (item.entered) {
+                            item.entered = false
+                            closeDrawer()
+                            const checkAreaAnimateBox = document.getElementById(`${item.id}-animate-box`)
+                            if (checkAreaAnimateBox) {
+                                checkAreaAnimateBox.classList.add('hidden')
+                                checkAreaAnimateBox.classList.remove('animate-pulse')
+                            }
                         }
                     }
                 }
