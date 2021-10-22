@@ -58,6 +58,9 @@ const Scene = ({
                 autoConnect: false
             })
 
+            // debug
+            window.ws = ws
+
             // `online` event will be occured when user is connected to websocket
             ws.on('online', mate => {
                 log.log('[online]', mate.name)
@@ -237,6 +240,7 @@ const Scene = ({
                 </Drawer>
             }
             {!isMobile && <Floors currentPath={floor} />}
+            <div className='z-50 fixed top-5 left-5 text-xl text-white font-bold'>网址：https://vhq.yomo.run</div>
         </>
     )
 }

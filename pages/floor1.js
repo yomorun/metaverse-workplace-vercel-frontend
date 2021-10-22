@@ -34,8 +34,8 @@ export default function Floor1() {
                             imgList: [
                                 {
                                     id: 1,
-                                    startAt: '2021-10-21 01:00:00',
-                                    endAt: '2021-10-23 23:59:00',
+                                    startAt: '10/21/2021 01:00:00',
+                                    endAt: '10/23/2021 23:59:00',
                                     src: 'https://rte-conference.oss-accelerate.aliyuncs.com/static/web/%E5%B1%95%E5%95%86%E5%90%8D%E5%BD%95.png'
                                 },
                             ]
@@ -53,20 +53,20 @@ export default function Floor1() {
                             imgList: [
                                 {
                                     id: 1,
-                                    startAt: '2021-10-21 01:00:00',
-                                    endAt: '2021-10-22 12:00:00',
+                                    startAt: '10/21/2021 01:00:00',
+                                    endAt: '10/22/2021 12:00:00',
                                     src: 'https://rte-conference.oss-accelerate.aliyuncs.com/static/web/%E5%AE%9E%E6%97%B6%E4%B8%87%E8%B1%A1%E9%A2%91%E9%81%93%C2%B7%E4%B8%BB%E8%AE%BA%E5%9D%9B.jpg'
                                 },
                                 {
                                     id: 2,
-                                    startAt: '2021-10-22 12:00:10',
-                                    endAt: '2021-10-22 23:59:00',
+                                    startAt: '10/22/2021 12:00:10',
+                                    endAt: '10/22/2021 23:59:00',
                                     src: 'https://rte-conference.oss-accelerate.aliyuncs.com/static/web/IoT%E5%88%86%E8%AE%BA%E5%9D%9B_.jpg'
                                 },
                                 {
                                     id: 3,
-                                    startAt: '2021-10-23 01:00:00',
-                                    endAt: '2021-10-23 23:59:00',
+                                    startAt: '10/23/2021 01:00:00',
+                                    endAt: '10/23/2021 23:59:00',
                                     src: 'https://rte-conference.oss-accelerate.aliyuncs.com/static/web/%E8%A7%86%E9%A2%91%E6%8A%80%E6%9C%AF%E4%B8%93%E5%9C%BA.jpg'
                                 },
                             ]
@@ -84,26 +84,26 @@ export default function Floor1() {
                             imgList: [
                                 {
                                     id: 1,
-                                    startAt: '2021-10-21 01:00:00',
-                                    endAt: '2021-10-22 12:00:00',
+                                    startAt: '10/21/2021 01:00:00',
+                                    endAt: '10/22/2021 12:00:00',
                                     src: 'https://rte-conference.oss-accelerate.aliyuncs.com/static/web/%E5%AE%9E%E6%97%B6%E4%B8%87%E8%B1%A1%E9%A2%91%E9%81%93%C2%B7%E4%B8%BB%E8%AE%BA%E5%9D%9B.jpg'
                                 },
                                 {
                                     id: 2,
-                                    startAt: '2021-10-22 12:00:10',
-                                    endAt: '2021-10-22 23:59:00',
+                                    startAt: '10/22/2021 12:00:10',
+                                    endAt: '10/22/2021 23:59:00',
                                     src: 'https://rte-conference.oss-accelerate.aliyuncs.com/static/web/Product%20channel.jpg'
                                 },
                                 {
                                     id: 3,
-                                    startAt: '2021-10-23 01:00:00',
-                                    endAt: '2021-10-23 12:00:00',
+                                    startAt: '10/23/2021 01:00:00',
+                                    endAt: '10/23/2021 12:00:00',
                                     src: 'https://rte-conference.oss-accelerate.aliyuncs.com/static/web/RTE%E5%88%9B%E6%96%B0%E5%A4%A7%E8%B5%9B%E5%86%B3%E8%B5%9B.jpg'
                                 },
                                 {
                                     id: 4,
-                                    startAt: '2021-10-23 12:00:10',
-                                    endAt: '2021-10-23 23:59:00',
+                                    startAt: '10/23/2021 12:00:10',
+                                    endAt: '10/23/2021 23:59:00',
                                     src: 'https://rte-conference.oss-accelerate.aliyuncs.com/static/web/%E5%AE%9E%E6%97%B6%E4%BA%92%E5%8A%A8%E5%9C%BA%E6%99%AF%E5%88%9B%E6%96%B0%E5%88%9B%E4%B8%9A%E8%AE%BA%E5%9D%9B.jpg'
                                 },
                             ]
@@ -121,26 +121,26 @@ export default function Floor1() {
                             imgList: [
                                 {
                                     id: 1,
-                                    startAt: '2021-10-21 01:00:00',
-                                    endAt: '2021-10-22 12:00:00',
+                                    startAt: '10/21/2021 01:00:00',
+                                    endAt: '10/22/2021 12:00:00',
                                     src: 'https://rte-conference.oss-accelerate.aliyuncs.com/static/web/%E5%AE%9E%E6%97%B6%E4%B8%87%E8%B1%A1%E9%A2%91%E9%81%93%C2%B7%E4%B8%BB%E8%AE%BA%E5%9D%9B.jpg'
                                 },
                                 {
                                     id: 2,
-                                    startAt: '2021-10-22 12:00:10',
-                                    endAt: '2021-10-22 23:59:00',
+                                    startAt: '10/22/2021 12:00:10',
+                                    endAt: '10/22/2021 23:59:00',
                                     src: 'https://rte-conference.oss-accelerate.aliyuncs.com/static/web/%E9%9F%B3%E9%A2%91%E6%8A%80%E6%9C%AF%E4%B8%93%E5%9C%BA.jpg'
                                 },
                                 {
                                     id: 3,
-                                    startAt: '2021-10-23 01:00:00',
-                                    endAt: '2021-10-23 12:00:00',
+                                    startAt: '10/23/2021 01:00:00',
+                                    endAt: '10/23/2021 12:00:00',
                                     src: 'https://rte-conference.oss-accelerate.aliyuncs.com/static/web/%E7%BD%91%E8%B7%AF%E4%BC%A0%E8%BE%93%E4%B8%8E%E6%9E%B6%E6%9E%84%E4%B8%93%E5%9C%BA.jpg'
                                 },
                                 {
                                     id: 4,
-                                    startAt: '2021-10-23 12:00:10',
-                                    endAt: '2021-10-23 23:59:00',
+                                    startAt: '10/23/2021 12:00:10',
+                                    endAt: '10/23/2021 23:59:00',
                                     src: 'https://rte-conference.oss-accelerate.aliyuncs.com/static/web/%E7%A4%BE%E4%BA%A4%E6%B3%9B%E5%A8%B1%E4%B9%90%E5%8F%8A%E5%87%BA%E6%B5%B7%E5%88%86%E8%AE%BA%E5%9D%9B.jpg'
                                 },
                             ]
@@ -158,20 +158,20 @@ export default function Floor1() {
                             imgList: [
                                 {
                                     id: 1,
-                                    startAt: '2021-10-21 01:00:00',
-                                    endAt: '2021-10-22 23:59:00',
+                                    startAt: '10/21/2021 01:00:00',
+                                    endAt: '10/22/2021 23:59:00',
                                     src: 'https://rte-conference.oss-accelerate.aliyuncs.com/static/web/%E5%A4%A7%E5%89%8D%E7%AB%AF%E4%B8%8E%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91%E4%B8%93%E5%9C%BA.jpg'
                                 },
                                 {
                                     id: 2,
-                                    startAt: '2021-10-23 01:00:00',
-                                    endAt: '2021-10-23 12:00:00',
+                                    startAt: '10/23/2021 01:00:00',
+                                    endAt: '10/23/2021 12:00:00',
                                     src: 'https://rte-conference.oss-accelerate.aliyuncs.com/static/web/%E6%95%99%E8%82%B2%E5%88%86%E8%AE%BA%E5%9D%9B_.jpg'
                                 },
                                 {
                                     id: 3,
-                                    startAt: '2021-10-23 12:00:10',
-                                    endAt: '2021-10-23 23:59:00',
+                                    startAt: '10/23/2021 12:00:10',
+                                    endAt: '10/23/2021 23:59:00',
                                     src: 'https://rte-conference.oss-accelerate.aliyuncs.com/static/web/AI%20%E6%8A%80%E6%9C%AF%E5%BA%94%E7%94%A8%E4%B8%93%E5%9C%BA.jpg'
                                 },
                             ]
@@ -203,8 +203,8 @@ export default function Floor1() {
                             imgList: [
                                 {
                                     id: 1,
-                                    startAt: '2021-10-21 01:00:00',
-                                    endAt: '2021-10-22 23:59:00',
+                                    startAt: '10/21/2021 01:00:00',
+                                    endAt: '10/23/2021 23:59:00',
                                     src: 'https://rte-conference.oss-accelerate.aliyuncs.com/static/web/%E4%B8%AA%E4%BA%BA%E4%BF%A1%E6%81%AF%E4%BF%9D%E6%8A%A4.jpg'
                                 },
                             ]
