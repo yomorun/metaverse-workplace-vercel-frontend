@@ -209,6 +209,33 @@ export default function Floor1() {
                                 },
                             ]
                         },
+                        {
+                            id: 'face-detection-area',
+                            position: {
+                                x: 720,
+                                y: 490
+                            },
+                            diameter: 90,
+                            iframeSrc: 'http://8.141.73.118:8888/'
+                        },
+                        {
+                            id: 'ntf-area',
+                            position: {
+                                x: 780,
+                                y: 90
+                            },
+                            diameter: 90,
+                            iframeSrc: 'https://minecraftart.netlify.app/editor'
+                        },
+                        {
+                            id: 'zihan-area',
+                            position: {
+                                x: 900,
+                                y: 90
+                            },
+                            diameter: 90,
+                            iframeSrc: 'http://zihanachai.com/post/a-chai-jian-jie/'
+                        },
                     ]}
                 />
             </div>
