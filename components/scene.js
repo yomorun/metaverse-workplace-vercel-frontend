@@ -237,6 +237,7 @@ const Scene = ({
                 </Drawer>
             }
             {!isMobile && <Floors currentPath={floor} />}
+            <div className='z-50 fixed top-5 left-5 text-xl text-white font-bold'>网址：https://vhq.yomo.run</div>
         </>
     )
 }
