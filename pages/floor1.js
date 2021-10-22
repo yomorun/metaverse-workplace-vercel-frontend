@@ -58,6 +58,15 @@ export default function Floor1() {
                             diameter: 90,
                             iframeSrc: 'https://minecraftart.netlify.app/editor'
                         },
+                        {
+                            id: 'zihan-area',
+                            position: {
+                                x: 900,
+                                y: 90
+                            },
+                            diameter: 90,
+                            iframeSrc: 'http://zihanachai.com/post/a-chai-jian-jie/'
+                        },
                     ]}
                 />
             </div>
