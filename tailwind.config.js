@@ -13,9 +13,10 @@ module.exports = {
             'md': { 'max': '767px' },
             'sm': { 'max': '639px' },
         },
-        scale: {
-            '125': '1.25',
-            '150': '1.5',
+        extend: {
+            backgroundImage: theme => ({
+                'check-point': "url('/check-point/icon-bg.png')",
+            })
         }
     }
 }

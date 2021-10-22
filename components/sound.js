@@ -95,7 +95,7 @@ const Sound = ({ audioTrack, elementIdPrefix, hostPlayerId, mateId, sock }) => {
     }, [audioTrack, muted])
 
     return (
-        <div className='w-32 py-3 rounded-lg shadow-lg bg-white bg-opacity-10'>
+        <div className='w-32 py-3 rounded-lg shadow-lg bg-white bg-opacity-80 sm:hidden'>
             <div className={`${styles.soundBox} ${muted ? '' : styles.animateSound}`}>
                 <span className={styles.line1}></span>
                 <span className={styles.line2}></span>
