@@ -58,6 +58,9 @@ const Scene = ({
                 autoConnect: false
             })
 
+            // debug
+            window.ws = ws
+
             // `online` event will be occured when user is connected to websocket
             ws.on('online', mate => {
                 log.log('[online]', mate.name)
