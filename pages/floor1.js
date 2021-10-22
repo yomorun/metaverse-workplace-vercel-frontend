@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic'
 
 const Scene = dynamic(
     () => import('../components/scene'),
-    { ssr: false }
+    {ssr: false}
 )
 
 export default function Floor1() {
@@ -19,7 +19,7 @@ export default function Floor1() {
                     height={900}
                     floor='floor1'
                     backgroundImage='/bg-floor-1.png'
-                    boundary={{ top: 5, left: 5, bottom: 900 - 5, right: 1800 - 5 }}
+                    boundary={{top: 5, left: 5, bottom: 900 - 5, right: 1800 - 5}}
                     checkAreaList={[
                         {
                             id: 'area-1',
@@ -208,33 +208,6 @@ export default function Floor1() {
                                     src: 'https://rte-conference.oss-accelerate.aliyuncs.com/static/web/%E4%B8%AA%E4%BA%BA%E4%BF%A1%E6%81%AF%E4%BF%9D%E6%8A%A4.jpg'
                                 },
                             ]
-                        },
-                        {
-                            id: 'face-detection-area',
-                            position: {
-                                x: 720,
-                                y: 490
-                            },
-                            diameter: 90,
-                            iframeSrc: 'http://8.141.73.118:8888/'
-                        },
-                        {
-                            id: 'ntf-area',
-                            position: {
-                                x: 780,
-                                y: 90
-                            },
-                            diameter: 90,
-                            iframeSrc: 'https://minecraftart.netlify.app/editor'
-                        },
-                        {
-                            id: 'zihan-area',
-                            position: {
-                                x: 900,
-                                y: 90
-                            },
-                            diameter: 90,
-                            iframeSrc: 'http://zihanachai.com/post/a-chai-jian-jie/'
                         },
                     ]}
                 />
