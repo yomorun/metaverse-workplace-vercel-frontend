@@ -32,12 +32,8 @@ export default function Floor2() {
                                 width: 200,
                                 height: 200
                             },
-                            imgList: [
-                                {
-                                    id: 1,
-                                    src: 'http://rte-conference.oss-cn-beijing.aliyuncs.com/static/web/%E6%96%87%E5%AD%97%E4%BA%8C%E7%BA%A7%E5%BC%B9%E7%AA%97_%202.png'
-                                }
-                            ]
+                            diameter: 80,
+                            iframeSrc: 'https://hijiangtao.js.org/'
                         },
                         {
                             id: 'area-2',
