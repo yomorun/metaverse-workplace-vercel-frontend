@@ -1,30 +1,38 @@
-import { useCallback, useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
+import { useCallback, useEffect, useState, useContext } from 'react'
+import { Context } from '../context'
 import Router from 'next/router'
 import io from 'socket.io-client'
+import cn from 'classnames'
 
-import Sidebar from './sidebar'
 import Me from './me'
 import Mate from './mate'
-import Distance from './distance'
-import AnchorArea from './anchor-area'
-import CheckPoint from './check-point'
+import Sidebar from './sidebar'
 
 import { Vector } from '../libs/movement'
-import { Logger, checkMobileDevice } from '../libs/lib'
+import { Logger, checkMobileDevice, getScale, isDuringDate } from '../libs/lib'
+
+const CheckArea = dynamic(() => import('./check-area'))
+const Drawer = dynamic(() => import('./drawer'))
+const Floors = dynamic(() => import('./floors'))
+const Guide = dynamic(() => import('./guide'))
 
 const Scene = ({
-    className, floor, backgroundImage, anchorAreaList, checkPointList,
-    playerInitialPosition = { x: 30, y: 60 }, showDistanceChange = false,
-    boundary = { top: 0, left: 0, bottom: 1000, right: 1600}
+    className, floor, backgroundImage, checkAreaList,
+    playerInitialPosition = { x: 60, y: 60 }, width = 1800, height = 900,
+    boundary = { top: 0, left: 0, bottom: 1000, right: 1600 }
 }) => {
     const [ws, setWS] = useState(null)
     const [onlineState, setOnlineState] = useState(false)
     const [me, setMe] = useState(null)
     const [mates, setMates] = useState([])
     const [isMobile, setIsMobile] = useState(false)
+    const [scale, setScale] = useState(null)
+    const { state: { drawer }, dispatch } = useContext(Context)
 
     useEffect(() => {
         setIsMobile(checkMobileDevice())
+        setScale(getScale(width, height))
 
         const accessToken = localStorage.getItem(process.env.NEXT_PUBLIC_ACCESSTOKENKEY)
         if (!accessToken) {
@@ -49,6 +57,9 @@ const Scene = ({
                 reconnectionAttempts: 50,
                 autoConnect: false
             })
+
+            // debug
+            window.ws = ws
 
             // `online` event will be occured when user is connected to websocket
             ws.on('online', mate => {
@@ -146,34 +157,28 @@ const Scene = ({
         })
     }, [])
 
-    if (!me || !ws) {
+    const closeDrawer = useCallback(() => {
+        dispatch({
+            type: 'CLOSE_DRAWER'
+        })
+    }, [])
+
+    if (!scale || !me || !ws) {
         return null
     }
 
-    const playerDiameter = me.role === 'broadcast' ? 128 : 64
-
     return (
         <>
-            <Sidebar onlineState={onlineState} count={mates.length + 1} />
-            <div className={`relative overflow-hidden sm:w-full sm:h-full sm:border-0 ${className}`}>
-                <img className='absolute top-0 left-0 w-full h-full sm:hidden' src={backgroundImage} />
-                {!isMobile && anchorAreaList &&
-                    <AnchorArea
-                        sock={ws}
-                        hostPlayerId={me.login}
-                        hostPlayerBoxId='host-player-box'
-                        anchorAreaList={anchorAreaList}
-                    />
+            <Sidebar onlineState={onlineState} count={mates.length + 1} isMobile={isMobile} />
+            <div
+                className={
+                    cn(`relative ${className} sm:w-full sm:min-w-full sm:h-full sm:overflow-y-scroll`, {
+                        [`${scale.className}`]: scale.value !== 1 && !isMobile
+                    })
                 }
-                {!isMobile && checkPointList &&
-                    <CheckPoint
-                        sock={ws}
-                        hostPlayerId={me.login}
-                        hostPlayerBoxId='host-player-box'
-                        checkPointList={checkPointList}
-                    />
-                }
-                <div className='relative w-full h-full sm:fixed sm:overflow-y-auto sm:grid sm:grid-cols-3 sm:gap-2'>
+            >
+                {!isMobile && <img className='absolute top-0 left-0 w-full h-full' src={backgroundImage} />}
+                <div className='relative w-full h-full sm:h-auto sm:pb-10 sm-grid '>
                     <Me
                         role={me.role}
                         name={me.login}
@@ -182,12 +187,7 @@ const Scene = ({
                         sock={ws}
                         rtcJoinedCallback={rtcJoinedCallback}
                         floor={floor}
-                        boundary={{
-                            top: boundary.top,
-                            left: boundary.left,
-                            bottom: boundary.bottom - playerDiameter,
-                            right: boundary.right - playerDiameter
-                        }}
+                        boundary={boundary}
                     />
                     {mates.map(m => (
                         <Mate
@@ -202,15 +202,45 @@ const Scene = ({
                         />
                     ))}
                 </div>
+                {!isMobile && checkAreaList &&
+                    <CheckArea
+                        sock={ws}
+                        hostPlayerId={me.login}
+                        hostPlayerBoxId='host-player-box'
+                        checkAreaList={checkAreaList}
+                        scale={scale.value}
+                    />
+                }
+                {!isMobile && <Guide />}
             </div>
-            {!isMobile && showDistanceChange &&
-                <Distance
-                    elementIdPrefix='stream-player-'
-                    hostPlayerId={me.login}
-                    matesIdList={mates.map(item => item.name)}
-                    sock={ws}
-                />
+            {!isMobile &&
+                <Drawer
+                    isOpen={drawer.isOpen}
+                    onClose={closeDrawer}
+                >
+                    {
+                        drawer.iframeSrc
+                            ? (
+                                <iframe
+                                    title=''
+                                    width='100%'
+                                    height='100%'
+                                    src={drawer.iframeSrc}
+                                />
+                            ) : (
+                                <div className='w-full h-full bg-black bg-opacity-60 flex flex-col justify-center items-center overflow-y-auto'>
+                                    {
+                                        drawer.imgList.map(item => (
+                                            isDuringDate(item.startAt, item.endAt) ? <img className='w-full mt-2' key={item.id} src={item.src} /> : null
+                                        ))
+                                    }
+                                </div>
+                            )
+                    }
+                </Drawer>
             }
+            {!isMobile && <Floors currentPath={floor} />}
+            <div className='z-50 fixed top-5 left-5 text-xl ym-text-blue font-bold'>https://vhq.yomo.run</div>
         </>
     )
 }

@@ -5,6 +5,7 @@ import cn from 'classnames'
 import Spin from './spin'
 
 import { getRtcToken } from '../libs/request'
+import { stringToColor } from '../libs/lib'
 
 let rtcClient
 let videoTrack
@@ -121,9 +122,12 @@ const Webcam = ({ cover, name, rtcJoinedCallback, channel, role }) => {
             className={
                 cn('relative mx-auto flex flex-col items-center', {
                     'w-32 h-32 sm:w-28 sm:h-28': role === 'broadcast',
-                    'w-16 h-16 sm:w-28 sm:h-28': role !== 'broadcast'
+                    'w-16 h-16 sm:w-28 sm:h-28 box-border border-4 rounded-full': role !== 'broadcast'
                 })
             }
+            style={{
+                borderColor: stringToColor(name)
+            }}
         >
             <div id={`stream-player-${name}`}
                 style={{

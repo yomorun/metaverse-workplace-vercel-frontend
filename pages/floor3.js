@@ -1,7 +1,5 @@
 import Head from 'next/head'
 import dynamic from 'next/dynamic'
-import Floors from '../components/floors'
-import Guide from '../components/guide'
 
 const Scene = dynamic(
     () => import('../components/scene'),
@@ -12,20 +10,27 @@ export default function Floor3() {
     return (
         <>
             <Head>
-                <title>Open-source Virtual HQ with Geo-distributed System Tech Stacks</title>
+                <title>Live Meeting Floor</title>
             </Head>
-            <div className='w-screen h-screen flex justify-center items-center bg-floor-3 min-w-1700px'>
+            <div className='w-screen h-screen flex justify-center items-center bg-black'>
                 <Scene
-                    className='w-1600px h-800px wall'
-                    showDistanceChange
+                    className='w-1800px min-w-1800px h-900px mobile-bg-2'
+                    width={1800}
+                    height={900}
                     floor='floor3'
                     backgroundImage='/bg-floor-3.png'
-                    playerInitialPosition={{ x: 600, y: 500 }}
-                    boundary={{ top: 0, left: 0, bottom: 800, right: 1600 }}
+                    boundary={{
+                        top: 20,
+                        left: 20,
+                        bottom: 900 - 20,
+                        right: 1800 - 20,
+                        lectern: {
+                            left: 1090,
+                            bottom: 700,
+                        }
+                    }}
                 />
             </div>
-            <Floors currentPath='floor3' />
-            <Guide />
         </>
     )
 }
