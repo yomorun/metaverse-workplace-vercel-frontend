@@ -105,6 +105,18 @@ const Webcam = ({ cover, name, rtcJoinedCallback, channel, role }) => {
         }
     }, [micOn])
 
+    const stringTocolor = (str) => {
+        let hex = ""
+        let sum = 0
+        for (let char of str.slice(-8)) {
+            hex = char.charCodeAt(0).toString(16) * 1;
+            sum += hex
+        }
+        return sum;
+    }
+
+    const color = stringTocolor(name)
+
     return (
         <div
             className={
@@ -117,8 +129,25 @@ const Webcam = ({ cover, name, rtcJoinedCallback, channel, role }) => {
                 borderColor: stringToColor(name)
             }}
         >
-            <div id={`stream-player-${name}`} className='w-full h-full rounded-full overflow-hidden transform translate-0 shadow-lg bg-white'>
-                {!videoOn && <img className='w-full h-full' src={cover} alt='avatar' />}
+            <div id={`stream-player-${name}`}
+                style={{
+                    borderRadius: "9999px",
+                    padding: "2px",
+                    backgroundImage: `-webkit-linear-gradient(315deg,#${color}, #ffffff)`,
+
+                }}
+                className='w-full h-full rounded-full overflow-hidden transform translate-0 shadow-lg bg-white'>
+                {!videoOn &&
+                    <img
+                        className='w-full h-full'
+                        style={{
+                            borderRadius: "9999px",
+                            background: "#fff"
+                        }}
+                        src={cover}
+                        alt='avatar'
+                    />
+                }
             </div>
             {
                 role === 'broadcast' && (
