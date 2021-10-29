@@ -12,7 +12,12 @@ const signList = [
   'WebRTC is provided by Agora.io',
 ]
 
-export default function Sidebar({ zone={props}, onlineState, count, isMobile = false }) {
+export default function Sidebar({
+  zone = { props },
+  onlineState,
+  count,
+  isMobile = false,
+}) {
   const [currentSign, setCurrentSign] = useState(0)
 
   useEffect(() => {
@@ -83,7 +88,9 @@ export default function Sidebar({ zone={props}, onlineState, count, isMobile = f
           src="./sidebar/notice.png"
           alt=""
         />
-        <p className={cn('relative px-6 text-base')}>{zone.city}-{zone.country}-{zone.regoin}</p>
+        <p className={cn('relative px-6 text-base text-white')}>
+          {zone.city}-{zone.country}
+        </p>
       </div>
 
       <div className="relative ml-4 h-10 flex justify-center items-center">
