@@ -6,14 +6,19 @@ const Scene = dynamic(
     {ssr: false}
 )
 
-export default function Floor1() {
+export const getServerSideProps = ({ query }) => {
+    return {
+    props: query,
+  }}
+
+export default function Floor1({city,country,region}) {
     return (
         <>
             <Head>
                 <title>Open-source Virtual HQ with Geo-distributed System Tech Stacks</title>
             </Head>
             <div className='w-screen h-screen flex justify-center items-center bg-black'>
-                <Scene
+                <Scene zone={{city,country,region}}
                     className='w-1800px min-w-1800px h-900px mobile-bg-1'
                     width={1800}
                     height={900}

@@ -18,6 +18,7 @@ const Floors = dynamic(() => import('./floors'))
 const Guide = dynamic(() => import('./guide'))
 
 const Scene = ({
+    zone={props},
     className, floor, backgroundImage, checkAreaList,
     playerInitialPosition = { x: 60, y: 60 }, width = 1800, height = 900,
     boundary = { top: 0, left: 0, bottom: 1000, right: 1600 }
@@ -29,7 +30,6 @@ const Scene = ({
     const [isMobile, setIsMobile] = useState(false)
     const [scale, setScale] = useState(null)
     const { state: { drawer }, dispatch } = useContext(Context)
-
     useEffect(() => {
         setIsMobile(checkMobileDevice())
         setScale(getScale(width, height))
@@ -169,7 +169,7 @@ const Scene = ({
 
     return (
         <>
-            <Sidebar onlineState={onlineState} count={mates.length + 1} isMobile={isMobile} />
+            <Sidebar zone={zone} onlineState={onlineState} count={mates.length + 1} isMobile={isMobile} />
             <div
                 className={
                     cn(`relative ${className} sm:w-full sm:min-w-full sm:h-full sm:overflow-y-scroll`, {

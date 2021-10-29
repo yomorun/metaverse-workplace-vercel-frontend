@@ -1,13 +1,8 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { useContext, useCallback, useState, useEffect } from 'react'
 import cn from 'classnames'
 
 import { Context } from '../context'
-
-export const getServerSideProps = ({ query }) => ({
-  props: query,
-})
 
 const signList = [
   'Use [W/A/S/D] control moving',
@@ -17,15 +12,7 @@ const signList = [
   'WebRTC is provided by Agora.io',
 ]
 
-export default function Sidebar({
-  onlineState,
-  count,
-  isMobile = false,
-  city,
-  region,
-  country,
-}) {
-  city = decodeURIComponent(city)
+export default function Sidebar({ zone={props}, onlineState, count, isMobile = false }) {
   const [currentSign, setCurrentSign] = useState(0)
 
   useEffect(() => {
@@ -90,11 +77,14 @@ export default function Sidebar({
         </div>
       )}
 
-      {/* <div className="relative ml-4 h-10 flex justify-center items-center">
-        <p className={cn('relative px-6 text-base')}>
-          {city}-{country}-{region}
-        </p>
-      </div> */}
+      <div className="relative ml-4 h-10 flex justify-center items-center">
+        <img
+          className="absolute w-28 h-full"
+          src="./sidebar/notice.png"
+          alt=""
+        />
+        <p className={cn('relative px-6 text-base')}>{zone.city}-{zone.country}-{zone.regoin}</p>
+      </div>
 
       <div className="relative ml-4 h-10 flex justify-center items-center">
         <img

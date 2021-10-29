@@ -6,7 +6,6 @@ export async function middleware(req) {
   const city = geo.city || 'Beijing'
   const region = geo.region || 'AS'
 
-  console.log('>>>>>>>>', geo)
 
   url.searchParams.set('country', country)
   url.searchParams.set('city', city)
