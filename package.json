@@ -18,6 +18,7 @@
   "author": "YoMo",
   "license": "MIT",
   "dependencies": {
+    "@vercel/edge-functions-ui": "^0.2.1",
     "agora-access-token": "^2.0.4",
     "agora-rtc-sdk-ng": "^4.7.1",
     "autoprefixer": "^10.3.7",

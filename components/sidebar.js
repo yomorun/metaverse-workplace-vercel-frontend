@@ -1,13 +1,8 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { useContext, useCallback, useState, useEffect } from 'react'
 import cn from 'classnames'
 
 import { Context } from '../context'
-
-export const getServerSideProps = ({ query }) => ({
-  props: query,
-})
 
 const signList = [
   'Use [W/A/S/D] control moving',
@@ -18,14 +13,11 @@ const signList = [
 ]
 
 export default function Sidebar({
+  zone = { props },
   onlineState,
   count,
   isMobile = false,
-  city,
-  region,
-  country,
 }) {
-  city = decodeURIComponent(city)
   const [currentSign, setCurrentSign] = useState(0)
 
   useEffect(() => {
@@ -91,13 +83,13 @@ export default function Sidebar({
       )}
 
       <div className="relative ml-4 h-10 flex justify-center items-center">
-        <Image
+        <img
           className="absolute w-28 h-full"
-          src={`https://flagcdn.com/${country.toLowerCase()}.svg`}
-          alt="flag"
+          src="./sidebar/notice.png"
+          alt=""
         />
-        <p className={cn('relative px-6 text-base')}>
-          {city}-{country}-{region}
+        <p className={cn('relative px-6 text-base text-white')}>
+          {zone.city}-{zone.country}
         </p>
       </div>
 
