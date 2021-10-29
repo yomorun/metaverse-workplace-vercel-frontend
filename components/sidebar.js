@@ -90,16 +90,11 @@ export default function Sidebar({
         </div>
       )}
 
-      <div className="relative ml-4 h-10 flex justify-center items-center">
-        <Image
-          className="absolute w-28 h-full"
-          src={`https://flagcdn.com/${country.toLowerCase()}.svg`}
-          alt="flag"
-        />
+      {/* <div className="relative ml-4 h-10 flex justify-center items-center">
         <p className={cn('relative px-6 text-base')}>
           {city}-{country}-{region}
         </p>
-      </div>
+      </div> */}
 
       <div className="relative ml-4 h-10 flex justify-center items-center">
         <img
