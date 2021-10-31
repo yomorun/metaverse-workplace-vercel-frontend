@@ -2,6 +2,8 @@ import Document, { Html, Head, Main, NextScript } from 'next/document'
 
 class MyDocument extends Document {
     render() {
+        const clearbitURL =
+          "https://grow.clearbitjs.com/api/pixel.js?v=" + new Date().getTime();
         return (
             <Html lang='en'>
                 <Head>
@@ -15,6 +17,7 @@ class MyDocument extends Document {
                     <meta name="googlebot" content="index,follow" />
                     <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="true" />
                     <link rel="stylesheet" media="print" onLoad="this.onload=null;this.removeAttribute('media');" href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400&amp;display=swap" />
+                    <script async src={clearbitURL}></script>
                 </Head>
                 <body>
                     <Main />
