@@ -89,7 +89,7 @@ export default function Sidebar({
           alt=""
         />
         <p className={cn('relative px-6 text-base text-white')}>
-          {zone.city}-{zone.country}
+          {zone.country}-{zone.region}
         </p>
       </div>
 
