@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 
+const countryRegion = require("../libs/amesh.json");
+
 export async function middleware(req) {
   const { nextUrl: url, geo } = req
   const country = geo.country
