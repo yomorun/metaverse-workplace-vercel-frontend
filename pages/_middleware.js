@@ -15,6 +15,7 @@ export async function middleware(req) {
     return NextResponse.rewrite(url)
 }
 
+// 4 mesh nodes
 function getMeshID(country) {
     if (country == undefined) {
         return 'us.x.yomo.dev'
