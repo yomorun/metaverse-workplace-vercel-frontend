@@ -63,8 +63,8 @@ export const matePositionMapState = atom({
     default: new Map()
 })
 
-export const IframePageState = atom({
-    key: 'IframePageState',
+export const iframePageState = atom({
+    key: 'iframePageState',
     default: {
         isOpen: false,
         iframeSrc: ''

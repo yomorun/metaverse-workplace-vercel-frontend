@@ -6,7 +6,7 @@ import FloorLinks from '../components/minor/floor-links'
 import Guide from '../components/minor/guide'
 import IframePage from '../components/minor/iframe-page'
 import { useSetRecoilState } from 'recoil'
-import { locationState, IframePageState } from '../store/atom'
+import { locationState, iframePageState } from '../store/atom'
 
 const Scene = dynamic(
     () => import('../components/scene'),
@@ -23,7 +23,7 @@ export const getServerSideProps = ({ query }) => {
 
 export default function Home({ query: { city, country, region } }) {
     const setLocationState = useSetRecoilState(locationState)
-    const setIframePageState = useSetRecoilState(IframePageState)
+    const setIframePageState = useSetRecoilState(iframePageState)
 
     useEffect(() => {
         setLocationState({ city, country, region })

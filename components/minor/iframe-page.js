@@ -1,9 +1,9 @@
 import { useRecoilState } from 'recoil'
-import { IframePageState } from '../../store/atom'
+import { iframePageState } from '../../store/atom'
 import Drawer from './drawer'
 
 const IframePage = () => {
-    const [IframePage, setIframePageState] = useRecoilState(IframePageState)
+    const [IframePage, setIframePageState] = useRecoilState(iframePageState)
 
     return (
         <Drawer
