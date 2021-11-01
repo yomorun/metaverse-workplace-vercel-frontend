@@ -2,8 +2,7 @@ import Document, { Html, Head, Main, NextScript } from 'next/document'
 
 class MyDocument extends Document {
     render() {
-        const clearbitURL =
-          "https://grow.clearbitjs.com/api/pixel.js?v=" + new Date().getTime();
+        const clearbitURL = `https://grow.clearbitjs.com/api/pixel.js?v=${new Date().getTime()}`
         return (
             <Html lang='en'>
                 <Head>

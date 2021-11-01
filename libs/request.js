@@ -51,7 +51,7 @@ export const getRtcToken = async (uid, channelName, role) => {
     } else {
         try {
             const response = await request({
-                url: `${process.env.NEXT_PUBLIC_SITEURL}/api/rtctoken`,
+                url: '/api/rtctoken',
                 method: 'post',
                 data: { uid, channelName, role }
             })
@@ -66,7 +66,7 @@ export const getRtcToken = async (uid, channelName, role) => {
 
 export const fetchUser = async (login) => {
     return request({
-        url: `${process.env.NEXT_PUBLIC_SITEURL}/api/user`,
+        url: '/api/user',
         method: 'get',
         params: {
             login
