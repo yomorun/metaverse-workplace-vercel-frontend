@@ -1,25 +1,20 @@
-import { memo } from 'react'
 import Link from 'next/link'
 import cn from 'classnames'
 
-const Floors = ({ currentPath = 'floor1' }) => {
+const FloorLinks = ({ currentPath = '/' }) => {
     const data = [
         {
-            name: '3',
-            path: 'floor3',
+            id: '2',
+            path: '/lectern',
         },
         {
-            name: '2',
-            path: 'floor2',
-        },
-        {
-            name: '1',
-            path: 'floor1',
+            id: '1',
+            path: '/',
         },
     ]
 
     return (
-        <div className='z-10 fixed left-0 top-1/2 shadow-lg bg-white bg-opacity-80'>
+        <div className='z-50 fixed left-0 top-1/2 shadow-lg bg-white bg-opacity-80'>
             <div className='w-8 flex flex-col items-center text-base'>
                 <svg
                     className='mt-2 fill-current text-black'
@@ -33,8 +28,8 @@ const Floors = ({ currentPath = 'floor1' }) => {
                 {
                     data.map(item => (
                         <Link
-                            href={`/${item.path}`}
-                            key={item.path}
+                            href={item.path}
+                            key={item.id}
                         >
                             <a
                                 className={
@@ -45,7 +40,7 @@ const Floors = ({ currentPath = 'floor1' }) => {
                                     })
                                 }
                             >
-                                {item.name}
+                                {item.id}
                             </a>
                         </Link>
                     ))
@@ -55,8 +50,4 @@ const Floors = ({ currentPath = 'floor1' }) => {
     )
 }
 
-function areEqual(prevProps, nextProps) {
-    return prevProps.currentPath === nextProps.currentPath
-}
-
-export default memo(Floors, areEqual)
+export default FloorLinks

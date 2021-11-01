@@ -1,12 +1,15 @@
 import { useEffect, useRef, memo } from 'react'
 import { fromEvent } from 'rxjs'
 import { map, filter, scan, auditTime } from 'rxjs/operators'
-import cn from 'classnames'
 
-import Webcam from './webcam'
+import { useSetRecoilState } from 'recoil'
+import { mePositionState } from '../../store/atom'
 
-import { Vector, move } from '../libs/movement'
-import { Logger, checkMobileDevice } from '../libs/lib'
+import Webcam from '../rtc/webcam'
+
+import { Vector, move } from '../../libs/movement'
+import { Logger, checkMobileDevice } from '../../libs/helper'
+import { playerDiameter } from '../../libs/constant'
 
 // Only accepts events from the W, A, S and D buttons
 const keyPressWASD = (e) => {
@@ -22,8 +25,8 @@ const keyPressWASD = (e) => {
 }
 
 // Stop player from stepping out of borders
-const boundaryProcess = (p, boundary, playerDiameter, role) => {
-    const { currPos, dir } = p
+const boundaryProcess = (p, boundary) => {
+    const { currPos } = p
     let collided = false
 
     if (currPos.x < boundary.left) {
@@ -46,19 +49,6 @@ const boundaryProcess = (p, boundary, playerDiameter, role) => {
         collided = true
     }
 
-    if (boundary.lectern && role !== 'broadcast') {
-        const lecternCollided = currPos.x > boundary.lectern.left - playerDiameter && currPos.y < boundary.lectern.bottom
-        if (lecternCollided) {
-            if (dir.x === 1) {
-                currPos.x = boundary.lectern.left - playerDiameter
-                collided = true
-            } else if (dir.y === -1) {
-                currPos.y = boundary.lectern.bottom
-                collided = true
-            }
-        }
-    }
-
     return {
         collided,
         ...p
@@ -66,10 +56,12 @@ const boundaryProcess = (p, boundary, playerDiameter, role) => {
 }
 
 const Me = ({
-    name, avatar, role, initPos, sock, rtcJoinedCallback, floor,
+    name, avatar, initPos, socket, channel,
     boundary = { top: 0, bottom: 1000, left: 0, right: 1200 },
 }) => {
     const refContainer = useRef(null)
+
+    const setMePositionState = useSetRecoilState(mePositionState)
 
     useEffect(() => {
         const log = new Logger('Me', 'color: white; background: green')
@@ -77,7 +69,6 @@ const Me = ({
         // default position
         const POS = new Vector(initPos.x || 0, initPos.y || 0)
 
-        const playerDiameter = role === 'broadcast' ? 128 : 64
 
         // Redraw UI
         const renderPosition = (p) => {
@@ -95,14 +86,14 @@ const Me = ({
 
         // Answer server query, when other mates go online, server will ask others' states,
         // this is the response
-        sock.on('ask', () => {
+        socket.on('ask', () => {
             log.log('[ask], response as', name, 'avatar:', avatar)
-            sock.emit('sync', { name: name, pos: POS, avatar: avatar })
+            socket.emit('sync', { name: name, pos: POS, avatar: avatar })
         })
 
         // TODO：Broadcast movement event streams to others in this game room
         const broadcastEvent = (evt) => {
-            sock.emit('movement', { dir: evt })
+            socket.emit('movement', { dir: evt })
         }
 
         // keyboard `keypress` event, we use keyboard to control moving actions
@@ -126,11 +117,16 @@ const Me = ({
         direction$
             .pipe(
                 scan(({ currPos = POS }, _dir) => ({ currPos: currPos.add(_dir), dir: _dir }), POS),
-                map(p => boundaryProcess(p, boundary, playerDiameter, role))
+                map(p => boundaryProcess(p, boundary))
             )
             .subscribe(({ currPos, dir, collided }) => {
 
                 renderPosition(currPos)
+
+                setMePositionState({
+                    x: currPos.x,
+                    y: currPos.y
+                })
 
                 if (!collided) {
                     // emit to others over websocket
@@ -139,7 +135,7 @@ const Me = ({
             })
 
         // connect to socket.io server
-        sock.connect()
+        socket.connect()
 
         // Add movement transition, it looks smoother
         setTimeout(() => {
@@ -151,19 +147,12 @@ const Me = ({
         return () => {
             log.log('[Unmount] event')
         }
-    }, [])
+    }, [socket])
 
     return (
-        <div className='z-10 absolute max-h-40 sm:relative sm-grid-card' id='host-player-box' ref={refContainer}>
-            <Webcam cover={avatar} name={name} rtcJoinedCallback={rtcJoinedCallback} channel={floor} role={role} />
-            <div
-                className={
-                    cn('absolute left-1/2 transform -translate-x-1/2 text-sm text-white font-bold whitespace-nowrap', {
-                        'top-32 sm:top-28': role === 'broadcast',
-                        'top-16 sm:top-28': role !== 'broadcast'
-                    })
-                }
-            >
+        <div className='absolute max-h-40 sm:relative sm-grid-card' ref={refContainer}>
+            <Webcam cover={avatar} name={name} channel={channel} />
+            <div className='absolute top-32 left-1/2 transform -translate-x-1/2 text-base text-white font-bold whitespace-nowrap sm:top-28'>
                 {name}
             </div>
         </div>

@@ -18,7 +18,6 @@
   "author": "YoMo",
   "license": "MIT",
   "dependencies": {
-    "@vercel/edge-functions-ui": "^0.2.1",
     "agora-access-token": "^2.0.4",
     "agora-rtc-sdk-ng": "^4.7.1",
     "autoprefixer": "^10.3.7",
@@ -26,8 +25,10 @@
     "classnames": "^2.3.1",
     "jsc8": "^0.16.3",
     "next": "^12.0.1",
+    "next-auth": "^3.29.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "recoil": "^0.4.1",
     "rxjs": "^7.3.0",
     "socket.io-client": "2.4.0",
     "tailwindcss": "^2.2.16"
