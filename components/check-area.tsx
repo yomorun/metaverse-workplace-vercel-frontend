@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import { Subscriber, Observable } from 'rxjs'
 import { throttleTime } from 'rxjs/operators'
+import cn from 'classnames'
 
 import { useRecoilValue } from 'recoil'
 import { mePositionState } from '../store/atom'
@@ -32,10 +33,43 @@ const CheckArea = ({ checkAreaList = [], onEnterCheckArea, onLeaveArea }: Props)
             positionSubscriber = subscriber
         })
 
+        const process = (entered: boolean, area: Area): boolean => {
+            if (entered) {
+                if (area.entered) {
+                    return true
+                }
+
+                area.entered = true
+
+                const rectangleBox = document.getElementById(area.id)
+                if (rectangleBox) {
+                    rectangleBox.classList.add('animate-pulse')
+                    rectangleBox.classList.remove('hidden')
+                }
+
+                onEnterCheckArea && onEnterCheckArea(area)
+
+                return true
+            } else {
+                if (area.entered) {
+                    area.entered = false
+
+                    const rectangleBox = document.getElementById(area.id)
+                    if (rectangleBox) {
+                        rectangleBox.classList.add('hidden')
+                        rectangleBox.classList.remove('animate-pulse')
+                    }
+
+                    onLeaveArea && onLeaveArea()
+                }
+            }
+
+            return false
+        }
+
         const subscription = positionObservable.pipe(throttleTime(200)).subscribe(position => {
             // Radius
             const r1 = playerDiameter / 2
-
             // Center of circle position
             const x1 = position.x + r1
             const y1 = position.y + r1
@@ -49,71 +83,21 @@ const CheckArea = ({ checkAreaList = [], onEnterCheckArea, onLeaveArea }: Props)
                     const right = item.rectangle.width + left
                     const bottom = item.rectangle.height + top
 
-                    if (x1 > left && x1 < right && y1 > top && y1 < bottom) {
-                        if (item.entered) {
-                            return
-                        }
+                    const entered = x1 > left && x1 < right && y1 > top && y1 < bottom
 
-                        item.entered = true
-
-                        const rectangleBox = document.getElementById(item.id)
-                        if (rectangleBox) {
-                            rectangleBox.classList.add('animate-pulse')
-                            rectangleBox.classList.remove('hidden')
-                        }
-
-                        onEnterCheckArea && onEnterCheckArea(item)
-
+                    if (process(entered, item)) {
                         return
-                    } else {
-                        if (item.entered) {
-                            item.entered = false
-                            onLeaveArea && onLeaveArea()
-                            const rectangleBox = document.getElementById(item.id)
-                            if (rectangleBox) {
-                                rectangleBox.classList.add('hidden')
-                                rectangleBox.classList.remove('animate-pulse')
-                            }
-                        }
                     }
-                } else if (item.circle) {
-                    const r2 = item.circle.diameter / 2
+                } else if (item.round) {
+                    const r2 = item.round.diameter / 2
                     const x2 = item.position.x + r2
                     const y2 = item.position.y + r2
 
                     // Calculate the distance between two circle centers
                     const collided = checkCircularCollision(x1, y1, r1, x2, y2, r2)
 
-                    if (collided) {
-                        if (item.entered) {
-                            return
-                        }
-
-                        item.entered = true
-
-                        const checkAreaAnimateBox = document.getElementById(
-                            `${item.id}-animate-box`
-                        )
-                        if (checkAreaAnimateBox) {
-                            checkAreaAnimateBox.classList.add('animate-pulse')
-                            checkAreaAnimateBox.classList.remove('hidden')
-                        }
-
-                        onEnterCheckArea && onEnterCheckArea(item)
-
+                    if (process(collided, item)) {
                         return
-                    } else {
-                        if (item.entered) {
-                            item.entered = false
-                            onLeaveArea && onLeaveArea()
-                            const checkAreaAnimateBox = document.getElementById(
-                                `${item.id}-animate-box`
-                            )
-                            if (checkAreaAnimateBox) {
-                                checkAreaAnimateBox.classList.add('hidden')
-                                checkAreaAnimateBox.classList.remove('animate-pulse')
-                            }
-                        }
                     }
                 }
             }
@@ -128,40 +112,24 @@ const CheckArea = ({ checkAreaList = [], onEnterCheckArea, onLeaveArea }: Props)
     return useMemo(
         () => (
             <>
-                {checkAreaList.map(item =>
-                    item.rectangle ? (
-                        <div
-                            className='absolute bg-blue-600 bg-opacity-30 border-4 border-blue-600 border-dotted hidden'
-                            key={item.id}
-                            id={item.id}
-                            style={{
-                                left: item.position.x,
-                                top: item.position.y,
-                                width: item.rectangle.width,
-                                height: item.rectangle.height,
-                            }}
-                        />
-                    ) : (
-                        <div
-                            className='absolute'
-                            key={item.id}
-                            id={item.id}
-                            style={{
-                                left: item.position.x,
-                                top: item.position.y,
-                                width: item.circle?.diameter,
-                                height: item.circle?.diameter,
-                            }}
-                        >
-                            <img
-                                className='absolute top-0 left-0 w-full h-full rounded-full hidden'
-                                src='/check-area/area-icon.png'
-                                id={`${item.id}-animate-box`}
-                                alt=''
-                            />
-                        </div>
-                    )
-                )}
+                {checkAreaList.map(item => (
+                    <div
+                        className={cn(
+                            'absolute bg-blue-600 bg-opacity-30 border-4 border-blue-600 border-dotted hidden',
+                            {
+                                'rounded-full': !!item.round,
+                            }
+                        )}
+                        key={item.id}
+                        id={item.id}
+                        style={{
+                            left: item.position.x,
+                            top: item.position.y,
+                            width: item.rectangle ? item.rectangle.width : item.round?.diameter,
+                            height: item.rectangle ? item.rectangle.height : item.round?.diameter,
+                        }}
+                    />
+                ))}
             </>
         ),
         [checkAreaList.length]

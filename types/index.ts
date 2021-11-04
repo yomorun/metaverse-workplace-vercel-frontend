@@ -10,7 +10,7 @@ export interface Area {
         width: number
         height: number
     }
-    circle?: {
+    round?: {
         diameter: number
     }
     iframeSrc: string

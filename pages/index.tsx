@@ -26,7 +26,7 @@ export const getServerSideProps = ({ query }: any) => {
 
 const Home: NextPage<Location> & PageAuth & PageSceneScale = ({ country, region }) => {
     const setLocationState = useSetRecoilState(locationState)
-const setIframePageState = useSetRecoilState(iframePageState)
+    const setIframePageState = useSetRecoilState(iframePageState)
 
     useEffect(() => {
         setLocationState({ country, region })
@@ -66,7 +66,7 @@ const setIframePageState = useSetRecoilState(iframePageState)
                                 x: 640,
                                 y: 80,
                             },
-                            circle: {
+                            round: {
                                 diameter: 200,
                             },
                             iframeSrc: 'https://yomo.run',
