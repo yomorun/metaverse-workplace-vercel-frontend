@@ -1,14 +1,25 @@
 {
-  "name": "yomo-vhq-nextjs",
-  "version": "0.0.1",
+  "name": "yomo-metaverse-workplace-nextjs",
+  "version": "0.1.0",
   "description": "Open-source Virtual HQ implementation by Geo-distributed System tech stacks",
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "export": "next build && next export",
     "lint": "next lint",
-    "export": "next build && next export"
+    "lint:types": "tsc -p . --noEmit"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged && npm run lint:types"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix"
+    ]
   },
   "keywords": [
     "vhq",
@@ -34,7 +45,17 @@
     "tailwindcss": "^2.2.16"
   },
   "devDependencies": {
+    "@types/node": "^16.11.6",
+    "@types/react": "^17.0.33",
+    "@typescript-eslint/eslint-plugin": "^5.3.0",
+    "@typescript-eslint/parser": "^5.3.0",
     "eslint": "^7.32.0",
-    "eslint-config-next": "^11.1.2"
+    "eslint-config-next": "^11.1.2",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^11.2.6",
+    "prettier": "^2.4.1",
+    "typescript": "^4.4.4"
   }
 }
