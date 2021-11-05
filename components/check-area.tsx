@@ -41,27 +41,27 @@ const CheckArea = ({ checkAreaList = [], onEnterCheckArea, onLeaveArea }: Props)
 
                 area.entered = true
 
-                const rectangleBox = document.getElementById(area.id)
-                if (rectangleBox) {
-                    rectangleBox.classList.add('animate-pulse')
-                    rectangleBox.classList.remove('hidden')
+                const areaBox = document.getElementById(area.id)
+                if (areaBox) {
+                    areaBox.classList.add('animate-pulse')
+                    areaBox.classList.remove('hidden')
                 }
 
                 onEnterCheckArea && onEnterCheckArea(area)
 
                 return true
-            } else {
-                if (area.entered) {
-                    area.entered = false
+            }
 
-                    const rectangleBox = document.getElementById(area.id)
-                    if (rectangleBox) {
-                        rectangleBox.classList.add('hidden')
-                        rectangleBox.classList.remove('animate-pulse')
-                    }
+            if (area.entered) {
+                area.entered = false
 
-                    onLeaveArea && onLeaveArea()
+                const areaBox = document.getElementById(area.id)
+                if (areaBox) {
+                    areaBox.classList.add('hidden')
+                    areaBox.classList.remove('animate-pulse')
                 }
+
+                onLeaveArea && onLeaveArea()
             }
 
             return false
