@@ -2,9 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer utilities {
-  
-}
+@layer utilities {}
 
 #__next {
   display       : flex;
