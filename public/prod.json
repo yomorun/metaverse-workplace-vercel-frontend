@@ -1,1 +1,1 @@
-[{"name":"Receiver-CAN","host":"can.x.yomo.dev","port":9000}, {"name":"Receiver-SIN","host":"sin.x.yomo.dev","port":9000}, {"name":"Receiver-FRA","host":"de.x.yomo.dev","port":9000}, {"name":"Receiver-US","host":"us.x.yomo.dev","port":9000}]
+[{"name":"Receiver-SIN","host":"sin.x.yomo.dev","port":9000}, {"name":"Receiver-FRA","host":"de.x.yomo.dev","port":9000}, {"name":"Receiver-US","host":"us.x.yomo.dev","port":9000}]
