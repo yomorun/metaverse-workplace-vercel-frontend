@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from 'axios'
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 
 axios.interceptors.request.use(
     config => {
@@ -39,9 +39,8 @@ export default function request(config: AxiosRequestConfig) {
 }
 
 export const getRtcToken = async (uid: string, channelName: string, role: string) => {
-    const rtctoken = JSON.parse(
-        localStorage.getItem(process.env.NEXT_PUBLIC_RTCTOKENKEY as string) as string
-    )
+    const rtctoken: { token: string; channelName: string; privilegeExpiredTs: number } | null =
+        JSON.parse(localStorage.getItem(process.env.NEXT_PUBLIC_RTCTOKENKEY as string) as string)
     const currentTimestamp = Math.floor(Date.now() / 1000)
     if (
         rtctoken &&
@@ -57,10 +56,15 @@ export const getRtcToken = async (uid: string, channelName: string, role: string
                 data: { uid, channelName, role },
             })
 
+            if (!response) {
+                return Promise.reject('response is null')
+            }
+
             localStorage.setItem(
                 process.env.NEXT_PUBLIC_RTCTOKENKEY as string,
                 JSON.stringify(response)
             )
+
             return Promise.resolve(response.token)
         } catch (error) {
             return Promise.reject(error)

@@ -19,7 +19,7 @@ type PositionSub = {
 
 type Props = {
     id: string
-    audioTrack: IRemoteAudioTrack
+    audioTrack: IRemoteAudioTrack | null
 }
 
 let positionSubscriber: Subscriber<PositionSub> | null

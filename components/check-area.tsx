@@ -14,12 +14,12 @@ import type { Area, Position } from '../types'
 type Props = {
     checkAreaList: Area[]
     onEnterCheckArea?: (area: Area) => void
-    onLeaveArea?: () => void
+    onLeaveCheckArea?: () => void
 }
 
 let positionSubscriber: Subscriber<Position> | null
 
-const CheckArea = ({ checkAreaList = [], onEnterCheckArea, onLeaveArea }: Props) => {
+const CheckArea = ({ checkAreaList = [], onEnterCheckArea, onLeaveCheckArea }: Props) => {
     const mePosition = useRecoilValue(mePositionState)
 
     useEffect(() => {
@@ -61,7 +61,7 @@ const CheckArea = ({ checkAreaList = [], onEnterCheckArea, onLeaveArea }: Props)
                     areaBox.classList.remove('animate-pulse')
                 }
 
-                onLeaveArea && onLeaveArea()
+                onLeaveCheckArea && onLeaveCheckArea()
             }
 
             return false

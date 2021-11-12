@@ -20,7 +20,7 @@ type Props = {
     playerInitialPosition: Position
     checkAreaList?: Area[]
     onEnterCheckArea?: (area: Area) => void
-    onLeaveArea?: () => void
+    onLeaveCheckArea?: () => void
 }
 
 const Scene = ({
@@ -31,7 +31,7 @@ const Scene = ({
     boundary,
     checkAreaList = [],
     onEnterCheckArea,
-    onLeaveArea,
+    onLeaveCheckArea,
 }: Props) => {
     const smallDevice = useRecoilValue(smallDeviceState)
     const scale = useRecoilValue(scaleState)
@@ -67,7 +67,7 @@ const Scene = ({
                 <CheckArea
                     checkAreaList={checkAreaList}
                     onEnterCheckArea={onEnterCheckArea}
-                    onLeaveArea={onLeaveArea}
+                    onLeaveCheckArea={onLeaveCheckArea}
                 />
             )}
             <div className='relative w-full h-full sm:h-auto sm:pb-10 sm-grid'>

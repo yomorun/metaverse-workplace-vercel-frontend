@@ -8,7 +8,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { trackMapState, matePositionMapState } from '../../store/atom'
 
 import { Vector } from '../../libs/movement'
-import { Logger, checkMobileDevice } from '../../libs/helper'
+import { checkMobileDevice } from '../../libs/helper'
 
 import type { Socket } from 'socket.io-client'
 import type { Position } from '../../types'
@@ -30,8 +30,6 @@ const Mate = ({ name, avatar, initPos, socket }: Props) => {
     const setMatePositionMapState = useSetRecoilState(matePositionMapState)
 
     useEffect(() => {
-        const log = new Logger(`Mate:${name}`, 'color: white; background: orange')
-
         const isMobile = checkMobileDevice()
 
         // default position
@@ -52,7 +50,7 @@ const Mate = ({ name, avatar, initPos, socket }: Props) => {
             renderPosition(POS)
         }
 
-        const direction$ = new Observable(obs => {
+        const direction$ = new Observable<Vector>(obs => {
             socket.on('movement', mv => {
                 if (mv.name != name || isMobile) {
                     return
@@ -64,7 +62,7 @@ const Mate = ({ name, avatar, initPos, socket }: Props) => {
 
         // every direction changing event will cause position movement
         const subscription = direction$
-            .pipe(scan((currPos, dir: any) => currPos.add(dir), POS))
+            .pipe(scan((currPos: Vector, dir: Vector) => currPos.add(dir), POS))
             .subscribe(currPos => {
                 renderPosition(currPos)
 
@@ -86,7 +84,6 @@ const Mate = ({ name, avatar, initPos, socket }: Props) => {
         }, 1000)
 
         return () => {
-            log.log('unload')
             subscription.unsubscribe()
         }
     }, [])
