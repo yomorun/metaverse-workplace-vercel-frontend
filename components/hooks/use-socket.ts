@@ -22,6 +22,10 @@ export default function useSocket({ me, position, room }: Props) {
     const setOnlineState = useSetRecoilState(onlineState)
 
     useEffect(() => {
+        if (!me.name) {
+            return
+        }
+        
         const log = new Logger('Scene', 'color: green; background: yellow')
 
         // init socket.io client
@@ -103,7 +107,7 @@ export default function useSocket({ me, position, room }: Props) {
             setMateMapState(new Map())
             socket.disconnect('bye')
         }
-    }, [])
+    }, [me])
 
     return socket
 }
