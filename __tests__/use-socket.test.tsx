@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom/extend-expect'
 import { render, act } from '@testing-library/react'
+import { renderHook } from '@testing-library/react-hooks'
 import { RecoilRoot, RecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { mateMapState } from '../store/atom'
 import SocketMock from 'socket.io-mock'
@@ -37,28 +38,16 @@ describe('unit test for custom hook useSocket', () => {
         socketMock = new SocketMock()
     })
 
-    it('Render', () => {
-        const TestComponent = () => {
-            const socket = useSocket({
+    it('Render Hook', () => {
+        const { result } = renderHook(() =>
+            useSocket({
                 me,
                 position,
                 room: 'home',
             })
-
-            if (!socket) {
-                return <></>
-            }
-
-            return <p>unit test for custom hook useSocket</p>
-        }
-
-        const { getByText } = render(
-            <RecoilRoot>
-                <TestComponent />
-            </RecoilRoot>
         )
 
-        expect(getByText(/unit test for custom hook useSocket/)).toBeInTheDocument()
+        expect(result.current).not.toEqual(null)
     })
 
     it('Testing the code for players to join the scene', () => {
