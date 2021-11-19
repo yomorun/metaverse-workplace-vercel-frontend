@@ -5,6 +5,7 @@ import AgoraRTC, {
     IMicrophoneAudioTrack,
     IRemoteVideoTrack,
     IRemoteAudioTrack,
+    IRemoteTrack,
 } from 'agora-rtc-sdk-ng'
 import cn from 'classnames'
 
@@ -45,7 +46,7 @@ const Webcam = ({ cover, name, channel }: Props) => {
                 const setTrack = (
                     id: string,
                     mediaType: 'audio' | 'video',
-                    trackObject: (IRemoteVideoTrack & IRemoteAudioTrack) | null
+                    trackObject: IRemoteTrack | null
                 ) => {
                     setTrackMapState(old => {
                         const trackMap = new Map(old)
@@ -53,7 +54,7 @@ const Webcam = ({ cover, name, channel }: Props) => {
                             videoTrack: null,
                             audioTrack: null,
                         }
-                        track[`${mediaType}Track`] = trackObject
+                        track[`${mediaType}Track`] = trackObject as (IRemoteVideoTrack & IRemoteAudioTrack | null)
                         if (!trackMap.has(id)) {
                             trackMap.set(id, track)
                         }
@@ -62,7 +63,7 @@ const Webcam = ({ cover, name, channel }: Props) => {
                 }
 
                 rtcClient.on('user-published', (remoteUser, mediaType) => {
-                    rtcClient.subscribe(remoteUser, mediaType).then((track: any) => {
+                    rtcClient.subscribe(remoteUser, mediaType).then((track: IRemoteTrack) => {
                         setTrack(remoteUser.uid as string, mediaType, track)
                     })
                 })
@@ -151,7 +152,7 @@ const Webcam = ({ cover, name, channel }: Props) => {
                 id={`stream-player-${name}`}
                 className='w-full h-full rounded-full overflow-hidden transform translate-0 shadow-lg bg-white'
             >
-                {!videoOn && <img className='w-full h-full' src={cover} alt='avatar' />}
+                {!videoOn && <img className='w-full h-full' src={cover} alt='me-avatar' />}
             </div>
             <div className='absolute bottom-3 flex'>
                 <div className='cursor-pointer' onClick={toggleVideoSwitch}>

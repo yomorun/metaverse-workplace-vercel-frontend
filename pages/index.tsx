@@ -15,11 +15,11 @@ import type { PageAuth, PageSceneScale, Location, Area } from '../types'
 
 const Scene = dynamic(() => import('../components/scene'), { ssr: false })
 
-export const getServerSideProps = ({ query }: any) => {
+export const getServerSideProps = ({ country, region }: Location) => {
     return {
         props: {
-            country: query.country || '',
-            region: query.region || '',
+            country: country || '',
+            region: region || '',
         },
     }
 }
@@ -79,7 +79,7 @@ const Home: NextPage<Location> & PageAuth & PageSceneScale = ({ country, region 
                             iframeSrc: area.iframeSrc,
                         })
                     }}
-                    onLeaveArea={() => {
+                    onLeaveCheckArea={() => {
                         console.log('[Leave Area]')
                         setIframePageState({
                             isOpen: false,

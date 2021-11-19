@@ -2,34 +2,23 @@ import { useEffect, useRef, memo } from 'react'
 import { fromEvent } from 'rxjs'
 import { map, filter, scan, auditTime } from 'rxjs/operators'
 
+import Webcam from '../rtc/webcam'
+
 import { useSetRecoilState } from 'recoil'
 import { mePositionState } from '../../store/atom'
 
-import Webcam from '../rtc/webcam'
-
-import { Vector, move } from '../../libs/movement'
+import { Vector, move, keyPressWASD } from '../../libs/movement'
 import { Logger, checkMobileDevice } from '../../libs/helper'
 import { playerDiameter } from '../../libs/constant'
 
 import type { Socket } from 'socket.io-client'
 import type { Boundary, Position } from '../../types'
 
-// Only accepts events from the W, A, S and D buttons
-const keyPressWASD = (e: { keyCode: number }) => {
-    switch (e.keyCode) {
-        case 119:
-        case 115:
-        case 97:
-        case 100:
-            return true
-        default:
-            return false
-    }
-}
+type CurrentPositionAndDirection = { currPos: Vector; dir: Vector }
 
 // Stop player from stepping out of borders
-const boundaryProcess = (p: { currPos: Vector; dir: Vector }, boundary: Boundary) => {
-    const { currPos } = p
+const boundaryProcess = (currPosAndDir: CurrentPositionAndDirection, boundary: Boundary) => {
+    const { currPos } = currPosAndDir
     let collided = false
 
     if (currPos.x < boundary.left) {
@@ -54,7 +43,7 @@ const boundaryProcess = (p: { currPos: Vector; dir: Vector }, boundary: Boundary
 
     return {
         collided,
-        ...p,
+        ...currPosAndDir,
     }
 }
 
@@ -103,15 +92,15 @@ const Me = ({ name, avatar, initPos, socket, channel, boundary }: Props) => {
         })
 
         // TODO：Broadcast movement event streams to others in this game room
-        const broadcastEvent = (evt: any) => {
-            socket.emit('movement', { dir: evt })
+        const broadcastEvent = (dir: Vector) => {
+            socket.emit('movement', { dir })
         }
 
         // keyboard `keypress` event, we use keyboard to control moving actions
-        const evtKeyPress = fromEvent(document, 'keypress').pipe(
+        const evtKeyPress = fromEvent<KeyboardEvent>(document, 'keypress').pipe(
             auditTime(16),
-            map((e: any) => {
-                return { evt: 'move', keyCode: e.keyCode }
+            map((e: KeyboardEvent) => {
+                return { evt: 'move', code: e.code }
             })
         )
 
@@ -119,24 +108,21 @@ const Me = ({ name, avatar, initPos, socket, channel, boundary }: Props) => {
         const keyPress$ = evtKeyPress.pipe(filter(keyPressWASD))
 
         // stream of direction changing, this will turns w/a/s/d keypress event into direction vector changing streams
-        const direction$ = keyPress$.pipe(
-            map(move),
-            map(p => p.dir)
-        )
+        const direction$ = keyPress$.pipe(map(move))
 
-        const scanFn = (p: any, _dir: any) => {
-            const { currPos = POS } = p
+        const accumulator = (acc: Vector | CurrentPositionAndDirection, value: Vector) => {
+            const { currPos = POS } = acc as CurrentPositionAndDirection
             return {
-                currPos: currPos.add(_dir),
-                dir: _dir,
+                currPos: currPos.add(value),
+                dir: value,
             }
         }
 
         // every direction changing event will cause position movement
         direction$
             .pipe(
-                scan(scanFn, POS),
-                map(p => boundaryProcess(p, boundary))
+                scan(accumulator, POS),
+                map(currPosAndDir => boundaryProcess(currPosAndDir, boundary))
             )
             .subscribe(({ currPos, dir, collided }) => {
                 renderPosition(currPos)
@@ -161,10 +147,6 @@ const Me = ({ name, avatar, initPos, socket, channel, boundary }: Props) => {
                 refContainer.current.classList.add('movement-transition')
             }
         }, 1000)
-
-        return () => {
-            log.log('[Unmount] event')
-        }
     }, [])
 
     return (

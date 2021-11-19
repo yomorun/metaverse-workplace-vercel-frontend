@@ -35,20 +35,37 @@ const dirUp = new Vector(0, -1)
 const dirDown = new Vector(0, 1)
 
 // Transform W, A, S, D into vectors of moving directions
-export const move = (e: { keyCode: number }) => {
+export const move = (e: { code: string }) => {
     let dir
-    switch (e.keyCode) {
-        case 119:
+    switch (e.code) {
+        case 'KeyW':
             dir = dirUp
             break
-        case 115:
+        case 'KeyS':
             dir = dirDown
             break
-        case 97:
+        case 'KeyA':
             dir = dirLeft
             break
-        case 100:
+        case 'KeyD':
             dir = dirRight
+            break
+        default:
+            dir = new Vector(0, 0)
     }
-    return Object.assign(e, { dir })
+    
+    return dir
+}
+
+// Only accepts events from the W, A, S and D buttons
+export const keyPressWASD = (e: { code: string }) => {
+    switch (e.code) {
+        case 'KeyW':
+        case 'KeyS':
+        case 'KeyA':
+        case 'KeyD':
+            return true
+        default:
+            return false
+    }
 }

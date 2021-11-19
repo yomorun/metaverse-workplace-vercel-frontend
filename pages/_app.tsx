@@ -33,7 +33,13 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     )
 }
 
-function Adapter({ scale = { sceneWidth: 0, sceneHeight: 0 }, children }: { scale?: ScaleParams; children: JSX.Element }) {
+function Adapter({
+    scale = { sceneWidth: 0, sceneHeight: 0 },
+    children,
+}: {
+    scale?: ScaleParams
+    children: JSX.Element
+}) {
     const setSmallDeviceState = useSetRecoilState(smallDeviceState)
     const setScaleState = useSetRecoilState(scaleState)
 
@@ -77,11 +83,15 @@ function Auth({ children }: { children: JSX.Element }) {
         }
 
         if (!!session?.user) {
+            const { user } = session
             setMeState((old: any) => {
-                if (old.name === session?.user?.name) {
+                if (old.name === user?.name) {
                     return old
                 }
-                return session.user
+                return {
+                    name: user.name,
+                    image: user.image,
+                }
             })
             return
         }

@@ -20,8 +20,12 @@ const rtctoken = async (req: NextApiRequest, res: NextApiResponse) => {
                 )
 
                 res.status(200).send({ token, privilegeExpiredTs, channelName })
-            } catch (e: any) {
-                res.status(500).json({ msg: e.message })
+            } catch (e: unknown) {
+                if (typeof e === 'string') {
+                    res.status(500).json({ msg: e })
+                } else if (e instanceof Error) {
+                    res.status(500).json({ msg: e.message })
+                }
             }
         } else {
             res.status(400).json({
