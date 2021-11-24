@@ -19,7 +19,7 @@ function getMeshID(country: string | undefined): string {
     }
 
     if (country === 'CN') {
-        return 'can.x.yomo.dev'
+        return 'cn1.x.yomo.dev'
     }
 
     const res = countryRegion.find((item: { name: string; region: string }) => {
