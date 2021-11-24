@@ -13,14 +13,17 @@ import { checkMobileDevice } from '../../libs/helper'
 import type { Socket } from 'socket.io-client'
 import type { Position } from '../../types'
 
-type Props = {
+const Mate = ({
+    name,
+    avatar,
+    initPos,
+    socket,
+}: {
     name: string
     avatar: string
     initPos: Position
     socket: Socket
-}
-
-const Mate = ({ name, avatar, initPos, socket }: Props) => {
+}) => {
     const refContainer = useRef<HTMLDivElement>(null)
     const trackMap = useRecoilValue(trackMapState)
     const { videoTrack, audioTrack } = trackMap.get(name) || {
@@ -48,6 +51,15 @@ const Mate = ({ name, avatar, initPos, socket }: Props) => {
         if (!isMobile) {
             // initial position
             renderPosition(POS)
+
+            setMatePositionMapState(old => {
+                const matePositionMap = new Map(old)
+                matePositionMap.set(name, {
+                    x: POS.x,
+                    y: POS.y,
+                })
+                return matePositionMap
+            })
         }
 
         const direction$ = new Observable<Vector>(obs => {
