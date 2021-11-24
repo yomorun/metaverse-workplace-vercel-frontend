@@ -12,17 +12,6 @@ import type { Area, Boundary, Position } from '../types'
 
 const CheckArea = dynamic(() => import('./check-area'))
 
-type Props = {
-    className: string
-    floor: string
-    backgroundImage: string
-    boundary: Boundary
-    playerInitialPosition: Position
-    checkAreaList?: Area[]
-    onEnterCheckArea?: (area: Area) => void
-    onLeaveCheckArea?: () => void
-}
-
 const Scene = ({
     className,
     floor,
@@ -32,7 +21,16 @@ const Scene = ({
     checkAreaList = [],
     onEnterCheckArea,
     onLeaveCheckArea,
-}: Props) => {
+}: {
+    className: string
+    floor: string
+    backgroundImage: string
+    boundary: Boundary
+    playerInitialPosition: Position
+    checkAreaList?: Area[]
+    onEnterCheckArea?: (area: Area) => void
+    onLeaveCheckArea?: () => void
+}) => {
     const smallDevice = useRecoilValue(smallDeviceState)
     const scale = useRecoilValue(scaleState)
     const me = useRecoilValue(meState)

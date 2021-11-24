@@ -1,13 +1,15 @@
 import { useEffect, useCallback } from 'react'
 import S from './drawer.module.css'
 
-type Props = {
+const Drawer = ({
+    isOpen,
+    onClose,
+    children,
+}: {
     isOpen: boolean
     onClose: () => void
     children: JSX.Element
-}
-
-const Drawer = ({ isOpen, onClose, children }: Props) => {
+}) => {
     useEffect(() => {
         if (isOpen) {
             document.body.setAttribute('style', 'overflow: hidden')

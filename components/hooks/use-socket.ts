@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { useSetRecoilState } from 'recoil'
-import { mateMapState, onlineState } from '../../store/atom'
+import { mateMapState, matePositionMapState, onlineState } from '../../store/atom'
 
 import { Vector } from '../../libs/movement'
 import { Logger } from '../../libs/helper'
@@ -10,22 +10,25 @@ import io from 'socket.io-client'
 import type { Socket } from 'socket.io-client'
 import type { User, Position } from '../../types'
 
-type Props = {
+export default function useSocket({
+    me,
+    position,
+    room,
+}: {
     me: User
     position: Position
     room: string
-}
-
-export default function useSocket({ me, position, room }: Props) {
+}) {
     const [socket, setSocket] = useState<Socket | null>(null)
     const setMateMapState = useSetRecoilState(mateMapState)
+    const setMatePositionMapState = useSetRecoilState(matePositionMapState)
     const setOnlineState = useSetRecoilState(onlineState)
 
     useEffect(() => {
         if (!me.name) {
             return
         }
-        
+
         const log = new Logger('Scene', 'color: green; background: yellow')
 
         // init socket.io client
@@ -64,6 +67,12 @@ export default function useSocket({ me, position, room }: Props) {
                 const mateMap = new Map(old)
                 mateMap.delete(mate.name)
                 return mateMap
+            })
+
+            setMatePositionMapState(old => {
+                const matePositionMap = new Map(old)
+                matePositionMap.delete(mate.name)
+                return matePositionMap
             })
         })
 
@@ -107,7 +116,7 @@ export default function useSocket({ me, position, room }: Props) {
             setMateMapState(new Map())
             socket.disconnect('bye')
         }
-    }, [me])
+    }, [me.name])
 
     return socket
 }

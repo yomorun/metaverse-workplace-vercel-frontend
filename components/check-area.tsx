@@ -1,6 +1,6 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Subscriber, Observable } from 'rxjs'
-import { throttleTime } from 'rxjs/operators'
+import { auditTime } from 'rxjs/operators'
 import cn from 'classnames'
 
 import { useRecoilValue } from 'recoil'
@@ -11,26 +11,21 @@ import { playerDiameter } from '../libs/constant'
 
 import type { Area, Position } from '../types'
 
-type Props = {
+const CheckArea = ({
+    checkAreaList = [],
+    onEnterCheckArea,
+    onLeaveCheckArea,
+}: {
     checkAreaList: Area[]
     onEnterCheckArea?: (area: Area) => void
     onLeaveCheckArea?: () => void
-}
-
-let positionSubscriber: Subscriber<Position> | null
-
-const CheckArea = ({ checkAreaList = [], onEnterCheckArea, onLeaveCheckArea }: Props) => {
+}) => {
+    const [subscriber, setSubscriber] = useState<Subscriber<Position> | null>(null)
     const mePosition = useRecoilValue(mePositionState)
 
     useEffect(() => {
-        if (positionSubscriber) {
-            positionSubscriber.next(mePosition)
-        }
-    }, [mePosition])
-
-    useEffect(() => {
         const positionObservable: Observable<Position> = new Observable(subscriber => {
-            positionSubscriber = subscriber
+            setSubscriber(subscriber)
         })
 
         const process = (entered: boolean, area: Area): boolean => {
@@ -67,7 +62,7 @@ const CheckArea = ({ checkAreaList = [], onEnterCheckArea, onLeaveCheckArea }: P
             return false
         }
 
-        const subscription = positionObservable.pipe(throttleTime(200)).subscribe(position => {
+        const subscription = positionObservable.pipe(auditTime(500)).subscribe(position => {
             // Radius
             const r1 = playerDiameter / 2
             // Center of circle position
@@ -105,9 +100,14 @@ const CheckArea = ({ checkAreaList = [], onEnterCheckArea, onLeaveCheckArea }: P
 
         return () => {
             subscription.unsubscribe()
-            positionSubscriber = null
         }
     }, [])
+
+    useEffect(() => {
+        if (subscriber) {
+            subscriber.next(mePosition)
+        }
+    }, [mePosition, subscriber])
 
     return useMemo(
         () => (

@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { Observable, Subscriber } from 'rxjs'
-import { throttleTime } from 'rxjs/operators'
+import { auditTime } from 'rxjs/operators'
 
 import { useRecoilValue } from 'recoil'
 import { mutedState, mePositionState, matePositionMapState } from '../../store/atom'
@@ -12,41 +12,27 @@ import type { Position } from '../../types'
 
 import styles from './sound.module.css'
 
-type PositionSub = {
+interface PositionSub {
     mePosition: Position
     matePosition: Position
 }
 
-type Props = {
-    id: string
-    audioTrack: IRemoteAudioTrack | null
-}
-
-let positionSubscriber: Subscriber<PositionSub> | null
-
-const Sound = ({ id, audioTrack }: Props) => {
+const Sound = ({ id, audioTrack }: { id: string; audioTrack: IRemoteAudioTrack | null }) => {
     const [volume, setVolume] = useState(100)
     const muted = useRecoilValue(mutedState)
+
+    const [subscriber, setSubscriber] = useState<Subscriber<PositionSub> | null>(null)
     const mePosition = useRecoilValue(mePositionState)
     const matePositionMap = useRecoilValue(matePositionMapState)
     const matePosition = matePositionMap.get(id) || { x: 0, y: 0 }
 
     useEffect(() => {
-        if (positionSubscriber) {
-            positionSubscriber.next({
-                mePosition,
-                matePosition,
-            })
-        }
-    }, [mePosition, matePosition])
-
-    useEffect(() => {
-        const positionObservable: Observable<PositionSub> = new Observable(subscriber => {
-            positionSubscriber = subscriber
+        const observer: Observable<PositionSub> = new Observable(subscriber => {
+            setSubscriber(subscriber)
         })
 
-        const subscription = positionObservable
-            .pipe(throttleTime(500))
+        const subscription = observer
+            .pipe(auditTime(500))
             .subscribe(({ mePosition, matePosition }) => {
                 const distance = calcDistance(
                     mePosition.x,
@@ -77,9 +63,17 @@ const Sound = ({ id, audioTrack }: Props) => {
 
         return () => {
             subscription.unsubscribe()
-            positionSubscriber = null
         }
     }, [])
+
+    useEffect(() => {
+        if (subscriber) {
+            subscriber.next({
+                mePosition,
+                matePosition,
+            })
+        }
+    }, [mePosition, matePosition, subscriber])
 
     useEffect(() => {
         if (audioTrack) {

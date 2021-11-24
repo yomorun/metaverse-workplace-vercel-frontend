@@ -14,7 +14,10 @@ import { playerDiameter } from '../../libs/constant'
 import type { Socket } from 'socket.io-client'
 import type { Boundary, Position } from '../../types'
 
-type CurrentPositionAndDirection = { currPos: Vector; dir: Vector }
+interface CurrentPositionAndDirection {
+    currPos: Vector
+    dir: Vector
+}
 
 // Stop player from stepping out of borders
 const boundaryProcess = (currPosAndDir: CurrentPositionAndDirection, boundary: Boundary) => {
@@ -47,16 +50,21 @@ const boundaryProcess = (currPosAndDir: CurrentPositionAndDirection, boundary: B
     }
 }
 
-type Props = {
+const Me = ({
+    name,
+    avatar,
+    initPos,
+    socket,
+    channel,
+    boundary,
+}: {
     name: string
     avatar: string
     initPos: Position
     socket: Socket
     channel: string
     boundary: Boundary
-}
-
-const Me = ({ name, avatar, initPos, socket, channel, boundary }: Props) => {
+}) => {
     const refContainer = useRef<HTMLDivElement>(null)
 
     const setMePositionState = useSetRecoilState(mePositionState)
