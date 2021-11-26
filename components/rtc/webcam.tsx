@@ -178,7 +178,7 @@ const Webcam = ({ cover, name, channel }: { cover: string; name: string; channel
                     )
 
                     // Detects if there are people within 400px of the surrounding area. If there is, then you can join
-                    if (distance < 400) {
+                    if (distance < 300) {
                         STATE.canJoin = true
                         break
                     }
