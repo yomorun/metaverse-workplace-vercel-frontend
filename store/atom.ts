@@ -20,11 +20,6 @@ export const onlineState = atom({
     default: false,
 })
 
-export const mutedState = atom({
-    key: 'mutedState',
-    default: true,
-})
-
 export const locationState = atom({
     key: 'locationState',
     default: {
@@ -69,5 +64,12 @@ export const iframePageState = atom({
     default: {
         isOpen: false,
         iframeSrc: '',
+    },
+})
+
+export const autoPlayState = atom({
+    key: 'autoPlayState',
+    default: {
+        isAutoplayFailed: false,
     },
 })

@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react'
-import { Subscriber, Observable } from 'rxjs'
+import { useEffect, useMemo } from 'react'
+import { Subject } from 'rxjs'
 import { auditTime } from 'rxjs/operators'
 import cn from 'classnames'
 
@@ -11,6 +11,8 @@ import { playerDiameter } from '../libs/constant'
 
 import type { Area, Position } from '../types'
 
+const position$ = new Subject<Position>()
+
 const CheckArea = ({
     checkAreaList = [],
     onEnterCheckArea,
@@ -20,14 +22,13 @@ const CheckArea = ({
     onEnterCheckArea?: (area: Area) => void
     onLeaveCheckArea?: () => void
 }) => {
-    const [subscriber, setSubscriber] = useState<Subscriber<Position> | null>(null)
     const mePosition = useRecoilValue(mePositionState)
 
     useEffect(() => {
-        const positionObservable: Observable<Position> = new Observable(subscriber => {
-            setSubscriber(subscriber)
-        })
+        position$.next(mePosition);
+    }, [mePosition])
 
+    useEffect(() => {
         const process = (entered: boolean, area: Area): boolean => {
             if (entered) {
                 if (area.entered) {
@@ -62,7 +63,7 @@ const CheckArea = ({
             return false
         }
 
-        const subscription = positionObservable.pipe(auditTime(500)).subscribe(position => {
+        const subscription = position$.pipe(auditTime(500)).subscribe(position => {
             // Radius
             const r1 = playerDiameter / 2
             // Center of circle position
@@ -102,12 +103,6 @@ const CheckArea = ({
             subscription.unsubscribe()
         }
     }, [])
-
-    useEffect(() => {
-        if (subscriber) {
-            subscriber.next(mePosition)
-        }
-    }, [mePosition, subscriber])
 
     return useMemo(
         () => (

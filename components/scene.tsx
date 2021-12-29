@@ -4,6 +4,7 @@ import cn from 'classnames'
 import Me from './player/me'
 import Mates from './player/mates'
 import useSocket from './hooks/use-socket'
+import AutoPlayTip from './minor/auto-play-tip'
 
 import { useRecoilValue } from 'recoil'
 import { smallDeviceState, scaleState, meState } from '../store/atom'
@@ -46,40 +47,43 @@ const Scene = ({
     }
 
     return (
-        <div
-            className={cn(
-                `relative ${className} sm:w-full sm:min-w-full sm:h-full sm:overflow-y-scroll`,
-                {
-                    [`${scale.className}`]: scale.value !== 1 && !smallDevice,
-                }
-            )}
-        >
-            {!smallDevice && (
-                <img
-                    className='absolute top-0 left-0 w-full h-full'
-                    src={backgroundImage}
-                    alt='background'
-                />
-            )}
-            {!smallDevice && checkAreaList && (
-                <CheckArea
-                    checkAreaList={checkAreaList}
-                    onEnterCheckArea={onEnterCheckArea}
-                    onLeaveCheckArea={onLeaveCheckArea}
-                />
-            )}
-            <div className='relative w-full h-full sm:h-auto sm:pb-10 sm-grid'>
-                <Mates socket={socket} />
-                <Me
-                    name={me.name}
-                    avatar={me.image}
-                    initPos={playerInitialPosition}
-                    socket={socket}
-                    channel={floor}
-                    boundary={boundary}
-                />
+        <>
+            <div
+                className={cn(
+                    `relative ${className} sm:w-full sm:min-w-full sm:h-full sm:overflow-y-scroll`,
+                    {
+                        [`${scale.className}`]: scale.value !== 1 && !smallDevice,
+                    }
+                )}
+            >
+                {!smallDevice && (
+                    <img
+                        className='absolute top-0 left-0 w-full h-full'
+                        src={backgroundImage}
+                        alt='background'
+                    />
+                )}
+                {!smallDevice && checkAreaList && (
+                    <CheckArea
+                        checkAreaList={checkAreaList}
+                        onEnterCheckArea={onEnterCheckArea}
+                        onLeaveCheckArea={onLeaveCheckArea}
+                    />
+                )}
+                <div className='relative w-full h-full sm:h-auto sm:pb-10 sm-grid'>
+                    <Mates socket={socket} />
+                    <Me
+                        name={me.name}
+                        avatar={me.image}
+                        initPos={playerInitialPosition}
+                        socket={socket}
+                        channel={floor}
+                        boundary={boundary}
+                    />
+                </div>
             </div>
-        </div>
+            <AutoPlayTip />
+        </>
     )
 }
 

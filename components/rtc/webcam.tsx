@@ -8,24 +8,34 @@ import AgoraRTC, {
     IRemoteTrack,
 } from 'agora-rtc-sdk-ng'
 import cn from 'classnames'
-import { Observable, Subscriber } from 'rxjs'
+import { Subject } from 'rxjs'
 import { debounceTime } from 'rxjs/operators'
 
 import Spin from '../minor/spin'
 
 import { useSetRecoilState, useRecoilValue } from 'recoil'
-import { trackMapState, mePositionState, matePositionMapState } from '../../store/atom'
+import {
+    trackMapState,
+    mePositionState,
+    matePositionMapState,
+    autoPlayState,
+} from '../../store/atom'
 
 import { getRtcToken } from '../../libs/request'
-import { calcDistance } from '../../libs/helper'
+import { calcDistance, checkMobileDevice } from '../../libs/helper'
 
 import type { Position, TrackMapValue } from '../../types'
+
+interface PositionSub {
+    mePosition: Position
+    matePositionMap: Map<string, Position>
+}
 
 const STATE: {
     rtcClient: IAgoraRTCClient | undefined
     videoTrack: ICameraVideoTrack | undefined
     audioTrack: IMicrophoneAudioTrack | undefined
-    positionSubscriber: Subscriber<PositionSub> | undefined
+    position$: Subject<PositionSub>
     canJoin: boolean
     joined: boolean
     showTip: boolean
@@ -35,7 +45,7 @@ const STATE: {
     rtcClient: undefined,
     videoTrack: undefined,
     audioTrack: undefined,
-    positionSubscriber: undefined,
+    position$: new Subject<PositionSub>(),
     canJoin: false,
     joined: false,
     showTip: false,
@@ -71,6 +81,7 @@ const leave = () => {
     if (STATE.rtcClient) {
         STATE.rtcClient.leave()
         STATE.joined = false
+        STATE.canJoin = false
     }
 }
 
@@ -142,27 +153,32 @@ const toggleTip = () => {
     }
 }
 
-interface PositionSub {
-    mePosition: Position
-    matePositionMap: Map<string, Position>
-}
-
 const Webcam = ({ cover, name, channel }: { cover: string; name: string; channel: string }) => {
     const [videoOn, setVideoOn] = useState(false)
     const [micOn, setMicOn] = useState(false)
     const [loading, setLoading] = useState(false)
 
     const setTrackMapState = useSetRecoilState(trackMapState)
+    const setAutoPlayState = useSetRecoilState(autoPlayState)
 
     const mePosition = useRecoilValue(mePositionState)
     const matePositionMap = useRecoilValue(matePositionMapState)
 
     useEffect(() => {
-        const observer: Observable<PositionSub> = new Observable(subscriber => {
-            STATE.positionSubscriber = subscriber
+        STATE.position$.next({
+            mePosition,
+            matePositionMap,
         })
+    }, [mePosition, matePositionMap])
 
-        const subscription = observer
+    useEffect(() => {
+        const isMobile = checkMobileDevice()
+        if (isMobile) {
+            STATE.canJoin = true
+            return
+        }
+
+        const subscription = STATE.position$
             .pipe(debounceTime(300))
             .subscribe(({ mePosition, matePositionMap }) => {
                 if (matePositionMap.size === 0) {
@@ -245,22 +261,17 @@ const Webcam = ({ cover, name, channel }: { cover: string; name: string; channel
 
         return () => {
             subscription.unsubscribe()
-            STATE.positionSubscriber = undefined
         }
     }, [])
 
     useEffect(() => {
-        const { positionSubscriber } = STATE
-        if (positionSubscriber) {
-            positionSubscriber.next({
-                mePosition,
-                matePositionMap,
+        AgoraRTC.setLogLevel(4)
+
+        AgoraRTC.onAutoplayFailed = () => {
+            setAutoPlayState({
+                isAutoplayFailed: true,
             })
         }
-    }, [mePosition, matePositionMap])
-
-    useEffect(() => {
-        AgoraRTC.setLogLevel(4)
 
         STATE.rtcClient = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' })
 
@@ -329,7 +340,7 @@ const Webcam = ({ cover, name, channel }: { cover: string; name: string; channel
 
     const toggleMicSwitch = useCallback(() => {
         const _micOn = !micOn
-        
+
         // To open the microphone, but can not join at this time, then open the prompt
         if (_micOn && !STATE.canJoin) {
             toggleTip()
