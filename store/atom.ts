@@ -67,9 +67,10 @@ export const iframePageState = atom({
     },
 })
 
-export const autoPlayState = atom({
-    key: 'autoPlayState',
+export const tipState = atom({
+    key: 'tipState',
     default: {
-        isAutoplayFailed: false,
+        isOpen: false,
+        msg: '',
     },
 })

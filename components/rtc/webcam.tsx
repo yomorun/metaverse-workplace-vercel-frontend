@@ -14,12 +14,8 @@ import { debounceTime } from 'rxjs/operators'
 import Spin from '../minor/spin'
 
 import { useSetRecoilState, useRecoilValue } from 'recoil'
-import {
-    trackMapState,
-    mePositionState,
-    matePositionMapState,
-    autoPlayState,
-} from '../../store/atom'
+import { trackMapState, mePositionState, matePositionMapState, tipState } from '../../store/atom'
+import { onlineCountState } from '../../store/selector'
 
 import { getRtcToken } from '../../libs/request'
 import { calcDistance, checkMobileDevice } from '../../libs/helper'
@@ -159,10 +155,31 @@ const Webcam = ({ cover, name, channel }: { cover: string; name: string; channel
     const [loading, setLoading] = useState(false)
 
     const setTrackMapState = useSetRecoilState(trackMapState)
-    const setAutoPlayState = useSetRecoilState(autoPlayState)
+    const setTipState = useSetRecoilState(tipState)
 
     const mePosition = useRecoilValue(mePositionState)
     const matePositionMap = useRecoilValue(matePositionMapState)
+    const onlineCount = useRecoilValue<number>(onlineCountState)
+
+    useEffect(() => {
+        if (checkMobileDevice()) {
+            if (onlineCount > 1) {
+                if (!STATE.joined) {
+                    STATE.canJoin = true
+                    join(name, channel)
+                    setTipState({
+                        isOpen: false,
+                        msg: '',
+                    })
+                }
+            } else {
+                setTipState({
+                    isOpen: true,
+                    msg: `No one is around you, so you can't join and publish local streams`,
+                })
+            }
+        }
+    }, [onlineCount])
 
     useEffect(() => {
         STATE.position$.next({
@@ -172,9 +189,7 @@ const Webcam = ({ cover, name, channel }: { cover: string; name: string; channel
     }, [mePosition, matePositionMap])
 
     useEffect(() => {
-        const isMobile = checkMobileDevice()
-        if (isMobile) {
-            STATE.canJoin = true
+        if (checkMobileDevice()) {
             return
         }
 
@@ -268,8 +283,9 @@ const Webcam = ({ cover, name, channel }: { cover: string; name: string; channel
         AgoraRTC.setLogLevel(4)
 
         AgoraRTC.onAutoplayFailed = () => {
-            setAutoPlayState({
-                isAutoplayFailed: true,
+            setTipState({
+                isOpen: true,
+                msg: 'Click me to resume the audio/video playback',
             })
         }
 

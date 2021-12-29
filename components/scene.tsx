@@ -4,7 +4,7 @@ import cn from 'classnames'
 import Me from './player/me'
 import Mates from './player/mates'
 import useSocket from './hooks/use-socket'
-import AutoPlayTip from './minor/auto-play-tip'
+import Tip from './minor/tip'
 
 import { useRecoilValue } from 'recoil'
 import { smallDeviceState, scaleState, meState } from '../store/atom'
@@ -82,7 +82,7 @@ const Scene = ({
                     />
                 </div>
             </div>
-            <AutoPlayTip />
+            <Tip />
         </>
     )
 }

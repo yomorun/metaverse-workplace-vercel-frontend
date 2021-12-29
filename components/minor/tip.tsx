@@ -3,27 +3,28 @@ import { useCallback } from 'react'
 import Modal from './modal'
 
 import { useRecoilState } from 'recoil'
-import { autoPlayState } from '../../store/atom'
+import { tipState } from '../../store/atom'
 
-const AutoPlayTip = () => {
-    const [autoPlay, setAutoPlayState] = useRecoilState(autoPlayState)
+const Tip = () => {
+    const [tip, setTipState] = useRecoilState(tipState)
 
     const closeModal = useCallback(() => {
-        setAutoPlayState({
-            isAutoplayFailed: false,
+        setTipState({
+            isOpen: false,
+            msg: '',
         })
     }, [])
 
     return (
-        <Modal isOpen={autoPlay.isAutoplayFailed}>
+        <Modal isOpen={tip.isOpen}>
             <button
                 className='px-10 py-5 bg-white rounded text-sm text-green-900'
                 onClick={closeModal}
             >
-                Click me to resume the audio/video playback
+                {tip.msg}
             </button>
         </Modal>
     )
 }
 
-export default AutoPlayTip
+export default Tip
