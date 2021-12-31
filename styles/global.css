@@ -21,6 +21,10 @@ body {
   overflow   : scroll;
 }
 
+button {
+  outline: none;
+}
+
 button,
 input {
   font-family: 'Exo 2';

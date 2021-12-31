@@ -1,9 +1,9 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Observable, Subscriber } from 'rxjs'
+import { Subject } from 'rxjs'
 import { auditTime } from 'rxjs/operators'
 
 import { useRecoilValue } from 'recoil'
-import { mutedState, mePositionState, matePositionMapState } from '../../store/atom'
+import { mePositionState, matePositionMapState } from '../../store/atom'
 
 import { calcDistance } from '../../libs/helper'
 
@@ -19,19 +19,20 @@ interface PositionSub {
 
 const Sound = ({ id, audioTrack }: { id: string; audioTrack: IRemoteAudioTrack | null }) => {
     const [volume, setVolume] = useState(100)
-    const muted = useRecoilValue(mutedState)
-
-    const [subscriber, setSubscriber] = useState<Subscriber<PositionSub> | null>(null)
+    const [position$] = useState<Subject<PositionSub>>(new Subject<PositionSub>())
     const mePosition = useRecoilValue(mePositionState)
     const matePositionMap = useRecoilValue(matePositionMapState)
     const matePosition = matePositionMap.get(id) || { x: 0, y: 0 }
 
     useEffect(() => {
-        const observer: Observable<PositionSub> = new Observable(subscriber => {
-            setSubscriber(subscriber)
+        position$.next({
+            mePosition,
+            matePosition,
         })
+    }, [mePosition, matePosition])
 
-        const subscription = observer
+    useEffect(() => {
+        const subscription = position$
             .pipe(auditTime(500))
             .subscribe(({ mePosition, matePosition }) => {
                 const distance = calcDistance(
@@ -67,15 +68,6 @@ const Sound = ({ id, audioTrack }: { id: string; audioTrack: IRemoteAudioTrack |
     }, [])
 
     useEffect(() => {
-        if (subscriber) {
-            subscriber.next({
-                mePosition,
-                matePosition,
-            })
-        }
-    }, [mePosition, matePosition, subscriber])
-
-    useEffect(() => {
         if (audioTrack) {
             audioTrack.setVolume(volume)
         }
@@ -83,18 +75,14 @@ const Sound = ({ id, audioTrack }: { id: string; audioTrack: IRemoteAudioTrack |
 
     useEffect(() => {
         if (audioTrack) {
-            if (muted) {
-                audioTrack.stop()
-            } else {
-                audioTrack.play()
-            }
+            audioTrack.play()
         }
-    }, [audioTrack, muted])
+    }, [audioTrack])
 
     return useMemo(
         () => (
             <div className='w-32 py-3 rounded-lg shadow-lg bg-white bg-opacity-80 sm:hidden'>
-                <div className={`${styles.soundBox} ${muted ? '' : styles.animateSound}`}>
+                <div className={`${styles.soundBox} ${styles.animateSound}`}>
                     <span className={styles.line1}></span>
                     <span className={styles.line2}></span>
                     <span className={styles.line3}></span>
@@ -106,7 +94,7 @@ const Sound = ({ id, audioTrack }: { id: string; audioTrack: IRemoteAudioTrack |
                 </div>
             </div>
         ),
-        [volume, muted]
+        [volume]
     )
 }
 

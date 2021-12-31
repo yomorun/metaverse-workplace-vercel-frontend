@@ -8,24 +8,30 @@ import AgoraRTC, {
     IRemoteTrack,
 } from 'agora-rtc-sdk-ng'
 import cn from 'classnames'
-import { Observable, Subscriber } from 'rxjs'
+import { Subject } from 'rxjs'
 import { debounceTime } from 'rxjs/operators'
 
 import Spin from '../minor/spin'
 
 import { useSetRecoilState, useRecoilValue } from 'recoil'
-import { trackMapState, mePositionState, matePositionMapState } from '../../store/atom'
+import { trackMapState, mePositionState, matePositionMapState, tipState } from '../../store/atom'
+import { onlineCountState } from '../../store/selector'
 
 import { getRtcToken } from '../../libs/request'
-import { calcDistance } from '../../libs/helper'
+import { calcDistance, checkMobileDevice } from '../../libs/helper'
 
 import type { Position, TrackMapValue } from '../../types'
+
+interface PositionSub {
+    mePosition: Position
+    matePositionMap: Map<string, Position>
+}
 
 const STATE: {
     rtcClient: IAgoraRTCClient | undefined
     videoTrack: ICameraVideoTrack | undefined
     audioTrack: IMicrophoneAudioTrack | undefined
-    positionSubscriber: Subscriber<PositionSub> | undefined
+    position$: Subject<PositionSub>
     canJoin: boolean
     joined: boolean
     showTip: boolean
@@ -35,7 +41,7 @@ const STATE: {
     rtcClient: undefined,
     videoTrack: undefined,
     audioTrack: undefined,
-    positionSubscriber: undefined,
+    position$: new Subject<PositionSub>(),
     canJoin: false,
     joined: false,
     showTip: false,
@@ -71,6 +77,7 @@ const leave = () => {
     if (STATE.rtcClient) {
         STATE.rtcClient.leave()
         STATE.joined = false
+        STATE.canJoin = false
     }
 }
 
@@ -142,27 +149,51 @@ const toggleTip = () => {
     }
 }
 
-interface PositionSub {
-    mePosition: Position
-    matePositionMap: Map<string, Position>
-}
-
 const Webcam = ({ cover, name, channel }: { cover: string; name: string; channel: string }) => {
     const [videoOn, setVideoOn] = useState(false)
     const [micOn, setMicOn] = useState(false)
     const [loading, setLoading] = useState(false)
 
     const setTrackMapState = useSetRecoilState(trackMapState)
+    const setTipState = useSetRecoilState(tipState)
 
     const mePosition = useRecoilValue(mePositionState)
     const matePositionMap = useRecoilValue(matePositionMapState)
+    const onlineCount = useRecoilValue<number>(onlineCountState)
 
     useEffect(() => {
-        const observer: Observable<PositionSub> = new Observable(subscriber => {
-            STATE.positionSubscriber = subscriber
-        })
+        if (checkMobileDevice()) {
+            if (onlineCount > 1) {
+                if (!STATE.joined) {
+                    STATE.canJoin = true
+                    join(name, channel)
+                    setTipState({
+                        isOpen: false,
+                        msg: '',
+                    })
+                }
+            } else {
+                setTipState({
+                    isOpen: true,
+                    msg: `No one is around you, so you can't join and publish local streams`,
+                })
+            }
+        }
+    }, [onlineCount])
 
-        const subscription = observer
+    useEffect(() => {
+        STATE.position$.next({
+            mePosition,
+            matePositionMap,
+        })
+    }, [mePosition, matePositionMap])
+
+    useEffect(() => {
+        if (checkMobileDevice()) {
+            return
+        }
+
+        const subscription = STATE.position$
             .pipe(debounceTime(300))
             .subscribe(({ mePosition, matePositionMap }) => {
                 if (matePositionMap.size === 0) {
@@ -245,22 +276,18 @@ const Webcam = ({ cover, name, channel }: { cover: string; name: string; channel
 
         return () => {
             subscription.unsubscribe()
-            STATE.positionSubscriber = undefined
         }
     }, [])
 
     useEffect(() => {
-        const { positionSubscriber } = STATE
-        if (positionSubscriber) {
-            positionSubscriber.next({
-                mePosition,
-                matePositionMap,
+        AgoraRTC.setLogLevel(4)
+
+        AgoraRTC.onAutoplayFailed = () => {
+            setTipState({
+                isOpen: true,
+                msg: 'Click me to resume the audio/video playback',
             })
         }
-    }, [mePosition, matePositionMap])
-
-    useEffect(() => {
-        AgoraRTC.setLogLevel(4)
 
         STATE.rtcClient = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' })
 
@@ -329,7 +356,7 @@ const Webcam = ({ cover, name, channel }: { cover: string; name: string; channel
 
     const toggleMicSwitch = useCallback(() => {
         const _micOn = !micOn
-        
+
         // To open the microphone, but can not join at this time, then open the prompt
         if (_micOn && !STATE.canJoin) {
             toggleTip()

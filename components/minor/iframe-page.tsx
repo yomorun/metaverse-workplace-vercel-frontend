@@ -1,4 +1,4 @@
-import Drawer from './drawer'
+import Modal from './modal'
 
 import { useRecoilState } from 'recoil'
 import { iframePageState } from '../../store/atom'
@@ -7,8 +7,9 @@ const IframePage = () => {
     const [IframePage, setIframePageState] = useRecoilState(iframePageState)
 
     return (
-        <Drawer
+        <Modal
             isOpen={IframePage.isOpen}
+            type='drawer'
             onClose={() =>
                 setIframePageState({
                     isOpen: false,
@@ -17,7 +18,7 @@ const IframePage = () => {
             }
         >
             <iframe title='' width='100%' height='100%' src={IframePage.iframeSrc} />
-        </Drawer>
+        </Modal>
     )
 }
 
