@@ -228,10 +228,11 @@ const Scene = ({
                                     src={drawer.iframeSrc}
                                 />
                             ) : (
-                                <div className='w-full h-full bg-black bg-opacity-60 flex flex-col justify-center items-center overflow-y-auto'>
+                                <div className='w-full h-full bg-black bg-opacity-60 flex flex-col items-center overflow-y-auto'>
                                     {
                                         drawer.imgList.map(item => (
-                                            isDuringDate(item.startAt, item.endAt) ? <img className='w-full mt-2' key={item.id} src={item.src} /> : null
+                                            // isDuringDate(item.startAt, item.endAt) ? <img className='w-full mt-2' key={item.id} src={item.src} /> : null
+                                            <img className='w-full mt-2' key={item.id} src={item.src} />
                                         ))
                                     }
                                 </div>
