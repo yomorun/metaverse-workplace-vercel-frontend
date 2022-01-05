@@ -34,9 +34,9 @@ function getMeshID(country: string | undefined): string {
 
     switch (res.region) {
         case 'Asia':
-            return 'sg.x.yomo.dev'
+            return 'kr.x.yomo.dev'
         case 'Europe':
-            return 'de.x.yomo.dev'
+            return 'fra.x.yomo.dev'
         default:
             return 'us.x.yomo.dev'
     }
