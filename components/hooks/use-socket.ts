@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
-import { useSetRecoilState } from 'recoil'
-import { mateMapState, matePositionMapState, onlineState } from '../../store/atom'
+import { useSetRecoilState, useRecoilValue } from 'recoil'
+import { locationState, mateMapState, matePositionMapState, onlineState } from '../../store/atom'
 
 import { Vector } from '../../libs/movement'
 import { Logger } from '../../libs/helper'
@@ -23,16 +23,17 @@ export default function useSocket({
     const setMateMapState = useSetRecoilState(mateMapState)
     const setMatePositionMapState = useSetRecoilState(matePositionMapState)
     const setOnlineState = useSetRecoilState(onlineState)
+    const { region } = useRecoilValue(locationState)
 
     useEffect(() => {
-        if (!me.name) {
+        if (!me.name || !region) {
             return
         }
 
         const log = new Logger('Scene', 'color: green; background: yellow')
 
         // init socket.io client
-        const socket: Socket = io(process.env.NEXT_PUBLIC_WEBSOCKET_URL, {
+        const socket: Socket = io(`wss://${region}`, {
             transports: ['websocket'],
             reconnection: true,
             reconnectionDelayMax: 10000,
@@ -116,7 +117,7 @@ export default function useSocket({
             setMateMapState(new Map())
             socket.disconnect('bye')
         }
-    }, [me.name])
+    }, [me.name, region])
 
     return socket
 }
