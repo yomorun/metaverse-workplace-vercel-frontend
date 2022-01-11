@@ -7,7 +7,7 @@ import useSocket from './hooks/use-socket'
 import Tip from './minor/tip'
 
 import { useRecoilValue } from 'recoil'
-import { smallDeviceState, scaleState, meState } from '../store/atom'
+import { smallDeviceState, scaleState, meState, locationState } from '../store/atom'
 
 import type { Area, Boundary, Position } from '../types'
 
@@ -35,15 +35,17 @@ const Scene = ({
     const smallDevice = useRecoilValue(smallDeviceState)
     const scale = useRecoilValue(scaleState)
     const me = useRecoilValue(meState)
+    const location = useRecoilValue(locationState)
 
     const socket = useSocket({
         me,
         position: playerInitialPosition,
         room: floor,
+        location
     })
 
     if (!socket) {
-        return <></>
+        return null
     }
 
     return (
@@ -75,6 +77,7 @@ const Scene = ({
                     <Me
                         name={me.name}
                         avatar={me.image}
+                        country={location.country}
                         initPos={playerInitialPosition}
                         socket={socket}
                         channel={floor}

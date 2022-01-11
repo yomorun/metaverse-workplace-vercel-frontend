@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
-import { useSetRecoilState, useRecoilValue } from 'recoil'
-import { locationState, mateMapState, matePositionMapState, onlineState } from '../../store/atom'
+import { useSetRecoilState } from 'recoil'
+import { mateMapState, matePositionMapState, onlineState } from '../../store/atom'
 
 import { Vector } from '../../libs/movement'
 import { Logger } from '../../libs/helper'
@@ -14,26 +14,30 @@ export default function useSocket({
     me,
     position,
     room,
+    location,
 }: {
     me: User
     position: Position
     room: string
+    location: {
+        region: string
+        country: string
+    }
 }) {
     const [socket, setSocket] = useState<Socket | null>(null)
     const setMateMapState = useSetRecoilState(mateMapState)
     const setMatePositionMapState = useSetRecoilState(matePositionMapState)
     const setOnlineState = useSetRecoilState(onlineState)
-    const { region } = useRecoilValue(locationState)
 
     useEffect(() => {
-        if (!me.name || !region) {
+        if (!me.name || !location.region) {
             return
         }
 
         const log = new Logger('Scene', 'color: green; background: yellow')
 
         // init socket.io client
-        const socket: Socket = io(`wss://${region}`, {
+        const socket: Socket = io(`wss://${location.region}`, {
             transports: ['websocket'],
             reconnection: true,
             reconnectionDelayMax: 10000,
@@ -98,7 +102,12 @@ export default function useSocket({
         // broadcast to others I am online when WebSocket connected
         socket.on('connect', () => {
             // log.log('WS CONNECTED', socket.id, socket.connected)
-            socket.emit('online', { room, name: me.name, avatar: me.image })
+            socket.emit('online', {
+                room,
+                name: me.name,
+                avatar: me.image,
+                country: location.country,
+            })
             setOnlineState(true)
         })
 
@@ -117,7 +126,7 @@ export default function useSocket({
             setMateMapState(new Map())
             socket.disconnect('bye')
         }
-    }, [me.name, region])
+    }, [me.name, location])
 
     return socket
 }

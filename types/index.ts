@@ -56,6 +56,7 @@ export type Mate = {
     name: string
     avatar: string
     pos: Position
+    country: string
 }
 
 export type TrackMapValue = {

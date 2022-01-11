@@ -10,6 +10,7 @@ import { mePositionState } from '../../store/atom'
 import { Vector, move, keyPressWASD } from '../../libs/movement'
 import { Logger, checkMobileDevice } from '../../libs/helper'
 import { playerDiameter } from '../../libs/constant'
+import flag from '../../libs/flag'
 
 import type { Socket } from 'socket.io-client'
 import type { Boundary, Position } from '../../types'
@@ -53,6 +54,7 @@ const boundaryProcess = (currPosAndDir: CurrentPositionAndDirection, boundary: B
 const Me = ({
     name,
     avatar,
+    country,
     initPos,
     socket,
     channel,
@@ -60,6 +62,7 @@ const Me = ({
 }: {
     name: string
     avatar: string
+    country: string
     initPos: Position
     socket: Socket
     channel: string
@@ -96,7 +99,7 @@ const Me = ({
         // this is the response
         socket.on('ask', () => {
             log.log('[ask], response as', name, 'avatar:', avatar)
-            socket.emit('sync', { name: name, pos: POS, avatar: avatar })
+            socket.emit('sync', { name, avatar, country, pos: POS })
         })
 
         // TODO：Broadcast movement event streams to others in this game room
@@ -161,7 +164,7 @@ const Me = ({
         <div className='absolute max-h-40 sm:relative sm-grid-card' ref={refContainer}>
             <Webcam cover={avatar} name={name} channel={channel} />
             <div className='absolute top-32 left-1/2 transform -translate-x-1/2 text-base text-white font-bold whitespace-nowrap sm:top-28'>
-                {name}
+                {`${flag(country)} ${name}`}
             </div>
         </div>
     )

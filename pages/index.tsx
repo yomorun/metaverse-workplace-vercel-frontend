@@ -15,11 +15,10 @@ import type { PageAuth, PageSceneScale, Location, Area } from '../types'
 
 const Scene = dynamic(() => import('../components/scene'), { ssr: false })
 
-export const getServerSideProps = ({ query }: any) => {
+export const getServerSideProps = ({ query }: { query: { country: string; region: string } }) => {
     return {
         props: {
-            country: query.country || '',
-            region: query.region || '',
+            ...query,
         },
     }
 }
