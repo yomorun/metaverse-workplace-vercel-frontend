@@ -11,15 +11,14 @@ import Spin from '../components/minor/spin'
 
 import { checkMobileDevice, getSceneScale } from '../libs/helper'
 
-import type { AppProps } from 'next/app'
-import type { PageAuth, PageSceneScale, ScaleParams, User } from '../types'
+import type { Page, Scale, User } from '../types'
 
-export default function MyApp({ Component, pageProps }: AppProps) {
+export default function MyApp({ Component, pageProps }: { Component: Page<any>; pageProps: any }) {
     return (
         <>
             <RecoilRoot>
-                <Adapter scale={(Component as PageSceneScale).scale}>
-                    {(Component as PageAuth).auth ? (
+                <Adapter scale={Component.scale}>
+                    {Component.auth ? (
                         <Auth>
                             <Component {...pageProps} />
                         </Auth>
@@ -37,7 +36,7 @@ function Adapter({
     scale = { sceneWidth: 0, sceneHeight: 0 },
     children,
 }: {
-    scale?: ScaleParams
+    scale?: Scale
     children: JSX.Element
 }) {
     const setSmallDeviceState = useSetRecoilState(smallDeviceState)
@@ -74,7 +73,8 @@ function Auth({ children }: { children: JSX.Element }) {
 
     useEffect(() => {
         if (loading) {
-            return // Do nothing while loading
+            // Do nothing while loading
+            return
         }
 
         if (developer) {
@@ -96,7 +96,8 @@ function Auth({ children }: { children: JSX.Element }) {
             return
         }
 
-        signIn() // If not authenticated, force log in
+        // If not authenticated, force log in
+        signIn()
     }, [loading, developer, session])
 
     if (!loading) {

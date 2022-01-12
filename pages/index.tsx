@@ -10,8 +10,7 @@ import IframePage from '../components/minor/iframe-page'
 import { useSetRecoilState } from 'recoil'
 import { locationState, iframePageState } from '../store/atom'
 
-import type { NextPage } from 'next'
-import type { PageAuth, PageSceneScale, Location, Area } from '../types'
+import type { Page, Location, Area } from '../types'
 
 const Scene = dynamic(() => import('../components/scene'), { ssr: false })
 
@@ -23,7 +22,7 @@ export const getServerSideProps = ({ query }: { query: { country: string; region
     }
 }
 
-const Home: NextPage<Location> & PageAuth & PageSceneScale = ({ country, region }) => {
+const Home: Page<Location> = ({ country, region }) => {
     const setLocationState = useSetRecoilState(locationState)
     const setIframePageState = useSetRecoilState(iframePageState)
 

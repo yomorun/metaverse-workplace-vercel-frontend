@@ -1,3 +1,4 @@
+import type { NextPage } from 'next'
 import type { IRemoteVideoTrack, IRemoteAudioTrack } from 'agora-rtc-sdk-ng'
 
 export interface Area {
@@ -17,17 +18,14 @@ export interface Area {
     entered?: boolean
 }
 
-export type PageAuth = {
-    auth?: boolean
-}
-
-export type ScaleParams = { 
+export type Scale = { 
     sceneWidth: number
     sceneHeight: number
 }
 
-export type PageSceneScale = {
-    scale?: ScaleParams
+export type Page<T> = NextPage<T> & {
+    auth: boolean
+    scale: Scale
 }
 
 export interface Location {

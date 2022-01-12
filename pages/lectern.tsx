@@ -9,8 +9,7 @@ import Guide from '../components/minor/guide'
 import { useSetRecoilState } from 'recoil'
 import { locationState } from '../store/atom'
 
-import type { NextPage } from 'next'
-import type { PageAuth, PageSceneScale, Location } from '../types'
+import type { Page, Location } from '../types'
 
 const Scene = dynamic(() => import('../components/scene'), { ssr: false })
 
@@ -22,7 +21,7 @@ export const getServerSideProps = ({ query }: { query: { country: string; region
     }
 }
 
-const Lectern: NextPage<Location> & PageAuth & PageSceneScale = ({ country, region }) => {
+const Lectern: Page<Location> = ({ country, region }) => {
     const setLocationState = useSetRecoilState(locationState)
 
     useEffect(() => {
