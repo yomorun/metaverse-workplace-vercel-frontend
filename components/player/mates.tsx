@@ -16,6 +16,7 @@ const Mates = ({ socket }: { socket: Socket }) => {
                 <Mate
                     key={m.name}
                     name={m.name}
+                    country={m.country}
                     avatar={m.avatar}
                     initPos={m.pos}
                     socket={socket}

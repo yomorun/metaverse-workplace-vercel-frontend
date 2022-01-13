@@ -6,7 +6,7 @@ export async function middleware(req: NextRequest) {
     const country = geo.country
     const mesh = getMeshID(country)
 
-    url.searchParams.set('country', country as string)
+    url.searchParams.set('country', country ? country : 'US')
     url.searchParams.set('region', mesh)
 
     return NextResponse.rewrite(url)

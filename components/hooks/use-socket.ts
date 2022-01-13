@@ -14,10 +14,15 @@ export default function useSocket({
     me,
     position,
     room,
+    location,
 }: {
     me: User
     position: Position
     room: string
+    location: {
+        region: string
+        country: string
+    }
 }) {
     const [socket, setSocket] = useState<Socket | null>(null)
     const setMateMapState = useSetRecoilState(mateMapState)
@@ -25,14 +30,14 @@ export default function useSocket({
     const setOnlineState = useSetRecoilState(onlineState)
 
     useEffect(() => {
-        if (!me.name) {
+        if (!me.name || !location.region) {
             return
         }
 
         const log = new Logger('Scene', 'color: green; background: yellow')
 
         // init socket.io client
-        const socket: Socket = io(process.env.NEXT_PUBLIC_WEBSOCKET_URL, {
+        const socket: Socket = io(`wss://${location.region}`, {
             transports: ['websocket'],
             reconnection: true,
             reconnectionDelayMax: 10000,
@@ -97,7 +102,12 @@ export default function useSocket({
         // broadcast to others I am online when WebSocket connected
         socket.on('connect', () => {
             // log.log('WS CONNECTED', socket.id, socket.connected)
-            socket.emit('online', { room, name: me.name, avatar: me.image })
+            socket.emit('online', {
+                room,
+                name: me.name,
+                avatar: me.image,
+                country: location.country,
+            })
             setOnlineState(true)
         })
 
@@ -116,7 +126,7 @@ export default function useSocket({
             setMateMapState(new Map())
             socket.disconnect('bye')
         }
-    }, [me.name])
+    }, [me.name, location])
 
     return socket
 }

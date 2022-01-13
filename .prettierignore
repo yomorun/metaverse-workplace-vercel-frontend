@@ -1,8 +1,0 @@
-**/*.min.js
-**/*.min.css
-*.css
-
-.idea/
-node_modules/
-dist/
-build/

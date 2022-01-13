@@ -9,6 +9,7 @@ import { trackMapState, matePositionMapState } from '../../store/atom'
 
 import { Vector } from '../../libs/movement'
 import { checkMobileDevice } from '../../libs/helper'
+import flag from '../../libs/flag'
 
 import type { Socket } from 'socket.io-client'
 import type { Position } from '../../types'
@@ -16,11 +17,13 @@ import type { Position } from '../../types'
 const Mate = ({
     name,
     avatar,
+    country,
     initPos,
     socket,
 }: {
     name: string
     avatar: string
+    country: string
     initPos: Position
     socket: Socket
 }) => {
@@ -121,7 +124,7 @@ const Mate = ({
                 )}
             </div>
             <div className='absolute top-32 left-1/2 transform -translate-x-1/2 text-base text-white font-bold whitespace-nowrap sm:top-28'>
-                {name}
+                {`${flag(country)} ${name}`}
             </div>
         </div>
     )

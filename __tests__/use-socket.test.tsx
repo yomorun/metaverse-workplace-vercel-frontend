@@ -38,18 +38,6 @@ describe('unit test for custom hook useSocket', () => {
         socketMock = new SocketMock()
     })
 
-    it('Render Hook', () => {
-        const { result } = renderHook(() =>
-            useSocket({
-                me,
-                position,
-                room: 'home',
-            })
-        )
-
-        expect(result.current).not.toEqual(null)
-    })
-
     it('Testing the code for players to join the scene', () => {
         let mateMap: Map<string, Mate> = new Map()
 
