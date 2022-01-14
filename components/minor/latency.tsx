@@ -11,8 +11,8 @@ const Latency = ({
     socket: Socket
 }) => {
     const [data, setData] = useState({
-        meshId: 'US',
-        latency: 50,
+        meshId: '',
+        latency: 0,
     })
 
     useEffect(() => {
