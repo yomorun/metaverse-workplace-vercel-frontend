@@ -3,6 +3,7 @@ import { Observable } from 'rxjs'
 import { scan } from 'rxjs/operators'
 
 import Sound from '../rtc/sound'
+import Latency from '../minor/latency'
 
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { trackMapState, matePositionMapState } from '../../store/atom'
@@ -126,6 +127,7 @@ const Mate = ({
             <div className='absolute top-32 left-1/2 transform -translate-x-1/2 text-base text-white font-bold whitespace-nowrap sm:top-28'>
                 {`${flag(country)} ${name}`}
             </div>
+            <Latency name={name} socket={socket} />
         </div>
     )
 }
