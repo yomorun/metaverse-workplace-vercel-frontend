@@ -40,20 +40,20 @@ const Home: Page<Location> = ({ country, region }) => {
             <div className='w-screen h-screen flex justify-center items-center bg-color-home'>
                 <Sidebar />
                 <Scene
-                    className='w-1800px min-w-1800px h-900px wall'
+                    className='w-1800px min-w-1800px h-900px'
                     floor='home'
-                    backgroundImage='/bg-home.png'
+                    backgroundImage='/bg-home-allegro.png'
                     boundary={{ top: 0, left: 0, bottom: 900, right: 1800 }}
                     playerInitialPosition={{ x: 30, y: 60 }}
                     checkAreaList={[
                         {
                             id: 'area-1',
                             position: {
-                                x: 60,
-                                y: 630,
+                                x: 820,
+                                y: 550,
                             },
                             rectangle: {
-                                width: 200,
+                                width: 300,
                                 height: 200,
                             },
                             iframeSrc: 'https://github.com/yomorun/yomo',
@@ -61,11 +61,11 @@ const Home: Page<Location> = ({ country, region }) => {
                         {
                             id: 'area-2',
                             position: {
-                                x: 640,
-                                y: 80,
+                                x: 1330,
+                                y: 340,
                             },
                             round: {
-                                diameter: 200,
+                                diameter: 100,
                             },
                             iframeSrc: 'https://yomo.run',
                         },
