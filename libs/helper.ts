@@ -68,6 +68,10 @@ export const getSceneScale = (
             value: 1.1,
         },
         {
+            className: 'scene-scale-106',
+            value: 1.06,
+        },
+        {
             className: 'scene-scale-105',
             value: 1.05,
         },
@@ -80,6 +84,14 @@ export const getSceneScale = (
             value: 0.95,
         },
         {
+            className: 'scene-scale-92',
+            value: 0.92,
+        },
+        {
+            className: 'scene-scale-91',
+            value: 0.91,
+        },
+        {
             className: 'scene-scale-90',
             value: 0.9,
         },
@@ -90,6 +102,22 @@ export const getSceneScale = (
         {
             className: 'scene-scale-80',
             value: 0.8,
+        },
+        {
+            className: 'scene-scale-79',
+            value: 0.79,
+        },
+        {
+            className: 'scene-scale-78',
+            value: 0.78,
+        },
+        {
+            className: 'scene-scale-77',
+            value: 0.77,
+        },
+        {
+            className: 'scene-scale-76',
+            value: 0.76,
         },
         {
             className: 'scene-scale-75',
@@ -122,7 +150,7 @@ export const getSceneScale = (
 
     for (let i = 0; i < scaleList.length; i++) {
         const item = scaleList[i]
-        if (item.value * sceneHeight < height - bar - 20 && item.value * sceneWidth < width) {
+        if (item.value * sceneHeight < height - bar && item.value * sceneWidth < width) {
             return item
         }
     }

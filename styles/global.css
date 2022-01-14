@@ -50,6 +50,10 @@ input {
   transform: scale(1.1)
 }
 
+.scene-scale-106 {
+  transform: scale(1.06)
+}
+
 .scene-scale-105 {
   transform: scale(1.05)
 }
@@ -62,6 +66,14 @@ input {
   transform: scale(0.95)
 }
 
+.scene-scale-92 {
+  transform: scale(0.92)
+}
+
+.scene-scale-91 {
+  transform: scale(0.91)
+}
+
 .scene-scale-90 {
   transform: scale(0.9)
 }
@@ -72,6 +84,22 @@ input {
 
 .scene-scale-80 {
   transform: scale(0.8)
+}
+
+.scene-scale-79 {
+  transform: scale(0.79)
+}
+
+.scene-scale-78 {
+  transform: scale(0.78)
+}
+
+.scene-scale-77 {
+  transform: scale(0.77)
+}
+
+.scene-scale-76 {
+  transform: scale(0.76)
 }
 
 .scene-scale-75 {
@@ -128,7 +156,7 @@ input {
 }
 
 .bg-color-home {
-  background-color: #D4C9B8;
+  background-color: #5E9234;
 }
 
 .movement-transition {
