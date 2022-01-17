@@ -105,7 +105,7 @@ const Me = ({
 
         // TODO：Broadcast movement event streams to others in this game room
         const broadcastEvent = (dir: Vector) => {
-            socket.emit('movement', { dir })
+            socket.emit('movement', { dir, timestamp: Date.now() })
         }
 
         // keyboard `keypress` event, we use keyboard to control moving actions
