@@ -3,6 +3,7 @@ import { fromEvent } from 'rxjs'
 import { map, filter, scan, auditTime } from 'rxjs/operators'
 
 import Webcam from '../rtc/webcam'
+import Latency from '../minor/latency'
 
 import { useSetRecoilState } from 'recoil'
 import { mePositionState } from '../../store/atom'
@@ -104,7 +105,7 @@ const Me = ({
 
         // TODO：Broadcast movement event streams to others in this game room
         const broadcastEvent = (dir: Vector) => {
-            socket.emit('movement', { dir })
+            socket.emit('movement', { dir, timestamp: Date.now() })
         }
 
         // keyboard `keypress` event, we use keyboard to control moving actions
@@ -166,6 +167,7 @@ const Me = ({
             <div className='absolute top-32 left-1/2 transform -translate-x-1/2 text-base text-white font-bold whitespace-nowrap sm:top-28'>
                 {`${flag(country)} ${name}`}
             </div>
+            <Latency isMaster name={name} socket={socket} />
         </div>
     )
 }
