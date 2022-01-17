@@ -37,13 +37,18 @@ export default function useSocket({
         const log = new Logger('Scene', 'color: green; background: yellow')
 
         // init socket.io client
-        const socket: Socket = io(`wss://${location.region}`, {
-            transports: ['websocket'],
-            reconnection: true,
-            reconnectionDelayMax: 10000,
-            reconnectionAttempts: 50,
-            autoConnect: false,
-        })
+        const socket: Socket = io(
+            process.env.NODE_ENV === 'development'
+                ? process.env.NEXT_PUBLIC_DEV_WEBSOCKET_URL
+                : `wss://${location.region}`,
+            {
+                transports: ['websocket'],
+                reconnection: true,
+                reconnectionDelayMax: 10000,
+                reconnectionAttempts: 50,
+                autoConnect: false,
+            }
+        )
 
         // `online` event will be occured when user is connected to websocket
         socket.on('online', mate => {
