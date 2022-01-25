@@ -139,15 +139,23 @@ input {
 }
 
 .ym-text-blue {
-  color: #95F7EF;
+  color: #68E4B0;
 }
 
-.online {
-  color: greenyellow;
+.ym-text-yellow {
+  color: #F1D671;
 }
 
-.offline {
-  color: palevioletred;
+.ym-text-dark {
+  color: #303756;
+}
+
+.bg-online {
+  background-color: greenyellow;
+}
+
+.bg-offline {
+  background-color: palevioletred;
 }
 
 .wall {
@@ -163,6 +171,11 @@ input {
   transition-property       : transform;
   transition-timing-function: linear;
   transition-duration       : 200ms;
+}
+
+.icon-sidebar {
+  z-index: 100;
+  width: 20px;
 }
 
 @media (max-width: 639px) {
