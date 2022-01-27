@@ -30,34 +30,37 @@ const Sidebar = () => {
     }, [])
 
     return (
-        <div className='z-50 fixed top-2 right-4 flex items-center'>
-            <div className='relative h-10 flex items-center sm:hidden'>
-                <img className='absolute w-full h-full' src='./sidebar/dialogue.png' alt='' />
+        <div className='z-50 fixed top-6 left-0 w-full px-6 flex justify-between items-center sm:top-2 sm:px-2'>
+            <div className='flex'>
+                <div className='relative w-24 h-10 flex justify-center items-center'>
+                    <img className='absolute w-full h-full' src='./bg-online.png' alt='bg-online' />
+                    <img className='icon-sidebar' src='./icon-users.png' alt='icon-users' />
+                    <div
+                        className={cn('relative ml-2 w-2 h-2 rounded-full', {
+                            'bg-online': online,
+                            'bg-offline': !online,
+                        })}
+                    />
+                    <p className='relative ml-2 text-base ym-text-yellow'>{count}</p>
+                </div>
+                <div className='relative ml-2 w-52 h-10 flex justify-center items-center'>
+                    <img className='absolute h-full' src='./bg-location.png' alt='' />
+                    <img className='icon-sidebar' src='./icon-modem.png' alt='icon-modem' />
+                    <p className='relative ml-2 text-base ym-text-yellow'>
+                        {location.country}-{location.region}
+                    </p>
+                </div>
+            </div>
+            <div className='relative h-10 flex items-center sm:hidden transition duration-500 ease-in-out transform-gpu hover:scale-110'>
+                <img className='absolute w-full h-full' src='./bg-button.png' alt='' />
                 <Link href='https://github.com/yomorun/yomo'>
                     <a
-                        className='relative px-10 text-base text-center ym-text-blue hover:text-blue-600'
+                        className='relative px-5 text-base text-center font-bold ym-text-dark'
                         target='_blank'
                     >
                         {signList[currentSign]}
                     </a>
                 </Link>
-            </div>
-            <div className='relative ml-4 h-10 flex justify-center items-center sm:hidden'>
-                <img className='absolute h-full' src='./sidebar/dialogue.png' alt='' />
-                <p className='relative px-6 text-base ym-text-blue'>
-                    {location.country}-{location.region}
-                </p>
-            </div>
-            <div className='relative ml-4 h-10 flex justify-center items-center'>
-                <img className='absolute h-full' src='./sidebar/notice.png' alt='' />
-                <p
-                    className={cn('relative px-10 text-base', {
-                        online: online,
-                        offline: !online,
-                    })}
-                >
-                    {online ? 'Online' : 'Offline'} {count}
-                </p>
             </div>
         </div>
     )

@@ -9,12 +9,12 @@ const Guide = () => {
     }
 
     return (
-        <div className='z-50 fixed bottom-10 left-1/2 transform -translate-x-1/2'>
-            <img className='absolute' src='./dialogue.png' alt='dialogue' />
-            <p className='relative mt-5 px-10 text-base ym-text-blue whitespace-nowrap'>
+        <div className='z-50 fixed bottom-5 left-1/2 transform -translate-x-1/2'>
+            <img className='absolute' src='./bg-guide.png' alt='bg-guide' />
+            <p className='relative px-10 py-2 text-base ym-text-yellow whitespace-nowrap'>
                 <span>Build a</span>&nbsp;
                 <a
-                    className='text-blue-500 hover:text-blue-800'
+                    className='ym-text-blue hover:opacity-80'
                     href='https://github.com/yomorun/yomo'
                     target='_blank'
                     rel='noreferrer'
@@ -24,14 +24,14 @@ const Guide = () => {
                 &nbsp;
                 <span>
                     Virtual HQ, use{' '}
-                    <strong className='bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500'>
+                    <strong className='ym-text-blue'>
                         [W/A/S/D]
                     </strong>{' '}
                     to control movement.
                 </span>
                 &nbsp; (
                 <a
-                    className='text-blue-500 hover:text-blue-800'
+                    className='ym-text-blue hover:opacity-80'
                     href='https://github.com/yomorun/yomo-metaverse-workplace-nextjs'
                     target='_blank'
                     rel='noreferrer'
