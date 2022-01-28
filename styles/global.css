@@ -167,6 +167,10 @@ input {
   background-color: #619C31;
 }
 
+.bg-color-newyear {
+  background-color: #CBDCFD;
+}
+
 .movement-transition {
   transition-property       : transform;
   transition-timing-function: linear;

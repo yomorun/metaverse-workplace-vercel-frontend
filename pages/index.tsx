@@ -37,12 +37,12 @@ const Home: Page<Location> = ({ country, region }) => {
                     Open-source Metaverse Workplace with Geo-distributed System Tech Stacks
                 </title>
             </Head>
-            <div className='w-screen h-screen flex justify-center items-center bg-color-home'>
+            <div className='w-screen h-screen flex justify-center items-center bg-color-newyear'>
                 <Sidebar />
                 <Scene
                     className='w-1800px min-w-1800px h-900px'
                     floor='home'
-                    backgroundImage='/bg-home-allegro.png'
+                    backgroundImage='/bg-home-newyear.png'
                     boundary={{ top: 0, left: 0, bottom: 900, right: 1800 }}
                     playerInitialPosition={{ x: 30, y: 60 }}
                     checkAreaList={[
