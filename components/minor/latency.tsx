@@ -3,6 +3,18 @@ import { useRecoilValue } from 'recoil'
 import { smallDeviceState } from '../../store/atom'
 import type { Socket } from 'socket.io-client'
 
+const getLatencyBgColor = (latency: number) => {
+    if (latency < 200) {
+        return 'green'
+    }
+
+    if (latency >= 200 && latency < 300) {
+        return '#FFB02A'
+    }
+
+    return 'red'
+}
+
 const Latency = ({
     isMaster = false,
     name,
@@ -13,13 +25,10 @@ const Latency = ({
     socket: Socket
 }) => {
     const smallDevice = useRecoilValue(smallDeviceState)
-
-    const [data, setData] = useState({
-        meshId: '',
+    const [latencyData, setLatencyData] = useState({
         latency: 0,
+        backgroundColor: 'green',
     })
-
-    const [e2eLatency, setE2eLatency] = useState(0)
 
     useEffect(() => {
         if (isMaster) {
@@ -34,19 +43,19 @@ const Latency = ({
                     return
                 }
 
-                const { timestamp, meshId } = payload
+                const { timestamp } = payload
                 const rtt = Date.now() - timestamp
                 const latency = rtt / 2
 
-                setData({
+                const backgroundColor = getLatencyBgColor(latency)
+                setLatencyData({
                     latency,
-                    meshId,
+                    backgroundColor,
                 })
 
                 socket.emit('latency', {
                     name,
                     latency,
-                    meshId,
                 })
             })
 
@@ -59,43 +68,30 @@ const Latency = ({
                     return
                 }
 
-                const { meshId, latency } = payload
-
-                setData({
+                const { latency } = payload
+                const backgroundColor = getLatencyBgColor(latency)
+                setLatencyData({
                     latency,
-                    meshId,
+                    backgroundColor,
                 })
-            })
-
-            socket.on('movement', mv => {
-                if (mv.name != name) {
-                    return
-                }
-
-                if (mv.timestamp) {
-                    setE2eLatency(Date.now() - mv.timestamp)
-                }
             })
         }
     }, [])
 
-    if (smallDevice) {
+    if (smallDevice || latencyData.latency <= 0) {
         return null
     }
 
     return (
-        <>
-            {data.latency > 0 && (
-                <div className='absolute top-36 left-1/2 transform -translate-x-1/2 text-base text-white font-bold whitespace-nowrap'>
-                    Edge node: {data.meshId} ({data.latency}ms)
-                </div>
-            )}
-            {e2eLatency > 0 && (
-                <div className='absolute top-40 left-1/2 transform -translate-x-1/2 text-base text-white font-bold whitespace-nowrap'>
-                    E2e latency: {e2eLatency}ms
-                </div>
-            )}
-        </>
+        <div
+            className='absolute top-40 left-1/2 transform -translate-x-1/2 px-4 rounded-md text-sm text-white font-bold whitespace-nowrap'
+            style={{
+                top: 150,
+                backgroundColor: latencyData.backgroundColor,
+            }}
+        >
+            {latencyData.latency}ms
+        </div>
     )
 }
 
