@@ -164,7 +164,7 @@ const Me = ({
     return (
         <div className='absolute max-h-40 sm:relative sm-grid-card' ref={refContainer}>
             <Webcam cover={avatar} name={name} channel={channel} />
-            <div className='absolute top-32 left-1/2 transform -translate-x-1/2 text-base text-white font-bold whitespace-nowrap sm:top-28'>
+            <div className='absolute top-32 left-1/2 transform -translate-x-1/2 px-2 rounded-md bg-black bg-opacity-50 text-sm text-white font-bold whitespace-nowrap sm:top-28'>
                 {`${flag(country)} ${name}`}
             </div>
             <Latency isMaster name={name} socket={socket} />

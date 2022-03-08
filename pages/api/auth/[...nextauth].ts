@@ -1,33 +1,15 @@
 import NextAuth from 'next-auth'
-import Providers from 'next-auth/providers'
-
-type Profile = {
-    id: string
-    login: string
-    email: string
-    avatar_url: string
-}
-
-type User = {
-    id: string
-    name: string
-    email: string
-    image: string
-}
+import GitHubProvider from 'next-auth/providers/github'
 
 export default NextAuth({
-    // https://next-auth.js.org/configuration/providers
     providers: [
-        // https://github.com/nextauthjs/next-auth/blob/main/src/providers/github.js
-        Providers.GitHub({
+        // https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/providers/github.js
+        GitHubProvider({
             clientId: process.env.GITHUB_CLIENT_ID,
             clientSecret: process.env.GITHUB_CLIENT_SECRET,
-            profile(profile: Profile): User {
-                // You can use the tokens, in case you want to fetch more profile information
-                // For example several OAuth providers do not return email by default.
-                // Depending on your provider, will have tokens like `access_token`, `id_token` and or `refresh_token`
+            profile(profile: any) {
                 return {
-                    id: profile.id,
+                    id: profile.id.toString(),
                     name: profile.login,
                     email: profile.email,
                     image: profile.avatar_url,
@@ -35,5 +17,7 @@ export default NextAuth({
             },
         }),
     ],
-    theme: 'light',
+    theme: {
+        colorScheme: 'light',
+    },
 })
