@@ -1,7 +1,7 @@
 import '../styles/global.css'
 
 import { useState, useEffect } from 'react'
-import { useSession, signIn } from 'next-auth/client'
+import { SessionProvider, useSession, signIn } from 'next-auth/react'
 
 import { RecoilRoot, useSetRecoilState } from 'recoil'
 import { smallDeviceState, scaleState, meState } from '../store/atom'
@@ -13,18 +13,26 @@ import { checkMobileDevice, getSceneScale } from '../libs/helper'
 
 import type { Page, Scale, User } from '../types'
 
-export default function MyApp({ Component, pageProps }: { Component: Page<any>; pageProps: any }) {
+export default function MyApp({
+    Component,
+    pageProps: { session, ...pageProps },
+}: {
+    Component: Page<any>
+    pageProps: any
+}) {
     return (
         <>
             <RecoilRoot>
                 <Adapter scale={Component.scale}>
-                    {Component.auth ? (
-                        <Auth>
+                    <SessionProvider session={session}>
+                        {Component.auth ? (
+                            <Auth>
+                                <Component {...pageProps} />
+                            </Auth>
+                        ) : (
                             <Component {...pageProps} />
-                        </Auth>
-                    ) : (
-                        <Component {...pageProps} />
-                    )}
+                        )}
+                    </SessionProvider>
                 </Adapter>
             </RecoilRoot>
             <GA />
@@ -60,7 +68,7 @@ function Adapter({
 function Auth({ children }: { children: JSX.Element }) {
     const [developer, setDeveloper] = useState<User | null>(null)
     const setMeState = useSetRecoilState(meState)
-    const [session, loading] = useSession()
+    const { data: session, status } = useSession()
 
     useEffect(() => {
         if (process.env.NODE_ENV == 'development') {
@@ -72,7 +80,7 @@ function Auth({ children }: { children: JSX.Element }) {
     }, [])
 
     useEffect(() => {
-        if (loading) {
+        if (status === 'loading') {
             // Do nothing while loading
             return
         }
@@ -98,9 +106,9 @@ function Auth({ children }: { children: JSX.Element }) {
 
         // If not authenticated, force log in
         signIn()
-    }, [loading, developer, session])
+    }, [status, developer, session])
 
-    if (!loading) {
+    if (status !== 'loading') {
         if (developer || !!session?.user) {
             return children
         }
