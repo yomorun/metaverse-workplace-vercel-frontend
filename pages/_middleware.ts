@@ -18,9 +18,9 @@ function getMeshID(country: string | undefined): string {
         return 'us.x.yomo.dev'
     }
 
-    if (country === 'CN') {
-        return 'cn1.x.yomo.dev'
-    }
+    //if (country === 'CN') {
+    //    return 'cn1.x.yomo.dev'
+    //}
 
     const res = countryRegion.find((item: { name: string; region: string }) => {
         if (item.name === country) {
