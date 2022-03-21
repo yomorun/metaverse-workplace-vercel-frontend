@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useRecoilValue } from 'recoil'
 import { smallDeviceState } from '../../store/atom'
 import type { Socket } from 'socket.io-client'
+import { addLatencyMetric } from '../../libs/metrics'
 
 const getLatencyBgColor = (latency: number) => {
     if (latency < 200) {
@@ -57,6 +58,9 @@ const Latency = ({
                     name,
                     latency,
                 })
+
+                // add metrics
+                addLatencyMetric('CN', 'kr.x.yomo.dev', timestamp, latency)
             })
 
             return () => {
