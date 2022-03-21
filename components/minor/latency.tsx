@@ -39,7 +39,7 @@ const Latency = ({
             }, 5000)
 
             socket.on('dang', payload => {
-                if (!payload || !payload.timestamp) {
+                if (!payload || !payload.timestamp || payload.name != name) {
                     return
                 }
 
