@@ -78,6 +78,7 @@ const Scene = ({
                         name={me.name}
                         avatar={me.image}
                         country={location.country}
+                        meshUrl={location.region}
                         initPos={playerInitialPosition}
                         socket={socket}
                         channel={floor}

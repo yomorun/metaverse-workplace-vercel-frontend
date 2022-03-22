@@ -19,10 +19,14 @@ const getLatencyBgColor = (latency: number) => {
 const Latency = ({
     isMaster = false,
     name,
+    country,
+    meshUrl,
     socket,
 }: {
     isMaster?: boolean
     name: string
+    country: string
+    meshUrl: string
     socket: Socket
 }) => {
     const smallDevice = useRecoilValue(smallDeviceState)
@@ -60,7 +64,7 @@ const Latency = ({
                 })
 
                 // add metrics
-                addLatencyMetric('CN', 'kr.x.yomo.dev', timestamp, latency)
+                addLatencyMetric(country, meshUrl, timestamp, latency)
             })
 
             return () => {
