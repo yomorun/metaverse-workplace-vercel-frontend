@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { v1 } from "@datadog/datadog-api-client";
+import { env } from 'process';
 
 const configuration = v1.createConfiguration();
 const apiInstance = new v1.MetricsApi(configuration);
@@ -11,8 +12,8 @@ const metrics = async (req: NextApiRequest, res: NextApiResponse) => {
         body: {
           series: [
             {
-              metric: "vhq.latency",
-              type: "gauge",
+              metric: process.env.DD_LATENCY_METRICS_NAME || 'yomo.vhq.latency',
+              type: 'gauge',
               points: [[timestamp / 1000, latency]],
               tags: [`country:${userCountry}`, `mesh:${meshID}`],
             },
