@@ -4,7 +4,8 @@ import countryRegion from '../libs/amesh.json'
 export async function middleware(req: NextRequest) {
     const { nextUrl: url, geo } = req
     const country = geo.country
-    const mesh = getMeshID(country)
+    const argo = url.searchParams.get('argo') === 'true'
+    const mesh = getMeshID(country, argo)
 
     url.searchParams.set('country', country ? country : 'US')
     url.searchParams.set('region', mesh)
@@ -13,7 +14,11 @@ export async function middleware(req: NextRequest) {
 }
 
 // 4 mesh nodes
-function getMeshID(country: string | undefined): string {
+function getMeshID(country: string | undefined, argo: boolean): string {
+    if (argo) {
+        return 'argo-vhq.yomo.run'
+    }
+
     if (country == undefined) {
         return 'us.x.yomo.dev'
     }
