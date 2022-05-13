@@ -42,7 +42,7 @@ const Home: Page<Location> = ({ country, region }) => {
                 <Scene
                     className='w-1800px min-w-1800px h-900px'
                     floor='home'
-                    backgroundImage='/bg-home-newyear.png'
+                    backgroundImage='/bg-home-newyear2.png'
                     boundary={{ top: 0, left: 0, bottom: 900, right: 1800 }}
                     playerInitialPosition={{ x: 30, y: 60 }}
                     checkAreaList={[
