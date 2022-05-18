@@ -38,15 +38,19 @@ const dirDown = new Vector(0, 1)
 export const move = (e: { code: string }) => {
     let dir
     switch (e.code) {
+        case 'KeyW':
         case 'ArrowUp':
             dir = dirUp
             break
+        case 'KeyS':
         case 'ArrowDown':
             dir = dirDown
             break
+        case 'KeyA':
         case 'ArrowLeft':
             dir = dirLeft
             break
+        case 'KeyD':
         case 'ArrowRight':
             dir = dirRight
             break
@@ -58,12 +62,16 @@ export const move = (e: { code: string }) => {
 }
 
 // Only accepts events from the W, A, S and D buttons
-export const keyPressUpDown = (e: { code: string }) => {
+export const keyPressWASD = (e: { code: string }) => {
     switch (e.code) {
-        case 'ArrowUp':
-        case 'ArrowDown':
+        case 'KeyW':
+        case 'KeyS':
+        case 'KeyA':
+        case 'KeyD':
         case 'ArrowLeft':
         case 'ArrowRight':
+        case 'ArrowUp':
+        case 'ArrowDown':
             return true
         default:
             return false
