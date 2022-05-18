@@ -11,18 +11,18 @@ test('Vector (50, 50) + direction (-1, 0) -> (40, 50)', () => {
 
 describe('Check move()', () => {
     it('Move to the left', () => {
-        expect(move({ code: 'KeyA' })).toEqual(new Vector(-1, 0))
+        expect(move({ code: 'ArrowLeft' })).toEqual(new Vector(-1, 0))
     })
     
     it('Move to the up', () => {
-        expect(move({ code: 'KeyW' })).toEqual(new Vector(0, -1))
+        expect(move({ code: 'ArrowUp' })).toEqual(new Vector(0, -1))
     })
     
     it('Move to the right', () => {
-        expect(move({ code: 'KeyD' })).toEqual(new Vector(1, 0))
+        expect(move({ code: 'ArrowRight' })).toEqual(new Vector(1, 0))
     })
     
     it('Move to the down', () => {
-        expect(move({ code: 'KeyS' })).toEqual(new Vector(0, 1))
+        expect(move({ code: 'ArrowDown' })).toEqual(new Vector(0, 1))
     })
 })

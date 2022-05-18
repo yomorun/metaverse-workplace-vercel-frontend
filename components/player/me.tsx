@@ -8,7 +8,7 @@ import Latency from '../minor/latency'
 import { useSetRecoilState } from 'recoil'
 import { mePositionState } from '../../store/atom'
 
-import { Vector, move, keyPressWASD } from '../../libs/movement'
+import { Vector, move, keyPressUpDown } from '../../libs/movement'
 import { Logger, checkMobileDevice } from '../../libs/helper'
 import { playerDiameter } from '../../libs/constant'
 import flag from '../../libs/flag'
@@ -109,17 +109,17 @@ const Me = ({
         }
 
         // keyboard `keypress` event, we use keyboard to control moving actions
-        const evtKeyPress = fromEvent<KeyboardEvent>(document, 'keypress').pipe(
+        const evtKeyPress = fromEvent<KeyboardEvent>(document, 'keydown').pipe(
             auditTime(16),
             map((e: KeyboardEvent) => {
                 return { evt: 'move', code: e.code }
             })
         )
 
-        // ignore keys other than W/A/S/D
-        const keyPress$ = evtKeyPress.pipe(filter(keyPressWASD))
+        // ignore keys other than up/down/left/right
+        const keyPress$ = evtKeyPress.pipe(filter(keyPressUpDown))
 
-        // stream of direction changing, this will turns w/a/s/d keypress event into direction vector changing streams
+        // stream of direction changing, this will turns up/down/left/right keypress event into direction vector changing streams
         const direction$ = keyPress$.pipe(map(move))
 
         const accumulator = (acc: Vector | CurrentPositionAndDirection, value: Vector) => {
