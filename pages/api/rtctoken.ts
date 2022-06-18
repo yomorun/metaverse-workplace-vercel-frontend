@@ -33,7 +33,7 @@ const rtctoken = async (req: NextApiRequest, res: NextApiResponse) => {
             })
         }
     } else {
-        res.status(405).json({})
+        res.status(200).json({})
     }
 }
 
