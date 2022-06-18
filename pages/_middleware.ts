@@ -3,7 +3,7 @@ import countryRegion from '../libs/amesh.json'
 
 export async function middleware(req: NextRequest) {
     const { nextUrl: url, geo } = req
-    const country = geo.country
+    const country = geo?.country
     const mesh = getMeshID(country)
 
     url.searchParams.set('country', country ? country : 'US')

@@ -38,3 +38,4 @@ yarn-error.log*
 .env
 
 .tsbuildinfo
+pnpm-lock.yaml
