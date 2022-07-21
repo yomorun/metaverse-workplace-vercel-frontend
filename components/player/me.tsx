@@ -56,6 +56,7 @@ const Me = ({
     name,
     avatar,
     country,
+    meshUrl,
     initPos,
     socket,
     channel,
@@ -64,6 +65,7 @@ const Me = ({
     name: string
     avatar: string
     country: string
+    meshUrl: string
     initPos: Position
     socket: Socket
     channel: string
@@ -167,7 +169,7 @@ const Me = ({
             <div className='absolute top-32 left-1/2 transform -translate-x-1/2 px-2 rounded-md bg-black bg-opacity-50 text-sm text-white font-bold whitespace-nowrap sm:top-28'>
                 {`${flag(country)} ${name}`}
             </div>
-            <Latency isMaster name={name} socket={socket} />
+            <Latency isMaster name={name} country={country} meshUrl={meshUrl} socket={socket} />
         </div>
     )
 }
