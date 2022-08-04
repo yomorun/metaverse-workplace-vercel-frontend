@@ -40,7 +40,6 @@ const Home: Page<Location> = ({ country, region }) => {
             </Head>
             <div className='w-screen h-screen flex justify-center items-center bg-color-newyear'>
                 <CookieConsent
-                    debug
                     location='top'
                     buttonText='Accept'
                     style={{
