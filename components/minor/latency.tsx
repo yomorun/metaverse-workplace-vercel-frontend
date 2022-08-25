@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useRecoilValue } from 'recoil'
 import { smallDeviceState } from '../../store/atom'
 import type { Socket } from 'socket.io-client'
+import { addLatencyMetric } from '../../libs/metrics'
 
 const getLatencyBgColor = (latency: number) => {
     if (latency < 200) {
@@ -18,10 +19,14 @@ const getLatencyBgColor = (latency: number) => {
 const Latency = ({
     isMaster = false,
     name,
+    country,
+    meshUrl,
     socket,
 }: {
     isMaster?: boolean
     name: string
+    country: string
+    meshUrl: string
     socket: Socket
 }) => {
     const smallDevice = useRecoilValue(smallDeviceState)
@@ -57,6 +62,9 @@ const Latency = ({
                     name,
                     latency,
                 })
+
+                // add metrics
+                addLatencyMetric(country, meshUrl, timestamp, latency)
             })
 
             return () => {
