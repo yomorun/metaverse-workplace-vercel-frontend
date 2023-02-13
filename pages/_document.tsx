@@ -1,4 +1,4 @@
-import Document, { Html, Head, Main, NextScript } from 'next/document'
+import Document, { Head, Html, Main, NextScript } from 'next/document'
 
 class MyDocument extends Document {
     render() {
@@ -23,7 +23,7 @@ class MyDocument extends Document {
                     />
                     <meta charSet='utf-8' />
                     <meta name='googlebot' content='index,follow' />
-                    <link rel='preconnect' href='https://fonts.googleapis.com' crossOrigin='true' />
+                    <link rel='preconnect' href='https://fonts.googleapis.com' crossOrigin="anonymous" />
                     <link
                         rel='stylesheet'
                         media='print'
