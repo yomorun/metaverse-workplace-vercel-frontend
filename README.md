@@ -8,7 +8,7 @@ For RTE2021 Realtime Engagement Global Conf, Oct 23, Bejing China, goes here: [R
 
 10月23日，在北京举行的全球 RTE2021 大会，[👉🏼 贡献者指南在这里 👈🏼](rte2021.md)
 
-## Presence Message Flow
+## Presence Message FloW
 
 ![yomo metaverse virtual hq](vhq-presence.jpg)
 
